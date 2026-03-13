@@ -1,59 +1,46 @@
 <!DOCTYPE html>
+
 <html lang="ca">
 
 <head>
 
 <meta charset="UTF-8">
 
-<title>Junts Cabrils</title>
+<title>
+Junts Cabrils
+</title>
 
-<link rel="manifest" href="manifest.json">
+<link
+rel="manifest"
+href="manifest.json"
+>
 
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link
+rel="icon"
+type="image/png"
+sizes="32x32"
+href="favicon.png"
+>
 
-<link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
+<link
+rel="icon"
+type="image/png"
+sizes="192x192"
+href="icona-192.png"
+>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1"
+>
 
 </head>
 
-<script>
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-
-</script>
-
-  <script>
-
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-
-  e.preventDefault();
-
-  deferredPrompt = e;
-
-  document.getElementById('installBtn').style.display = 'block';
-
-});
-
-document.getElementById('installBtn').addEventListener('click', () => {
-
-  deferredPrompt.prompt();
-
-  deferredPrompt.userChoice.then(() => {
-
-    deferredPrompt = null;
-
-  });
-
-});
-
-</script>
-  
-<body style="text-align:center; font-family:Arial; margin-top:40px;">
+<body
+style="text-align:center;
+font-family:Arial;
+margin-top:40px;"
+>
 
 <img
 src="icona-192.png"
@@ -69,10 +56,71 @@ Junts Cabrils
 PWA en construcció
 </p>
 
-</body>
-  
-<button id="installBtn" style="padding:10px 20px;font-size:16px;">
+<button
+id="installBtn"
+style="
+display:none;
+padding:10px 20px;
+font-size:16px;
+"
+>
 Instal·la l'app
 </button>
-  
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+navigator.serviceWorker.register("sw.js");
+
+}
+
+let deferredPrompt;
+
+window.addEventListener(
+
+"beforeinstallprompt",
+
+(e) => {
+
+e.preventDefault();
+
+deferredPrompt = e;
+
+document
+.getElementById("installBtn")
+.style.display = "inline-block";
+
+}
+
+);
+
+document
+.getElementById("installBtn")
+.addEventListener(
+
+"click",
+
+async () => {
+
+if (!deferredPrompt) return;
+
+deferredPrompt.prompt();
+
+await deferredPrompt.userChoice;
+
+deferredPrompt = null;
+
+document
+.getElementById("installBtn")
+.style.display = "none";
+
+}
+
+);
+
+</script>
+
+</body>
+
 </html>
