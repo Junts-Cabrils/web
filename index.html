@@ -98,11 +98,28 @@ font-weight:bold;
 text-align:center;
 box-shadow:0 6px 16px rgba(0,0,0,0.2);
 line-height:1.2;
+transition:transform 0.08s;
 }
 
-.boto img{
-width:34px;
-margin-bottom:6px;
+.boto:active{
+transform:scale(0.96);
+}
+
+.icona{
+width:48px;
+height:48px;
+border-radius:50%;
+background:#0b3a63;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:8px;
+}
+
+.icona img{
+width:24px;
+height:24px;
+filter:invert(1);
 }
 
 .text{
@@ -132,8 +149,17 @@ font-size:13px;
 font-size:11px;
 }
 
+.icona{
+width:42px;
+height:42px;
 }
 
+.icona img{
+width:20px;
+height:20px;
+}
+
+}
 </style>
 
 </head>
@@ -156,28 +182,51 @@ font-size:11px;
 <div class="columna">
 
 <a class="boto" href="https://www.juntspercabrils.cat" target="_blank">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png">
+</div>
+
 <span class="text">WEB</span>
-</a>
 
 <a class="boto" href="https://wa.me/34676446473?text=ALTA" target="_blank">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+</div>
+
 <span class="text">ENVIA "ALTA"<br>WHATSAPP</span>
+
 </a>
 
 <a class="boto" href="https://www.instagram.com/jxccabrils" target="_blank">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png">
+</div>
+
 <span class="text">INSTAGRAM</span>
+
 </a>
 
 <a class="boto" href="https://www.facebook.com/JxCCabrils" target="_blank">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+</div>
+
 <span class="text">FACEBOOK</span>
+
 </a>
 
 <a class="boto" href="mailto:info@juntspercabrils.cat">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png">
+</div>
+
 <span class="text">CORREU</span>
+
 </a>
 
 </div>
@@ -185,28 +234,53 @@ font-size:11px;
 <div class="columna">
 
 <a class="boto" href="marta.html">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png">
+</div>
+
 <span class="marta">MARTA GÓMEZ<br>CANDIDATA A L'ALCALDIA</span>
+
 </a>
 
 <a class="boto placeholder" href="noticies.html">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png">
+</div>
+
 <span class="text">NOTÍCIES</span>
+
 </a>
 
 <a class="boto placeholder" href="convocatories.html">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/747/747310.png">
+</div>
+
 <span class="text">CONVOCATÒRIES</span>
+
 </a>
 
 <a class="boto placeholder" href="programa.html">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png">
+</div>
+
 <span class="text">PROGRAMA</span>
+
 </a>
 
 <a class="boto placeholder" href="presentacio.html">
+
+<div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/2910/2910768.png">
+</div>
+
 <span class="text">PRESENTACIÓ</span>
+
 </a>
 
 </div>
