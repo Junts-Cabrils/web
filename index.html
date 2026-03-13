@@ -12,8 +12,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b3a63">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <style>
 
@@ -99,8 +97,7 @@ text-decoration:none;
 font-weight:bold;
 text-align:center;
 box-shadow:0 6px 16px rgba(0,0,0,0.2);
-line-height:1.15;
-overflow:hidden;
+line-height:1.2;
 }
 
 .boto img{
@@ -108,47 +105,27 @@ width:34px;
 margin-bottom:6px;
 }
 
-.text-petit{
+.text{
 font-size:14px;
-line-height:1.1;
 }
 
 .marta{
 font-size:12px;
-line-height:1.05;
+line-height:1.1;
 }
 
 .placeholder{
 opacity:0.75;
 }
 
-.placeholder img{
-opacity:0.45;
-}
-
 @media (max-width:520px){
-
-.columnes{
-gap:10px;
-}
-
-.columna{
-gap:10px;
-}
 
 .boto{
 height:100px;
-padding:8px;
-font-size:14px;
 }
 
-.boto img{
-width:30px;
-margin-bottom:6px;
-}
-
-.text-petit{
-font-size:12px;
+.text{
+font-size:13px;
 }
 
 .marta{
@@ -178,29 +155,29 @@ font-size:11px;
 
 <div class="columna">
 
-<a class="boto" href="https://www.juntspercabrils.cat" target="_blank" rel="noopener">
+<a class="boto" href="https://www.juntspercabrils.cat" target="_blank">
 <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png">
-Web
+<span class="text">WEB</span>
 </a>
 
 <a class="boto" href="https://wa.me/34676446473?text=ALTA" target="_blank">
 <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
-<span class="text-petit">Envia "ALTA" al nostre WhatsApp</span>
+<span class="text">ENVIA "ALTA"<br>WHATSAPP</span>
 </a>
 
 <a class="boto" href="https://www.instagram.com/jxccabrils" target="_blank">
 <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png">
-Instagram
+<span class="text">INSTAGRAM</span>
 </a>
 
 <a class="boto" href="https://www.facebook.com/JxCCabrils" target="_blank">
 <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
-Facebook
+<span class="text">FACEBOOK</span>
 </a>
 
 <a class="boto" href="mailto:info@juntspercabrils.cat">
 <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png">
-Correu
+<span class="text">CORREU</span>
 </a>
 
 </div>
@@ -212,24 +189,24 @@ Correu
 <span class="marta">MARTA GÓMEZ<br>CANDIDATA A L'ALCALDIA</span>
 </a>
 
-<a class="boto placeholder">
+<a class="boto placeholder" href="noticies.html">
 <img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png">
-Notícies
+<span class="text">NOTÍCIES</span>
 </a>
 
-<a class="boto placeholder">
+<a class="boto placeholder" href="convocatories.html">
 <img src="https://cdn-icons-png.flaticon.com/512/747/747310.png">
-Convocatòries
+<span class="text">CONVOCATÒRIES</span>
 </a>
 
-<a class="boto placeholder">
+<a class="boto placeholder" href="programa.html">
 <img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png">
-Programa
+<span class="text">PROGRAMA</span>
 </a>
 
-<a class="boto placeholder">
+<a class="boto placeholder" href="presentacio.html">
 <img src="https://cdn-icons-png.flaticon.com/512/2910/2910768.png">
-Properament
+<span class="text">PRESENTACIÓ</span>
 </a>
 
 </div>
@@ -263,11 +240,6 @@ deferredPrompt=null;
 if(outcome==="accepted"){
 installButton.style.display="none";
 }
-});
-
-window.addEventListener("appinstalled",()=>{
-installButton.style.display="none";
-deferredPrompt=null;
 });
 
 </script>
