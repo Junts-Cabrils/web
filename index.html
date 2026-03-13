@@ -257,6 +257,7 @@ h1{
 </div>
 
 <script>
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
@@ -264,23 +265,47 @@ if ("serviceWorker" in navigator) {
 let deferredPrompt;
 const installButton = document.getElementById("installButton");
 
-window.addEventListener("beforeinstallprompt", (e) => {
+/* detectar iPhone / iPad */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+/* si és iPhone */
+if(isIOS){
+  installButton.style.display="block";
+  installButton.innerHTML="📲 iPhone:<br>Compartir →<br>Afegir a pantalla d'inici";
+}
+
+/* Android instal·lació automàtica */
+
+window.addEventListener("beforeinstallprompt",(e)=>{
   e.preventDefault();
-  deferredPrompt = e;
-  installButton.style.display = "block";
-});
+  deferredPrompt=e;
 
-installButton.addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-
-  if (outcome === "accepted") {
-    installButton.style.display = "none";
+  if(!isIOS){
+    installButton.style.display="block";
+    installButton.innerHTML="Instal·la l'app";
   }
 });
+
+installButton.addEventListener("click",async ()=>{
+
+  if(isIOS){
+    alert("Per instal·lar:\n\n1. Prem el botó compartir\n2. Selecciona 'Afegir a pantalla d'inici'");
+    return;
+  }
+
+  if(!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+
+  const {outcome}=await deferredPrompt.userChoice;
+  deferredPrompt=null;
+
+  if(outcome==="accepted"){
+    installButton.style.display="none";
+  }
+
+});
+
 </script>
 
 </body>
