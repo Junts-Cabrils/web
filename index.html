@@ -24,6 +24,34 @@ if ("serviceWorker" in navigator) {
 }
 
 </script>
+
+  <script>
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+
+  e.preventDefault();
+
+  deferredPrompt = e;
+
+  document.getElementById('installBtn').style.display = 'block';
+
+});
+
+document.getElementById('installBtn').addEventListener('click', () => {
+
+  deferredPrompt.prompt();
+
+  deferredPrompt.userChoice.then(() => {
+
+    deferredPrompt = null;
+
+  });
+
+});
+
+</script>
   
 <body style="text-align:center; font-family:Arial; margin-top:40px;">
 
@@ -42,5 +70,9 @@ PWA en construcció
 </p>
 
 </body>
-
+  
+<button id="installBtn" style="padding:10px 20px;font-size:16px;">
+Instal·la l'app
+</button>
+  
 </html>
