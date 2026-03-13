@@ -190,14 +190,14 @@ h1{
         <span class="text">ENVIA "ALTA"<br>WHATSAPP</span>
       </a>
 
-      <a class="boto" href="https://www.instagram.com/juntspercabrils/" target="_blank" rel="noopener noreferrer">
+      <a class="boto" href="#" onclick="obreInstagram(); return false;">
         <div class="icona">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram">
         </div>
         <span class="text">INSTAGRAM</span>
       </a>
-
-      <a class="boto" href="https://www.facebook.com/JuntsCabrils/" target="_blank" rel="noopener noreferrer">
+      
+      <a class="boto" href="#" onclick="obreFacebook(); return false;">
         <div class="icona">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
         </div>
@@ -258,6 +258,7 @@ h1{
 
 <script>
 
+<script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
@@ -270,24 +271,22 @@ const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
 /* si és iPhone */
 if(isIOS){
-  installButton.style.display="block";
-  installButton.innerHTML="📲 iPhone:<br>Compartir →<br>Afegir a pantalla d'inici";
+  installButton.style.display = "block";
+  installButton.innerHTML = "📲 iPhone:<br>Compartir →<br>Afegir a pantalla d'inici";
 }
 
 /* Android instal·lació automàtica */
-
-window.addEventListener("beforeinstallprompt",(e)=>{
+window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
-  deferredPrompt=e;
+  deferredPrompt = e;
 
   if(!isIOS){
-    installButton.style.display="block";
-    installButton.innerHTML="Instal·la l'app";
+    installButton.style.display = "block";
+    installButton.innerHTML = "Instal·la l'app";
   }
 });
 
-installButton.addEventListener("click",async ()=>{
-
+installButton.addEventListener("click", async () => {
   if(isIOS){
     alert("Per instal·lar:\n\n1. Prem el botó compartir\n2. Selecciona 'Afegir a pantalla d'inici'");
     return;
@@ -297,15 +296,35 @@ installButton.addEventListener("click",async ()=>{
 
   deferredPrompt.prompt();
 
-  const {outcome}=await deferredPrompt.userChoice;
-  deferredPrompt=null;
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
 
-  if(outcome==="accepted"){
-    installButton.style.display="none";
+  if(outcome === "accepted"){
+    installButton.style.display = "none";
   }
-
 });
 
+function obreInstagram() {
+  const appUrl = "instagram://user?username=juntspercabrils";
+  const webUrl = "https://www.instagram.com/juntspercabrils/";
+
+  window.location.href = appUrl;
+
+  setTimeout(() => {
+    window.location.href = webUrl;
+  }, 900);
+}
+
+function obreFacebook() {
+  const appUrl = "fb://facewebmodal/f?href=https://www.facebook.com/JuntsCabrils/";
+  const webUrl = "https://www.facebook.com/JuntsCabrils/";
+
+  window.location.href = appUrl;
+
+  setTimeout(() => {
+    window.location.href = webUrl;
+  }, 900);
+}
 </script>
 
 </body>
