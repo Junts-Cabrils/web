@@ -1,126 +1,209 @@
 <!DOCTYPE html>
-
 <html lang="ca">
-
 <head>
+  <meta charset="UTF-8">
+  <title>Junts Cabrils</title>
 
-<meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
 
-<title>
-Junts Cabrils
-</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b3a63">
 
-<link
-rel="manifest"
-href="manifest.json"
->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<link
-rel="icon"
-type="image/png"
-sizes="32x32"
-href="favicon.png"
->
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0b3a63 0%, #114d82 100%);
+      color: white;
+      min-height: 100vh;
+    }
 
-<link
-rel="icon"
-type="image/png"
-sizes="192x192"
-href="icona-192.png"
->
+    .app {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 24px 18px 40px;
+    }
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1"
->
+    .capcalera {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
 
+    .logo {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      border-radius: 22px;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.20);
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+      font-size: 2rem;
+      line-height: 1.1;
+    }
+
+    .subtitol {
+      margin: 0;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .bloc {
+      margin-top: 24px;
+    }
+
+    .bloc h2 {
+      font-size: 1.05rem;
+      margin: 0 0 14px;
+      font-weight: bold;
+      opacity: 0.95;
+    }
+
+    .boto {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+      background: white;
+      color: #0b3a63;
+      padding: 18px 18px;
+      margin-bottom: 14px;
+      border-radius: 16px;
+      font-size: 1.08rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .boto:active {
+      transform: scale(0.98);
+    }
+
+    .boto-secundari {
+      background: rgba(255,255,255,0.14);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.20);
+      box-shadow: none;
+    }
+
+    #installButton {
+      display: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .peu {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.92rem;
+      opacity: 0.85;
+    }
+  </style>
 </head>
+<body>
 
-<body
-style="text-align:center;
-font-family:Arial;
-margin-top:40px;"
->
+  <div class="app">
 
-<img
-src="icona-192.png"
-width="140"
-alt="Logo Junts Cabrils"
->
+    <div class="capcalera">
+      <img src="icona-192.png" alt="Logo Junts Cabrils" class="logo">
+      <h1>Junts Cabrils</h1>
+      <p class="subtitol">Informació, actualitat i contacte</p>
+    </div>
 
-<h1>
-Junts Cabrils
-</h1>
+    <div class="bloc">
+      <h2>Accés ràpid</h2>
 
-<p>
-PWA en construcció
-</p>
+      <a class="boto" href="https://junts-cabrils.github.io/web/" target="_blank">
+        Web Junts Cabrils
+      </a>
 
-<button
-id="installBtn"
-style="
-display:none;
-padding:10px 20px;
-font-size:16px;
-"
->
-Instal·la l'app
-</button>
+      <a class="boto" href="https://wa.me/+34676446473" target="_blank">
+        WhatsApp
+      </a>
 
-<script>
+      <a class="boto" href="https://www.instagram.com/jxccabrils" target="_blank">
+        Instagram
+      </a>
 
-if ("serviceWorker" in navigator) {
+      <a class="boto" href="https://www.facebook.com/@JxCCabrils" target="_blank">
+        Facebook
+      </a>
 
-navigator.serviceWorker.register("sw.js");
+      <a class="boto" href="mailto:info@juntspercabrils.cat">
+        Correu
+      </a>
+    </div>
 
-}
+    <div class="bloc">
+      <h2>Properament</h2>
 
-let deferredPrompt;
+      <a class="boto boto-secundari" href="#">
+        Programa electoral
+      </a>
 
-window.addEventListener(
+      <a class="boto boto-secundari" href="#">
+        Notícies
+      </a>
 
-"beforeinstallprompt",
+      <a class="boto boto-secundari" href="#">
+        Convocatòries
+      </a>
+    </div>
 
-(e) => {
+    <div class="bloc">
+      <button id="installButton" class="boto boto-secundari">
+        Instal·la l'app
+      </button>
+    </div>
 
-e.preventDefault();
+    <div class="peu">
+      Versió inicial de l’app
+    </div>
 
-deferredPrompt = e;
+  </div>
 
-document
-.getElementById("installBtn")
-.style.display = "inline-block";
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
 
-}
+    let deferredPrompt;
+    const installButton = document.getElementById("installButton");
 
-);
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installButton.style.display = "block";
+    });
 
-document
-.getElementById("installBtn")
-.addEventListener(
+    installButton.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
 
-"click",
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
 
-async () => {
+      if (outcome === "accepted") {
+        installButton.style.display = "none";
+      }
+    });
 
-if (!deferredPrompt) return;
-
-deferredPrompt.prompt();
-
-await deferredPrompt.userChoice;
-
-deferredPrompt = null;
-
-document
-.getElementById("installBtn")
-.style.display = "none";
-
-}
-
-);
-
-</script>
+    window.addEventListener("appinstalled", () => {
+      installButton.style.display = "none";
+      deferredPrompt = null;
+    });
+  </script>
 
 </body>
-
 </html>
