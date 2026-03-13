@@ -269,37 +269,36 @@ const installButton = document.getElementById("installButton");
 /* detectar iPhone / iPad */
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-/* si és iPhone */
-if(isIOS){
+/* si és iPhone, mostrar ajuda manual */
+if (isIOS) {
   installButton.style.display = "block";
   installButton.innerHTML = "📲 iPhone:<br>Compartir →<br>Afegir a pantalla d'inici";
 }
 
-/* Android instal·lació automàtica */
+/* Android: botó d'instal·lació automàtica */
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  if(!isIOS){
+  if (!isIOS) {
     installButton.style.display = "block";
     installButton.innerHTML = "Instal·la l'app";
   }
 });
 
 installButton.addEventListener("click", async () => {
-  if(isIOS){
-    alert("Per instal·lar:\n\n1. Prem el botó compartir\n2. Selecciona 'Afegir a pantalla d'inici'");
+  if (isIOS) {
+    alert("Per instal·lar a iPhone:\n\n1. Prem el botó Compartir\n2. Selecciona 'Afegir a pantalla d'inici'");
     return;
   }
 
-  if(!deferredPrompt) return;
+  if (!deferredPrompt) return;
 
   deferredPrompt.prompt();
-
   const { outcome } = await deferredPrompt.userChoice;
   deferredPrompt = null;
 
-  if(outcome === "accepted"){
+  if (outcome === "accepted") {
     installButton.style.display = "none";
   }
 });
