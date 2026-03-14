@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-
 <meta charset="UTF-8">
 <title>Junts Cabrils</title>
 
@@ -16,10 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
 
 <link rel="apple-touch-icon" href="icona-192.png">
-
-<meta name="apple-mobile-web-app-capable" content="yes">  
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#163B65">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
 <style>
 *{
@@ -112,6 +108,10 @@ h1{
   transform:scale(0.96);
 }
 
+.boto-marta{
+  height:140px;
+}
+
 .icona{
   width:48px;
   height:48px;
@@ -121,34 +121,28 @@ h1{
   align-items:center;
   justify-content:center;
   margin-bottom:8px;
+  overflow:hidden;
 }
-.boto-marta{
-  height:140px;
-}
+
 .icona img{
   width:24px;
   height:24px;
   filter:invert(1);
 }
-<a class="boto boto-marta" href="marta.html">
-  <div class="icona icona-marta">
-    <img src="marta.png" alt="Marta Gómez">
-  </div>
-  <span class="marta">MARTA GÓMEZ<br>CANDIDATA A L'ALCALDIA</span>
-</a>
-}
+
 .icona-marta{
   width:90px;
   height:90px;
   background:none;
-  overflow:hidden;
 }
-  .icona-marta img{
+
+.icona-marta img{
   width:100%;
   height:100%;
   object-fit:cover;
   filter:none;
 }
+
 .text{
   font-size:14px;
 }
@@ -167,6 +161,10 @@ h1{
     height:100px;
   }
 
+  .boto-marta{
+    height:130px;
+  }
+
   .text{
     font-size:13px;
   }
@@ -183,6 +181,16 @@ h1{
   .icona img{
     width:20px;
     height:20px;
+  }
+
+  .icona-marta{
+    width:78px;
+    height:78px;
+  }
+
+  .icona-marta img{
+    width:100%;
+    height:100%;
   }
 }
 </style>
@@ -225,7 +233,7 @@ h1{
         </div>
         <span class="text">INSTAGRAM</span>
       </a>
-            
+
       <a class="boto" href="#" onclick="obreFacebook(); return false;">
         <div class="icona">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
@@ -244,13 +252,13 @@ h1{
 
     <div class="columna">
 
-     <a class="boto" href="marta.html">
-    <div class="icona icona-marta">
-    <img src="marta.png" alt="Marta Gómez">
-    </div>
-    <span class="marta">MARTA GÓMEZ<br>CANDIDATA A L'ALCALDIA</span>
-    </a>
-      
+      <a class="boto boto-marta" href="marta.html">
+        <div class="icona icona-marta">
+          <img src="marta.png" alt="Marta Gómez">
+        </div>
+        <span class="marta">MARTA GÓMEZ<br>CANDIDATA A L'ALCALDIA</span>
+      </a>
+
       <a class="boto placeholder" href="noticies.html">
         <div class="icona">
           <img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png" alt="Notícies">
@@ -267,7 +275,7 @@ h1{
 
       <a class="boto placeholder" href="informacio.html">
         <div class="icona">
-          <img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png" alt="Informacio">
+          <img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png" alt="Informació">
         </div>
         <span class="text">INFORMACIÓ<br>LOCAL</span>
       </a>
@@ -335,5 +343,6 @@ function obreFacebook() {
   window.open("https://www.facebook.com/JuntsCabrils/", "_blank", "noopener,noreferrer");
 }
 </script>
+
 </body>
 </html>
