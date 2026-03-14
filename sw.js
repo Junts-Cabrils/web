@@ -1,9 +1,15 @@
-const CACHE_NAME = "junts-cabrils-v18";
+const CACHE_NAME = "junts-cabrils-v19";
 
-const URLS_TO_CACHE = [
+const urlsToCache = [
   "/web/",
   "/web/index.html",
   "/web/marta.html",
+  "/web/noticies.html",
+  "/web/convocatories.html",
+  "/web/informacio.html",
+  "/web/presentacio.html",
+  "/web/programa.html",
+  "/web/PROGRAMA23.pdf",
   "/web/manifest.json",
   "/web/favicon.png",
   "/web/icona-192.png",
