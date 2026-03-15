@@ -48,7 +48,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   const requestUrl = new URL(event.request.url);
-
+  if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") return;
   if (requestUrl.origin === location.origin) {
     event.respondWith(
       fetch(event.request)
