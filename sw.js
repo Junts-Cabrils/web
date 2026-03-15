@@ -1,76 +1,120 @@
-const CACHE_NAME = "junts-cabrils-v35";
+const CACHE_NAME = "junts-cabrils-v40";
 
 const urlsToCache = [
-  "/web/",
-  "/web/index.html",
-  "/web/marta.html",
-  "/web/noticies.html",
-  "/web/convocatories.html",
-  "/web/informacio.html",
-  "/web/presentacio.html",
-  "/web/programa.html",
-  "/web/PROGRAMA23.pdf",
-  "/web/manifest.json",
-  "/web/favicon.png",
-  "/web/icona-192.png",
-  "/web/icona-512.png",
-  "/web/marta.png",
-  "/web/equip.html"
+
+"/web/",
+"/web/index.html",
+"/web/marta.html",
+"/web/noticies.html",
+"/web/convocatories.html",
+"/web/informacio.html",
+"/web/presentacio.html",
+"/web/programa.html",
+"/web/equip.html",
+
+"/web/PROGRAMA23.pdf",
+
+"/web/manifest.json",
+"/web/favicon.png",
+"/web/icona-192.png",
+"/web/icona-512.png",
+
+"/web/marta.png"
+
 ];
 
+
+
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    })
-  );
-  self.skipWaiting();
+
+self.skipWaiting();
+
+event.waitUntil(
+
+caches.open(CACHE_NAME)
+
+.then((cache) => {
+
+return cache.addAll(urlsToCache);
+
+})
+
+);
+
 });
+
+
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-  self.clients.claim();
+
+self.clients.claim();
+
+event.waitUntil(
+
+caches.keys().then((cacheNames) => {
+
+return Promise.all(
+
+cacheNames.map((cacheName) => {
+
+if (cacheName !== CACHE_NAME) {
+
+return caches.delete(cacheName);
+
+}
+
+})
+
+);
+
+})
+
+);
+
 });
 
+
+
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") {
-    return;
-  }
 
-  const requestUrl = new URL(event.request.url);
-  if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") return;
-  if (requestUrl.origin === location.origin) {
-    event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-          return networkResponse;
-        })
-        .catch(() => {
-          return caches.match(event.request).then((cachedResponse) => {
-            return cachedResponse || caches.match("/web/index.html");
-          });
-        })
-    );
-    return;
-  }
+const requestUrl = new URL(event.request.url);
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
+
+
+if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") return;
+
+
+
+event.respondWith(
+
+caches.match(event.request)
+
+.then((response) => {
+
+if (response) {
+
+return response;
+
+}
+
+
+
+return fetch(event.request)
+
+.then((networkResponse) => {
+
+return caches.open(CACHE_NAME).then((cache) => {
+
+cache.put(event.request, networkResponse.clone());
+
+return networkResponse;
+
+});
+
+});
+
+})
+
+);
+
 });
