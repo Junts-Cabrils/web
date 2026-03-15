@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
+
 <meta charset="UTF-8">
 <title>Marta Gómez</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#163B65">
 
+<link rel="manifest" href="manifest.json">
+
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
 
+<link rel="apple-touch-icon" href="icona-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -120,6 +127,7 @@ body{
 }
 
 @media (max-width:520px){
+
   .foto-marta-gran{
     width:150px;
     height:150px;
@@ -157,7 +165,9 @@ body{
   .text{
     font-size:13px;
   }
+
 }
+
 </style>
 </head>
 
@@ -165,61 +175,67 @@ body{
 
 <div class="app">
 
-  <a href="index.html" class="boto-tornar">← Tornar</a>
+<a href="index.html" class="boto-tornar">← Tornar</a>
 
-  <div class="cap-marta">
-    <img src="marta.png" alt="Marta Gómez" class="foto-marta-gran">
-    <h1 class="nom">Marta Gómez</h1>
-    <p class="subtitol">Candidata a l'Alcaldia</p>
-  </div>
+<div class="cap-marta">
+<img src="marta.png" alt="Marta Gómez" class="foto-marta-gran">
+<h1 class="nom">Marta Gómez</h1>
+<p class="subtitol">Candidata a l'Alcaldia</p>
+</div>
 
-  <div class="grid">
+<div class="grid">
 
-    <a class="caixa" href="presentacio.html">
-      <div class="icona">
-        <img src="https://cdn-icons-png.flaticon.com/512/2910/2910768.png" alt="Presentació">
-      </div>
-      <span class="text">PRESENTACIÓ</span>
-    </a>
+<a class="caixa" href="presentacio.html">
+<div class="icona">
+<img src="https://cdn-icons-png.flaticon.com/512/2910/2910768.png">
+</div>
+<span class="text">PRESENTACIÓ</span>
+</a>
 
-    <a class="caixa" href="programa.html">
-      <div class="icona">
-        <img src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png" alt="Programa">
-      </div>
-      <span class="text">PROGRAMA</span>
-    </a>
+<a class="caixa" href="programa.html">
+<div class="icona">
+<img src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png">
+</div>
+<span class="text">PROGRAMA</span>
+</a>
 
-    <a class="caixa" href="noticies.html">
-      <div class="icona">
-        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png" alt="Notícies">
-      </div>
-      <span class="text">NOTÍCIES</span>
-    </a>
+<a class="caixa" href="noticies.html">
+<div class="icona">
+<img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png">
+</div>
+<span class="text">NOTÍCIES</span>
+</a>
 
-    <a class="caixa" href="convocatories.html">
-      <div class="icona">
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" alt="Convocatòries">
-      </div>
-      <span class="text">CONVOCATÒRIES</span>
-    </a>
+<a class="caixa" href="convocatories.html">
+<div class="icona">
+<img src="https://cdn-icons-png.flaticon.com/512/747/747310.png">
+</div>
+<span class="text">CONVOCATÒRIES</span>
+</a>
 
-    <a class="caixa" href="informacio.html">
-      <div class="icona">
-        <img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png" alt="Informació local">
-      </div>
-      <span class="text">INFORMACIÓ<br>LOCAL</span>
-    </a>
+<a class="caixa" href="informacio.html">
+<div class="icona">
+<img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png">
+</div>
+<span class="text">INFORMACIÓ<br>LOCAL</span>
+</a>
 
-    <a class="caixa" href="mailto:info@juntspercabrils.cat">
-      <div class="icona">
-        <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Contacte">
-      </div>
-      <span class="text">CONTACTE</span>
-    </a>
-
-  </div>
+<a class="caixa" href="mailto:info@juntspercabrils.cat">
+<div class="icona">
+<img src="https://cdn-icons-png.flaticon.com/512/561/561127.png">
+</div>
+<span class="text">CONTACTE</span>
+</a>
 
 </div>
+
+</div>
+
+<script>
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("sw.js");
+}
+</script>
 
 </body>
 </html>
