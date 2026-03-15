@@ -13,16 +13,15 @@ const urlsToCache = [
   "/web/manifest.json",
   "/web/favicon.png",
   "/web/icona-192.png",
-  "/web/icona-512.png"
+  "/web/icona-512.png",
+  "/web/marta.png",
+  "/web/equip.html"
 ];
-self.skipWaiting();
-
-self.clients.claim();
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(URLS_TO_CACHE);
+      return cache.addAll(urlsToCache);
     })
   );
   self.skipWaiting();
@@ -44,11 +43,11 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  const requestUrl = new URL(event.request.url);
-
   if (event.request.method !== "GET") {
     return;
   }
+
+  const requestUrl = new URL(event.request.url);
 
   if (requestUrl.origin === location.origin) {
     event.respondWith(
