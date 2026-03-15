@@ -15,6 +15,9 @@ const urlsToCache = [
   "/web/icona-192.png",
   "/web/icona-512.png"
 ];
+self.skipWaiting();
+
+self.clients.claim();
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
