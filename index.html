@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <title>Junts Cabrils</title>
 
 <link rel="manifest" href="manifest.json">
@@ -29,7 +28,7 @@ background:#163B65;
 }
 
 .container{
-max-width:1000px;
+max-width:900px;
 margin:auto;
 padding:20px;
 }
@@ -43,22 +42,28 @@ gap:16px;
 .box{
 background:white;
 border-radius:18px;
-padding:20px;
+padding:18px;
 text-align:center;
 text-decoration:none;
 color:#163B65;
 font-weight:bold;
-font-size:18px;
+font-size:16px;
 box-shadow:0 4px 10px rgba(0,0,0,0.2);
 }
 
 .box img{
-width:100%;
-border-radius:14px;
+width:60px;
+margin-bottom:10px;
 }
 
 .marta{
 grid-row:span 2;
+}
+
+.marta img{
+width:100%;
+border-radius:12px;
+margin-bottom:10px;
 }
 
 @media (max-width:700px){
@@ -80,41 +85,48 @@ grid-template-columns:1fr 1fr;
 <div class="grid">
 
 <a class="box" href="https://junts-cabrils.cat">
-WEB
+<img src="web.png">
+<br>WEB
 </a>
 
 <a class="box marta" href="marta.html">
 <img src="marta.png">
-<br><br>
-MARTA GÓMEZ
+<br>MARTA GÓMEZ
 </a>
 
-<a class="box" href="https://wa.me/34676446473">
-WHATSAPP
+<a class="box" href="https://wa.me/XXXXXXXXX">
+<img src="whatsapp.png">
+<br>WHATSAPP
 </a>
 
 <a class="box" href="noticies.html">
-NOTÍCIES / CONVOCATÒRIES
+<img src="noticies.png">
+<br>NOTÍCIES / CONVOCATÒRIES
 </a>
 
-<a class="box" href="https://instagram.com/juntspercabrils/">
-INSTAGRAM
+<a class="box" href="https://instagram.com/XXXXXXXX">
+<img src="instagram.png">
+<br>INSTAGRAM
 </a>
 
 <a class="box" href="informacio.html">
-INFORMACIÓ LOCAL
+<img src="informacio.png">
+<br>INFORMACIÓ LOCAL
 </a>
 
-<a class="box" href="https://facebook.com/JuntsCabrils/">
-FACEBOOK
+<a class="box" href="https://facebook.com/XXXXXXXX">
+<img src="facebook.png">
+<br>FACEBOOK
 </a>
 
-<a class="box" href="mailto:info@juntspercabrils.cat">
-CORREU
+<a class="box" href="mailto:XXXXX@XXXXX.cat">
+<img src="correu.png">
+<br>CORREU
 </a>
 
-<a class="box" href="https://youtube.com/@JuntsperCabrils">
-YOUTUBE
+<a class="box" href="https://youtube.com/@XXXXXXXX">
+<img src="youtube.png">
+<br>YOUTUBE
 </a>
 
 </div>
@@ -130,5 +142,4 @@ navigator.serviceWorker.register("sw.js");
 </script>
 
 </body>
-
 </html>
