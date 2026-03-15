@@ -20,151 +20,151 @@
 <style>
 
 *{
-  box-sizing:border-box;
+box-sizing:border-box;
 }
 
 body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:rgb(22,59,101);
-  color:white;
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:rgb(22,59,101);
+color:white;
 }
 
 .app{
-  max-width:700px;
-  margin:auto;
-  padding:18px 16px 30px 16px;
+max-width:700px;
+margin:auto;
+padding:18px 16px 30px 16px;
 }
 
 .boto-tornar{
-  display:inline-block;
-  background:white;
-  color:#163B65;
-  text-decoration:none;
-  font-weight:bold;
-  padding:10px 16px;
-  border-radius:12px;
-  margin-bottom:18px;
+display:inline-block;
+background:white;
+color:#163B65;
+text-decoration:none;
+font-weight:bold;
+padding:10px 16px;
+border-radius:12px;
+margin-bottom:18px;
 }
 
 .cap-marta{
-  text-align:center;
-  margin-bottom:22px;
+text-align:center;
+margin-bottom:22px;
 }
 
 .foto-marta-gran{
-  width:170px;
-  height:170px;
-  border-radius:50%;
-  object-fit:cover;
-  display:block;
-  margin:0 auto 14px auto;
-  border:4px solid rgba(255,255,255,0.18);
-  background:white;
+width:170px;
+height:170px;
+border-radius:50%;
+object-fit:cover;
+display:block;
+margin:0 auto 14px auto;
+border:4px solid rgba(255,255,255,0.18);
+background:white;
 }
 
 .nom{
-  margin:0 0 6px 0;
-  font-size:30px;
-  line-height:1.1;
+margin:0 0 6px 0;
+font-size:30px;
+line-height:1.1;
 }
 
 .subtitol{
-  margin:0;
-  font-size:18px;
-  font-weight:bold;
-  opacity:0.95;
+margin:0;
+font-size:18px;
+font-weight:bold;
+opacity:0.95;
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:12px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:12px;
 }
 
 .caixa{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  min-height:118px;
-  background:white;
-  color:#0b3a63;
-  text-decoration:none;
-  text-align:center;
-  border-radius:16px;
-  padding:14px 10px;
-  font-weight:bold;
-  box-shadow:0 6px 16px rgba(0,0,0,0.2);
-  line-height:1.2;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+min-height:118px;
+background:white;
+color:#0b3a63;
+text-decoration:none;
+text-align:center;
+border-radius:16px;
+padding:14px 10px;
+font-weight:bold;
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+line-height:1.2;
 }
 
 .caixa:active{
-  transform:scale(0.97);
+transform:scale(0.97);
 }
 
 .icona{
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  background:rgb(22,59,101);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:10px;
-  overflow:hidden;
+width:50px;
+height:50px;
+border-radius:50%;
+background:rgb(22,59,101);
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:10px;
+overflow:hidden;
 }
 
 .icona img{
-  width:24px;
-  height:24px;
-  filter:invert(1);
+width:24px;
+height:24px;
+filter:invert(1);
 }
 
 .text{
-  font-size:14px;
+font-size:14px;
 }
 
 @media (max-width:520px){
 
-  .foto-marta-gran{
-    width:150px;
-    height:150px;
-  }
+.foto-marta-gran{
+width:150px;
+height:150px;
+}
 
-  .nom{
-    font-size:26px;
-  }
+.nom{
+font-size:26px;
+}
 
-  .subtitol{
-    font-size:16px;
-  }
+.subtitol{
+font-size:16px;
+}
 
-  .grid{
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-  }
+.grid{
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
 
-  .caixa{
-    min-height:108px;
-    padding:12px 8px;
-  }
+.caixa{
+min-height:108px;
+padding:12px 8px;
+}
 
-  .icona{
-    width:44px;
-    height:44px;
-    margin-bottom:8px;
-  }
+.icona{
+width:44px;
+height:44px;
+margin-bottom:8px;
+}
 
-  .icona img{
-    width:20px;
-    height:20px;
-  }
+.icona img{
+width:20px;
+height:20px;
+}
 
-  .text{
-    font-size:13px;
-  }
+.text{
+font-size:13px;
+}
 
 }
 
@@ -175,56 +175,62 @@ body{
 
 <div class="app">
 
-<a href="index.html" class="boto-tornar">← Tornar</a>
+<a href="index.html" class="boto-tornar">
+← Tornar
+</a>
 
 <div class="cap-marta">
-<img src="marta.png" alt="Marta Gómez" class="foto-marta-gran">
-<h1 class="nom">Marta Gómez</h1>
-<p class="subtitol">Candidata a l'Alcaldia</p>
+
+<img src="marta.png"
+alt="Marta Gómez"
+class="foto-marta-gran">
+
+<h1 class="nom">
+Marta Gómez
+</h1>
+
+<p class="subtitol">
+Candidata a l'Alcaldia
+</p>
+
 </div>
 
 <div class="grid">
 
 <a class="caixa" href="presentacio.html">
+
 <div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/2910/2910768.png">
 </div>
-<span class="text">PRESENTACIÓ</span>
+
+<span class="text">
+PRESENTACIÓ
+</span>
+
 </a>
 
 <a class="caixa" href="programa.html">
+
 <div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png">
 </div>
-<span class="text">PROGRAMA</span>
-</a>
 
-<a class="caixa" href="noticies.html">
-<div class="icona">
-<img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png">
-</div>
-<span class="text">NOTÍCIES</span>
-</a>
+<span class="text">
+PROGRAMA
+</span>
 
-<a class="caixa" href="convocatories.html">
-<div class="icona">
-<img src="https://cdn-icons-png.flaticon.com/512/747/747310.png">
-</div>
-<span class="text">CONVOCATÒRIES</span>
-</a>
-
-<a class="caixa" href="informacio.html">
-<div class="icona">
-<img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png">
-</div>
-<span class="text">INFORMACIÓ<br>LOCAL</span>
 </a>
 
 <a class="caixa" href="mailto:info@juntspercabrils.cat">
+
 <div class="icona">
 <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png">
 </div>
-<span class="text">CONTACTE</span>
+
+<span class="text">
+CONTACTE
+</span>
+
 </a>
 
 </div>
@@ -232,9 +238,11 @@ body{
 </div>
 
 <script>
+
 if ("serviceWorker" in navigator) {
 navigator.serviceWorker.register("sw.js");
 }
+
 </script>
 
 </body>
