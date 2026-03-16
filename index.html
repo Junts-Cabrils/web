@@ -149,6 +149,54 @@ font-size:14px;
 line-height:1.35;
 }
 
+.boto-noticies{
+height:auto;
+min-height:140px;
+align-items:center;
+justify-content:flex-start;
+}
+
+.text-noticies{
+width:100%;
+font-size:12px;
+line-height:1.25;
+}
+
+.titol-boto{
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+#preview-noticies,
+#preview-convocatories{
+display:block;
+width:100%;
+font-weight:normal;
+font-size:12px;
+line-height:1.25;
+color:#444;
+}
+
+#preview-noticies{
+margin-bottom:8px;
+padding-bottom:8px;
+border-bottom:1px solid #ddd;
+}
+
+.mini-titol{
+display:block;
+font-weight:bold;
+margin-bottom:3px;
+color:#0b3a63;
+}
+
+.mini-text{
+display:block;
+color:#555;
+}
+
+  
 .boto-youtube .icona{
 background:var(--color-youtube);
 }
@@ -293,7 +341,7 @@ Candidata a l'Alcaldia
 </a>
 
 
-<a class="boto" href="noticies.html">
+<a class="boto boto-noticies" href="noticies.html">
 
 <div class="icona">
 <svg viewBox="0 0 24 24">
@@ -303,7 +351,11 @@ Candidata a l'Alcaldia
 </svg>
 </div>
 
-<span class="text">NOTÍCIES<br>CONVOCATÒRIES</span>
+<div class="text text-noticies">
+<div class="titol-boto">NOTÍCIES I CONVOCATÒRIES</div>
+<div id="preview-noticies">Carregant notícia...</div>
+<div id="preview-convocatories">Carregant convocatòria...</div>
+</div>
 
 </a>
 
@@ -358,6 +410,121 @@ window.location=web;
 if ("serviceWorker" in navigator) {
 navigator.serviceWorker.register("sw.js");
 }
+
+const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
+const URL_CONVOCATORIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
+
+function parseCSVLine(line){
+let result = [];
+let current = "";
+let insideQuotes = false;
+
+for(let i = 0; i < line.length; i++){
+let char = line[i];
+
+if(char === '"'){
+if(insideQuotes && line[i + 1] === '"'){
+current += '"';
+i++;
+}else{
+insideQuotes = !insideQuotes;
+}
+}else if(char === "," && !insideQuotes){
+result.push(current);
+current = "";
+}else{
+current += char;
+}
+}
+
+result.push(current);
+return result;
+}
+
+function parseCSV(text){
+let lines = text.trim().split(/\r?\n/);
+if(lines.length < 2) return [];
+
+let headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+let rows = [];
+
+for(let i = 1; i < lines.length; i++){
+if(!lines[i].trim()) continue;
+
+let values = parseCSVLine(lines[i]);
+let obj = {};
+
+headers.forEach(function(header, index){
+obj[header] = (values[index] || "").trim();
+});
+
+rows.push(obj);
+}
+
+return rows;
+}
+
+function textCurt(text, max){
+if(!text) return "";
+return text.length > max ? text.substring(0, max) + "..." : text;
+}
+
+async function carregarPreviewNoticies(){
+try{
+const resposta = await fetch(URL_NOTICIES, {cache:"no-store"});
+const csv = await resposta.text();
+let files = parseCSV(csv);
+
+files = files.filter(f => (f.visible || "").toLowerCase() === "si");
+files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+
+if(files.length === 0){
+document.getElementById("preview-noticies").textContent = "No hi ha notícies.";
+return;
+}
+
+let item = files[0];
+
+document.getElementById("preview-noticies").innerHTML =
+'<span class="mini-titol">Notícia: ' + (item.titol || '') + '</span>' +
+'<span class="mini-text">' + textCurt(item.text || '', 55) + '</span>';
+
+}catch(error){
+document.getElementById("preview-noticies").textContent = "No s'ha pogut carregar la notícia.";
+console.error(error);
+}
+}
+
+async function carregarPreviewConvocatories(){
+try{
+const resposta = await fetch(URL_CONVOCATORIES, {cache:"no-store"});
+const csv = await resposta.text();
+let files = parseCSV(csv);
+
+files = files.filter(f => (f.visible || "").toLowerCase() === "si");
+files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+
+if(files.length === 0){
+document.getElementById("preview-convocatories").textContent = "No hi ha convocatòries.";
+return;
+}
+
+let item = files[0];
+let resum = [item.data, item.hora, item.lloc].filter(Boolean).join(" · ");
+if(!resum) resum = item.text || "";
+
+document.getElementById("preview-convocatories").innerHTML =
+'<span class="mini-titol">Convocatòria: ' + (item.titol || '') + '</span>' +
+'<span class="mini-text">' + textCurt(resum, 55) + '</span>';
+
+}catch(error){
+document.getElementById("preview-convocatories").textContent = "No s'ha pogut carregar la convocatòria.";
+console.error(error);
+}
+}
+
+carregarPreviewNoticies();
+carregarPreviewConvocatories();
 
 </script>
 
