@@ -1,4 +1,4 @@
-const CACHE_NAME = "junts-cabrils-v34";
+const CACHE_NAME = "junts-cabrils-v50";
 
 const urlsToCache = [
   "/web/",
