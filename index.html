@@ -533,6 +533,47 @@ console.error(error);
 carregarPreviewNoticies();
 carregarPreviewConvocatories();
 
+const URL_NOTICIES =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
+
+const URL_CONVOCATORIES =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
+
+async function carregarPreview(){
+
+const r1 = await fetch(URL_NOTICIES,{cache:"no-store"});
+const t1 = await r1.text();
+
+const l1 = t1.split("\n");
+
+if(l1.length>1){
+
+const c=l1[1].split(",");
+
+document.getElementById("preview-noticies").innerHTML =
+"<b>"+c[2]+"</b><br>"+(c[3] || "");
+
+}
+
+const r2 = await fetch(URL_CONVOCATORIES,{cache:"no-store"});
+const t2 = await r2.text();
+
+const l2 = t2.split("\n");
+
+if(l2.length>1){
+
+const c=l2[1].split(",");
+
+document.getElementById("preview-convocatories").innerHTML =
+"<b>"+c[2]+"</b><br>"+(c[1] || "");
+
+}
+
+}
+
+carregarPreview();
+
+  
 </script>
 
 </body>
