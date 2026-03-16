@@ -1,50 +1,95 @@
 <!DOCTYPE html>
+
 <html lang="ca">
+
 <head>
 
 <meta charset="UTF-8">
-<title>Noticies</title>
 
-<link rel="manifest" href="manifest.json">
+<title>Notícies</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b3a63">
 
 <style>
 
 body{
+
 margin:0;
+
 font-family:Arial, Helvetica, sans-serif;
-background:#0b3a63;
+
+background:#163B65;
+
 color:white;
+
 }
 
 .app{
-max-width:600px;
+
+max-width:700px;
+
 margin:auto;
-padding:20px;
+
+padding:20px 16px 30px 16px;
+
 }
 
 h1{
+
 text-align:center;
-margin-bottom:25px;
+
+margin-bottom:20px;
+
 }
 
-.contingut{
+#llista-noticies{
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.bloc-noticia{
+
 background:white;
-color:#0b3a63;
-padding:20px;
-border-radius:12px;
-line-height:1.5;
+
+color:#163B65;
+
+border-radius:16px;
+
+padding:16px;
+
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+
 }
 
-.tornar{
-margin-top:25px;
-display:block;
-text-align:center;
-color:white;
-font-weight:bold;
-text-decoration:none;
+.data-noticia{
+
+font-size:13px;
+
+color:#666;
+
+margin-bottom:8px;
+
+}
+
+.bloc-noticia h2{
+
+margin:0 0 8px 0;
+
+font-size:22px;
+
+}
+
+.bloc-noticia p{
+
+margin:0 0 10px 0;
+
+line-height:1.4;
+
 }
 
 </style>
@@ -55,19 +100,67 @@ text-decoration:none;
 
 <div class="app">
 
-<h1>Noticies</h1>
+<h1>Notícies</h1>
 
-<div class="contingut">
-
-<!-- AQUÍ HI POSARÀS EL CONTINGUT -->
-
-<p>Contingut en preparació.</p>
+<div id="llista-noticies">
+Carregant...
+</div>
 
 </div>
 
-<a class="tornar" href="index.html">← Tornar</a>
+<script>
+
+const URL_NOTICIES =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
+
+async function carregarNoticies(){
+
+const resposta = await fetch(URL_NOTICIES,{cache:"no-store"});
+
+const text = await resposta.text();
+
+const files = text.split("\n").slice(1);
+
+let html="";
+
+files.forEach(function(linia){
+
+const camps = linia.split(",");
+
+const visible = camps[0];
+
+const data = camps[1];
+
+const titol = camps[2];
+
+const text = camps[3];
+
+if(visible==="si"){
+
+html += `
+<div class="bloc-noticia">
+
+<div class="data-noticia">${data}</div>
+
+<h2>${titol}</h2>
+
+<p>${text}</p>
 
 </div>
+`;
+
+}
+
+});
+
+document.getElementById("llista-noticies").innerHTML = html;
+
+}
+
+carregarNoticies();
+
+</script>
 
 </body>
+
 </html>
