@@ -149,9 +149,9 @@ font-size:14px;
 line-height:1.35;
 }
 
-..boto-noticies{
+.boto-noticies{
 
-height:358px;
+height:358px !important;
 
 align-items:center;
 
@@ -222,18 +222,6 @@ color:#555;
 background:var(--color-youtube);
 }
 
-<a class="boto" href="mailto:info@juntspercabrils.cat">
-
-<div class="icona">
-<svg viewBox="0 0 24 24">
-<rect x="3" y="5" width="18" height="14" rx="2"/>
-<polyline points="3,7 12,13 21,7"/>
-</svg>
-</div>
-
-<span class="text">CORREU</span>
-
-</a>
   
 @media (max-width:520px){
 
@@ -241,6 +229,12 @@ background:var(--color-youtube);
 height:100px;
 }
 
+.boto-noticies{
+
+height:328px !important;
+
+}
+  
 .boto-marta{
 height:214px;
 padding-top:16px;
@@ -354,7 +348,20 @@ margin-bottom:10px;
 <span class="text">YOUTUBE</span>
 
 </a>
+<a class="boto" href="mailto:info@juntspercabrils.cat">
 
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<rect x="3" y="5" width="18" height="14" rx="2"/>
+<polyline points="3,7 12,13 21,7"/>
+</svg>
+</div>
+
+<span class="text">
+CORREU
+</span>
+
+</a>
 </div>
 
 
@@ -371,6 +378,8 @@ MARTA GÓMEZ
 <br>
 Candidata a l'Alcaldia
 </span>
+
+</a>
 
 <a class="boto boto-noticies" href="noticies.html">
 
@@ -553,46 +562,6 @@ console.error(error);
 
 carregarPreviewNoticies();
 carregarPreviewConvocatories();
-
-const URL_NOTICIES =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
-
-const URL_CONVOCATORIES =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
-
-async function carregarPreview(){
-
-const r1 = await fetch(URL_NOTICIES,{cache:"no-store"});
-const t1 = await r1.text();
-
-const l1 = t1.split("\n");
-
-if(l1.length>1){
-
-const c=l1[1].split(",");
-
-document.getElementById("preview-noticies").innerHTML =
-"<b>"+c[2]+"</b><br>"+(c[3] || "");
-
-}
-
-const r2 = await fetch(URL_CONVOCATORIES,{cache:"no-store"});
-const t2 = await r2.text();
-
-const l2 = t2.split("\n");
-
-if(l2.length>1){
-
-const c=l2[1].split(",");
-
-document.getElementById("preview-convocatories").innerHTML =
-"<b>"+c[2]+"</b><br>"+(c[1] || "");
-
-}
-
-}
-
-carregarPreview();
 
   
 </script>
