@@ -1,35 +1,20 @@
 {
-  "id": "/web/",
   "name": "Junts Cabrils",
   "short_name": "Junts Cabrils",
-  "description": "App de Junts Cabrils",
-
-  "start_url": "/web/",
-  "scope": "/web/",
+  "start_url": "/web/index.html",
   "display": "standalone",
-  "orientation": "portrait",
-
-  "background_color": "#0b3a63",
-  "theme_color": "#0b3a63",
-
+  "background_color": "#163B65",
+  "theme_color": "#163B65",
   "icons": [
     {
-      "src": "icona-192.png",
+      "src": "/web/icona-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "icona-512.png",
+      "src": "/web/icona-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icona-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ]
 }
