@@ -84,7 +84,24 @@ color:#163B65;
 white-space:pre-line;
 }
 
+.img-noticia{
+width:100%;
+border-radius:12px;
+margin-bottom:10px;
+display:block;
+}
 
+.boto-enllac{
+display:inline-block;
+margin-top:10px;
+padding:6px 10px;
+background:#163B65;
+color:white;
+text-decoration:none;
+border-radius:6px;
+font-size:14px;
+font-weight:bold;
+}
   
 </style>
 
@@ -153,6 +170,8 @@ fetch(URL_CONVOCATORIES)
     const idxData = capcalera.indexOf("data");
     const idxTitol = capcalera.indexOf("titol");
     const idxText = capcalera.indexOf("text");
+    const idxImatge = capcalera.indexOf("imatge");
+    const idxEnllac = capcalera.indexOf("enllac");
 
     const convocatories = filesDades
       .filter(f => f[idxVisible] && f[idxVisible].trim().toLowerCase() === "si")
@@ -166,12 +185,20 @@ fetch(URL_CONVOCATORIES)
     }
 
     contenidor.innerHTML = convocatories.map(f => `
-      <div class="targeta">
-        <div class="targeta-data">${formatData(f[idxData])}</div>
-        <div class="targeta-titol">${f[idxTitol] || ""}</div>
-        <div class="targeta-text">${f[idxText] || ""}</div>
-      </div>
-    `).join("");
+    <div class="targeta">
+
+    ${f[idxImatge] ? `<img src="${f[idxImatge].trim()}" class="img-noticia">` : ""}
+
+    <div class="targeta-data">${formatData(f[idxData])}</div>
+
+    <div class="targeta-titol">${f[idxTitol] || ""}</div>
+
+    <div class="targeta-text">${f[idxText] || ""}</div>
+
+    ${f[idxEnllac] ? `<a href="${f[idxEnllac].trim()}" target="_blank" class="boto-enllac">Veure més</a>` : ""}
+
+  </div>
+`).join("");
   })
   .catch(error => {
     document.getElementById("llista-convocatories").innerHTML =
