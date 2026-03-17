@@ -1,505 +1,365 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Junts Cabrils</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#163B65">
-  <meta name="robots" content="noindex">
 
-  <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>Junts per Cabrils</title>
 
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#163B65">
+<meta name="robots" content="noindex">
 
-  <style>
-    *{
-      box-sizing:border-box;
-    }
+<link rel="manifest" href="manifest.json">
 
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:#163B65;
-      color:#163B65;
-    }
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
 
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
+<style>
 
-    .container{
-      max-width:900px;
-      margin:0 auto;
-      padding:16px;
-    }
+:root{
+--color-fons:#163B65;
+--color-caixa:white;
+--color-text:#0b3a63;
+--color-icona-fons:#163B65;
+--color-icona:white;
+--color-youtube:#FF0000;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-    }
+*{
+box-sizing:border-box;
+}
 
-    .tile{
-      background:#fff;
-      border-radius:28px;
-      min-height:220px;
-      padding:22px 18px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.14);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      transition:transform 0.15s ease, box-shadow 0.15s ease;
-    }
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:var(--color-fons);
+color:white;
+}
 
-    .tile:active{
-      transform:scale(0.99);
-    }
+.app{
+max-width:560px;
+margin:auto;
+padding:20px 16px 30px 16px;
+}
 
-    .tile:hover{
-      transform:translateY(-2px);
-      box-shadow:0 10px 24px rgba(0,0,0,0.16);
-    }
+.capcalera{
+text-align:center;
+margin-bottom:18px;
+}
 
-    .tile.double{
-      grid-row:span 2;
-      min-height:456px;
-      justify-content:flex-start;
-      padding-top:34px;
-    }
+.logo{
+width:100px;
+background:white;
+padding:10px;
+border-radius:20px;
+}
 
-    .tile-icon-circle{
-      width:92px;
-      height:92px;
-      border-radius:50%;
-      background:#163B65;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-bottom:18px;
-      overflow:hidden;
-      flex-shrink:0;
-    }
+h1{
+margin:15px 0 5px 0;
+font-size:28px;
+}
 
-    .tile-icon-circle img{
-      width:44px;
-      height:44px;
-      object-fit:contain;
-      display:block;
-    }
+.columnes{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+align-items:start;
+}
 
-    .tile-label{
-      font-size:28px;
-      font-weight:800;
-      line-height:1.15;
-      margin:0;
-      color:#163B65;
-    }
+.columna{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
 
-    .tile-sub{
-      font-size:18px;
-      line-height:1.25;
-      margin:6px 0 0 0;
-      font-weight:700;
-      color:#163B65;
-    }
+.boto{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+height:110px;
+background:var(--color-caixa);
+color:var(--color-text);
+padding:10px;
+border-radius:16px;
+text-decoration:none;
+font-weight:bold;
+text-align:center;
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+line-height:1.2;
+}
 
-    .marta-photo{
-      width:220px;
-      height:220px;
-      border-radius:50%;
-      object-fit:cover;
-      display:block;
-      margin:0 auto 26px auto;
-      background:#eaeaea;
-    }
+.boto:active{
+transform:scale(0.96);
+}
 
-    .preview-tile{
-      background:#fff;
-      border-radius:28px;
-      min-height:220px;
-      padding:22px 20px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.14);
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
-      text-align:center;
-      color:#163B65;
-      transition:transform 0.15s ease, box-shadow 0.15s ease;
-    }
+.boto-marta{
+height:234px;
+justify-content:flex-start;
+padding-top:30px;
+padding-bottom:14px;
+}
 
-    .preview-tile:active{
-      transform:scale(0.99);
-    }
+.icona{
+width:48px;
+height:48px;
+border-radius:50%;
+background:var(--color-icona-fons);
+color:var(--color-icona);
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:8px;
+overflow:hidden;
+}
 
-    .preview-tile:hover{
-      transform:translateY(-2px);
-      box-shadow:0 10px 24px rgba(0,0,0,0.16);
-    }
+svg{
+width:24px;
+height:24px;
+stroke:currentColor;
+fill:none;
+stroke-width:2;
+stroke-linecap:round;
+stroke-linejoin:round;
+}
 
-    .preview-heading{
-      margin:0 0 16px 0;
-      font-size:28px;
-      line-height:1.1;
-      font-weight:800;
-      color:#163B65;
-    }
+.icona-marta{
+width:120px;
+height:120px;
+border-radius:50%;
+overflow:hidden;
+margin-bottom:12px;
+}
 
-    .preview-content{
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
-      align-items:center;
-      gap:10px;
-      flex:1;
-    }
+.icona-marta img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
 
-    .preview-title{
-      margin:0;
-      font-size:18px;
-      line-height:1.22;
-      font-weight:800;
-      color:#163B65;
-      word-break:break-word;
-    }
+.text{
+font-size:14px;
+}
 
-    .preview-text{
-      margin:0;
-      font-size:16px;
-      line-height:1.35;
-      color:#4b4b4b;
-      word-break:break-word;
-    }
+.text-marta{
+font-size:14px;
+line-height:1.35;
+}
 
-    .preview-date{
-      margin-top:auto;
-      padding-top:10px;
-      font-size:16px;
-      line-height:1.2;
-      color:#666;
-    }
+.boto-noticies{
+height:172px !important;
+align-items:center;
+justify-content:flex-start;
+padding-top:16px;
+padding-bottom:14px;
+overflow:hidden;
+}
 
-    .loading{
-      font-size:18px;
-      color:#666;
-    }
+.text-noticies{
+width:100%;
+font-size:12px;
+line-height:1.2;
+}
 
-    @media (max-width: 700px){
-      .container{
-        padding:14px;
-      }
+.titol-boto{
+font-size:14px;
+font-weight:bold;
+margin-bottom:10px;
+}
 
-      .grid{
-        gap:14px;
-      }
+#preview-noticies,
+#preview-convocatories{
+display:block;
+width:100%;
+font-weight:normal;
+font-size:12px;
+line-height:1.25;
+color:#444;
+}
 
-      .tile,
-      .preview-tile{
-        min-height:190px;
-        border-radius:24px;
-      }
+#preview-noticies{
+margin-bottom:10px;
+padding-bottom:10px;
+border-bottom:1px solid #ddd;
+}
 
-      .tile.double{
-        min-height:394px;
-        padding-top:26px;
-      }
+.mini-titol{
+display:block;
+font-weight:bold;
+margin-bottom:3px;
+color:#0b3a63;
+}
 
-      .tile-icon-circle{
-        width:82px;
-        height:82px;
-        margin-bottom:16px;
-      }
+.mini-text{
+display:block;
+color:#555;
+}
 
-      .tile-icon-circle img{
-        width:40px;
-        height:40px;
-      }
+.boto-youtube .icona{
+background:var(--color-youtube);
+}
 
-      .marta-photo{
-        width:170px;
-        height:170px;
-        margin-bottom:22px;
-      }
+@media (max-width:520px){
 
-      .tile-label,
-      .preview-heading{
-        font-size:24px;
-      }
+.boto{
+height:100px;
+}
 
-      .tile-sub{
-        font-size:16px;
-      }
+.boto-noticies{
+height:158px !important;
+padding-top:14px;
+}
 
-      .preview-title{
-        font-size:16px;
-      }
+.boto-marta{
+height:214px;
+padding-top:16px;
+}
 
-      .preview-text,
-      .preview-date{
-        font-size:15px;
-      }
-    }
-  </style>
+.text{
+font-size:13px;
+}
+
+.text-marta{
+font-size:13px;
+}
+
+.icona{
+width:42px;
+height:42px;
+}
+
+svg{
+width:20px;
+height:20px;
+}
+
+.icona-marta{
+width:104px;
+height:104px;
+margin-bottom:10px;
+}
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-  <div class="container">
-    <div class="grid">
+<div class="app">
 
-      <a class="tile" href="https://junts-cabrils.github.io/web/" target="_blank" rel="noopener noreferrer">
-        <div class="tile-icon-circle">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/world.svg" alt="Web">
-        </div>
-        <p class="tile-label">WEB</p>
-      </a>
+<div class="capcalera">
+<img class="logo" src="icona-192.png">
+<h1>Junts per Cabrils</h1>
+</div>
 
-      <a class="tile double" href="marta.html">
-        <img class="marta-photo" src="marta.png" alt="Marta Gómez" onerror="this.style.display='none'">
-        <p class="tile-label">MARTA GÓMEZ</p>
-        <p class="tile-sub">Candidata a l'Alcaldia</p>
-      </a>
+<div class="columnes">
 
-      <a class="tile" href="https://wa.me/34676446473?text=ALTA" target="_blank" rel="noopener noreferrer">
-        <div class="tile-icon-circle">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/brand-whatsapp.svg" alt="WhatsApp">
-        </div>
-        <p class="tile-label">WHATSAPP</p>
-        <p class="tile-sub">ENVIA "ALTA"</p>
-      </a>
+<div class="columna">
 
-      <a class="tile" href="https://www.instagram.com/juntspercabrils/" target="_blank" rel="noopener noreferrer">
-        <div class="tile-icon-circle">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/brand-instagram.svg" alt="Instagram">
-        </div>
-        <p class="tile-label">INSTAGRAM</p>
-      </a>
+<a class="boto" href="https://www.juntspercabrils.cat" target="_blank">
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"/>
+<line x1="3" y1="12" x2="21" y2="12"/>
+</svg>
+</div>
+<span class="text">WEB</span>
+</a>
 
-      <a class="preview-tile" id="preview-noticia" href="noticies.html">
-        <p class="loading">Carregant notícies...</p>
-      </a>
+<a class="boto" href="https://wa.me/34676446473?text=ALTA" target="_blank">
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<path d="M20 11.5A8.5 8.5 0 0 1 7.5 19L4 20l1-3.2A8.5 8.5 0 1 1 20 11.5z"/>
+</svg>
+</div>
+<span class="text">WHATSAPP<br>ENVIA "ALTA"</span>
+</a>
 
-      <a class="tile" href="https://www.facebook.com/JuntsCabrils/" target="_blank" rel="noopener noreferrer">
-        <div class="tile-icon-circle">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/brand-facebook.svg" alt="Facebook">
-        </div>
-        <p class="tile-label">FACEBOOK</p>
-      </a>
+<a class="boto" href="#" onclick="obreInstagram(); return false;">
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<rect x="4" y="4" width="16" height="16" rx="4"/>
+<circle cx="12" cy="12" r="3"/>
+</svg>
+</div>
+<span class="text">INSTAGRAM</span>
+</a>
 
-      <a class="preview-tile" id="preview-agenda" href="convocatories.html">
-        <p class="loading">Carregant agenda...</p>
-      </a>
+<a class="boto" href="https://facebook.com/JuntsCabrils/" target="_blank">
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<path d="M13 22v-8h3l1-4h-4V7c0-1 .4-2 2-2h2V1h-3c-4 0-6 2-6 5v4H5v4h3v8z"/>
+</svg>
+</div>
+<span class="text">FACEBOOK</span>
+</a>
 
-      <a class="tile" href="https://www.youtube.com/@JuntsperCabrils" target="_blank" rel="noopener noreferrer">
-        <div class="tile-icon-circle" style="background:#ff0000;">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/brand-youtube.svg" alt="YouTube">
-        </div>
-        <p class="tile-label">YOUTUBE</p>
-      </a>
+<a class="boto boto-youtube" href="https://youtube.com/@JuntsperCabrils" target="_blank">
+<div class="icona">
+<svg viewBox="0 0 24 24" fill="white" stroke="none">
+<polygon points="10,8 16,12 10,16"/>
+</svg>
+</div>
+<span class="text">YOUTUBE</span>
+</a>
 
-      <a class="tile" href="mailto:info@juntspercabrils.cat">
-        <div class="tile-icon-circle">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/mail.svg" alt="Correu">
-        </div>
-        <p class="tile-label">CORREU</p>
-      </a>
+<a class="boto" href="mailto:info@juntspercabrils.cat">
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<rect x="3" y="5" width="18" height="14" rx="2"/>
+<polyline points="3,7 12,13 21,7"/>
+</svg>
+</div>
+<span class="text">CORREU</span>
+</a>
 
-      <a class="tile" href="informacio.html">
-        <div class="tile-icon-circle">
-          <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/map-pin.svg" alt="Informació local">
-        </div>
-        <p class="tile-label">INFORMACIÓ LOCAL</p>
-      </a>
+</div>
 
-    </div>
-  </div>
+<div class="columna">
 
-  <script>
-    const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
-    const URL_AGENDA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
+<a class="boto boto-marta" href="marta.html">
+<div class="icona-marta">
+<img src="marta.png">
+</div>
+<span class="text-marta">
+MARTA GÓMEZ<br>
+Candidata a l'Alcaldia
+</span>
+</a>
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
+<a class="boto boto-noticies" href="noticies.html">
+<div class="text text-noticies">
+<div class="titol-boto">NOTÍCIES</div>
+<div id="preview-noticies">Carregant notícia...</div>
+</div>
+</a>
 
-    function parseCSV(text) {
-      const rows = [];
-      let row = [];
-      let current = "";
-      let inQuotes = false;
+<a class="boto boto-noticies" href="convocatories.html">
+<div class="text text-noticies">
+<div class="titol-boto">AGENDA</div>
+<div id="preview-convocatories">Carregant convocatòria...</div>
+</div>
+</a>
 
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const next = text[i + 1];
+<a class="boto" href="informacio.html">
+<div class="icona">
+<svg viewBox="0 0 24 24">
+<path d="M12 21s-6-6-6-10a6 6 0 1 1 12 0c0 4-6 10-6 10z"/>
+</svg>
+</div>
+<span class="text">INFORMACIÓ LOCAL</span>
+</a>
 
-        if (char === '"') {
-          if (inQuotes && next === '"') {
-            current += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (char === ',' && !inQuotes) {
-          row.push(current);
-          current = "";
-        } else if ((char === '\n' || char === '\r') && !inQuotes) {
-          if (char === '\r' && next === '\n') i++;
-          row.push(current);
-          if (row.some(cell => cell.trim() !== "")) rows.push(row);
-          row = [];
-          current = "";
-        } else {
-          current += char;
-        }
-      }
+</div>
 
-      if (current.length > 0 || row.length > 0) {
-        row.push(current);
-        if (row.some(cell => cell.trim() !== "")) rows.push(row);
-      }
+</div>
 
-      return rows;
-    }
+</div>
 
-    function csvToObjects(csvText) {
-      const rows = parseCSV(csvText);
-      if (!rows.length) return [];
-
-      const headers = rows[0].map(h => h.trim().toLowerCase());
-
-      return rows.slice(1).map(row => {
-        const obj = {};
-        headers.forEach((header, index) => {
-          obj[header] = (row[index] || "").trim();
-        });
-        return obj;
-      });
-    }
-
-    function parseDateDMY(str) {
-      if (!str) return new Date(0);
-
-      const s = str.trim();
-
-      if (/^\d{2}-\d{2}-\d{4}$/.test(s)) {
-        const [d, m, y] = s.split("-");
-        return new Date(Number(y), Number(m) - 1, Number(d));
-      }
-
-      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-        const [y, m, d] = s.split("-");
-        return new Date(Number(y), Number(m) - 1, Number(d));
-      }
-
-      return new Date(s);
-    }
-
-    function visibles(items) {
-      return items.filter(item => (item.visible || "").trim().toLowerCase() === "si");
-    }
-
-    function renderPreviewNoticia(item) {
-      const box = document.getElementById("preview-noticia");
-      if (!box) return;
-
-      const titol = item.titol || "";
-      const text = item.text || "";
-
-      box.innerHTML = `
-        <h2 class="preview-heading">NOTÍCIES</h2>
-        <div class="preview-content">
-          ${titol ? `<p class="preview-title">${escapeHtml(titol)}</p>` : ""}
-          ${text ? `<p class="preview-text">${escapeHtml(text)}</p>` : ""}
-        </div>
-      `;
-    }
-
-    function renderPreviewAgenda(item) {
-      const box = document.getElementById("preview-agenda");
-      if (!box) return;
-
-      const titol = item.titol || "";
-      const text = item.text || "";
-      const data = item.data || "";
-
-      box.innerHTML = `
-        <h2 class="preview-heading">AGENDA</h2>
-        <div class="preview-content">
-          ${titol ? `<p class="preview-title">${escapeHtml(titol)}</p>` : ""}
-          ${text ? `<p class="preview-text">${escapeHtml(text)}</p>` : ""}
-          ${data ? `<p class="preview-date">${escapeHtml(data)}</p>` : ""}
-        </div>
-      `;
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    async function carregaNoticiaPortada() {
-      try {
-        const res = await fetch(URL_NOTICIES);
-        const csv = await res.text();
-        const items = visibles(csvToObjects(csv))
-          .sort((a, b) => parseDateDMY(b.data) - parseDateDMY(a.data));
-
-        if (items.length) {
-          renderPreviewNoticia(items[0]);
-        } else {
-          document.getElementById("preview-noticia").innerHTML = `
-            <h2 class="preview-heading">NOTÍCIES</h2>
-            <div class="preview-content">
-              <p class="preview-text">No hi ha notícies disponibles.</p>
-            </div>
-          `;
-        }
-      } catch (e) {
-        document.getElementById("preview-noticia").innerHTML = `
-          <h2 class="preview-heading">NOTÍCIES</h2>
-          <div class="preview-content">
-            <p class="preview-text">No s'han pogut carregar les notícies.</p>
-          </div>
-        `;
-      }
-    }
-
-    async function carregaAgendaPortada() {
-      try {
-        const res = await fetch(URL_AGENDA);
-        const csv = await res.text();
-        const items = visibles(csvToObjects(csv))
-          .sort((a, b) => parseDateDMY(a.data) - parseDateDMY(b.data));
-
-        if (items.length) {
-          renderPreviewAgenda(items[0]);
-        } else {
-          document.getElementById("preview-agenda").innerHTML = `
-            <h2 class="preview-heading">AGENDA</h2>
-            <div class="preview-content">
-              <p class="preview-text">No hi ha convocatòries disponibles.</p>
-            </div>
-          `;
-        }
-      } catch (e) {
-        document.getElementById("preview-agenda").innerHTML = `
-          <h2 class="preview-heading">AGENDA</h2>
-          <div class="preview-content">
-            <p class="preview-text">No s'ha pogut carregar l'agenda.</p>
-          </div>
-        `;
-      }
-    }
-
-    carregaNoticiaPortada();
-    carregaAgendaPortada();
-  </script>
 </body>
 </html>
