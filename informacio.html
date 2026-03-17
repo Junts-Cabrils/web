@@ -77,6 +77,37 @@ text-decoration:none;
 font-weight:bold;
 }
 
+.barra-superior{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+background:#163B65;
+color:white;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.boto-tornar{
+color:white;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+line-height:1;
+display:inline-block;
+padding:2px 4px;
+}
+
+.titol-pagina{
+font-size:18px;
+font-weight:bold;
+letter-spacing:0.3px;
+color:white;
+}
+
+
+  
 </style>
 
 </head>
@@ -89,8 +120,6 @@ font-weight:bold;
   <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
   <div class="titol-pagina">INFORMACIÓ CABRILS</div>
 </div>
-
-<h1 class="titol">Informació Cabrils</h1>
 
 <div class="caixa">
 <iframe src="informacio_cabrils.pdf"></iframe>
