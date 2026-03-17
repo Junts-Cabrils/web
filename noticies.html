@@ -147,6 +147,26 @@ line-height:1.45;
 color:#374151;
 white-space:pre-line;
 }
+
+.img-noticia{
+width:100%;
+border-radius:12px;
+margin-bottom:10px;
+display:block;
+}
+
+.boto-enllac{
+display:inline-block;
+margin-top:10px;
+padding:6px 10px;
+background:#163B65;
+color:white;
+text-decoration:none;
+border-radius:6px;
+font-size:14px;
+font-weight:bold;
+}  
+  
 </style>
 
 </head>
@@ -185,6 +205,12 @@ files.forEach(function(linia){
 
 const camps = linia.split(",");
 
+const data = camps[1];
+const titol = camps[2];
+const textNoticia = camps[3];
+const imatge = camps[4];
+const enllac = camps[5];
+
 const visible = camps[0];
 
 const data = camps[1];
@@ -193,20 +219,23 @@ const titol = camps[2];
 
 const text = camps[3];
 
-if(visible==="si"){
+if(visible.trim().toLowerCase() === "si"){
 
 html += `
-<div class="bloc-noticia">
+<div class="targeta">
 
-<div class="data-noticia">${data}</div>
+  ${imatge ? `<img src="${imatge.trim()}" class="img-noticia">` : ""}
 
-<h2>${titol}</h2>
+  <div class="targeta-data">${data ? data.trim() : ""}</div>
 
-<p>${text}</p>
+  <div class="targeta-titol">${titol ? titol.trim() : ""}</div>
+
+  <div class="targeta-text">${textNoticia ? textNoticia.trim() : ""}</div>
+
+  ${enllac ? `<a href="${enllac.trim()}" target="_blank" class="boto-enllac">Veure més</a>` : ""}
 
 </div>
 `;
-
 }
 
 });
