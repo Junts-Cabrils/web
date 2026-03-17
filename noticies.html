@@ -1,284 +1,284 @@
 <!DOCTYPE html>
-
 <html lang="ca">
-
 <head>
+  <meta charset="UTF-8">
+  <title>Notícies - Junts Cabrils</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163B65">
+  <meta name="robots" content="noindex">
 
-<meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
 
-<title>Notícies</title>
+  <style>
+    *{
+      box-sizing:border-box;
+    }
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:#163B65;
+      color:#163B65;
+    }
 
-<style>
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background:#163B65;
+      color:#fff;
+      padding:16px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.2);
+    }
 
-.barra-superior{
-display:flex;
-align-items:center;
-gap:12px;
-padding:10px 14px;
-background:#163B65;
-color:white;
-position:sticky;
-top:0;
-z-index:1000;
-}
+    .back{
+      color:#fff;
+      text-decoration:none;
+      font-size:28px;
+      font-weight:700;
+      line-height:1;
+    }
 
-.boto-tornar{
-color:white;
-text-decoration:none;
-font-size:24px;
-font-weight:bold;
-line-height:1;
-display:inline-block;
-padding:2px 4px;
-}
-.titol-pagina{
-font-size:18px;
-font-weight:bold;
-letter-spacing:0.3px;
-}
-  
-body{
+    .topbar h1{
+      margin:0;
+      font-size:28px;
+      line-height:1.1;
+    }
 
-margin:0;
+    .llista{
+      max-width:900px;
+      margin:0 auto;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
 
-font-family:Arial, Helvetica, sans-serif;
+    .card-link{
+      text-decoration:none;
+      color:inherit;
+      display:block;
+    }
 
-background:#163B65;
+    .card{
+      background:#fff;
+      border-radius:20px;
+      padding:16px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.10);
+      overflow:hidden;
+      transition:transform 0.15s ease, box-shadow 0.15s ease;
+    }
 
-color:white;
+    .card.clicable{
+      cursor:pointer;
+    }
 
-}
+    .card.clicable:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 18px rgba(0,0,0,0.14);
+    }
 
-.app{
+    .card-img{
+      width:100%;
+      display:block;
+      border-radius:14px;
+      margin-bottom:12px;
+      object-fit:cover;
+      max-height:420px;
+      background:#f1f1f1;
+    }
 
-max-width:700px;
+    .card-data{
+      font-size:13px;
+      font-weight:700;
+      color:#163B65;
+      margin-bottom:6px;
+    }
 
-margin:auto;
+    .card-titol{
+      margin:0 0 8px 0;
+      font-size:22px;
+      line-height:1.2;
+      color:#0f172a;
+    }
 
-padding:20px 16px 30px 16px;
+    .card-text{
+      margin:0;
+      font-size:16px;
+      line-height:1.45;
+      color:#334155;
+      white-space:pre-line;
+    }
 
-}
+    .card-more{
+      margin-top:14px;
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:10px;
+      background:#163B65;
+      color:#fff;
+      font-size:14px;
+      font-weight:700;
+    }
 
-h1{
-
-text-align:center;
-
-margin-bottom:20px;
-
-}
-
-#llista-noticies{
-
-display:flex;
-
-flex-direction:column;
-
-gap:18px;
-
-}
-
-.bloc-noticia{
-
-background:white;
-
-color:#163B65;
-
-border-radius:16px;
-
-padding:16px;
-
-box-shadow:0 6px 16px rgba(0,0,0,0.2);
-
-}
-
-.data-noticia{
-
-font-size:13px;
-
-color:#666;
-
-margin-bottom:8px;
-
-}
-
-.bloc-noticia h2{
-
-margin:0 0 8px 0;
-
-font-size:22px;
-
-}
-
-.bloc-noticia p{
-
-margin:0 0 10px 0;
-
-line-height:1.4;
-
-}
-.targeta{
-background:white;
-border-radius:14px;
-padding:14px;
-margin-bottom:12px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-.targeta-data{
-font-size:13px;
-font-weight:bold;
-color:#163B65;
-margin-bottom:6px;
-text-transform:uppercase;
-}
-
-.targeta-titol{
-font-size:18px;
-font-weight:bold;
-margin-bottom:8px;
-color:#111827;
-}
-
-.targeta-text{
-font-size:15px;
-line-height:1.45;
-color:#374151;
-white-space:pre-line;
-}
-
-.img-noticia{
-width:100%;
-border-radius:12px;
-margin-bottom:10px;
-display:block;
-}
-
-.boto-enllac{
-display:inline-block;
-margin-top:10px;
-padding:6px 10px;
-background:#163B65;
-color:white;
-text-decoration:none;
-border-radius:6px;
-font-size:14px;
-font-weight:bold;
-}  
-  
-</style>
-
+    .missatge{
+      background:#fff;
+      border-radius:18px;
+      padding:18px;
+      color:#4b4b4b;
+      box-shadow:0 4px 14px rgba(0,0,0,0.10);
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="barra-superior">
-  <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
-  <div class="titol-pagina">NOTÍCIES</div>
-</div>
-  
-<div class="app">
+  <div class="topbar">
+    <a class="back" href="index.html" aria-label="Tornar">←</a>
+    <h1>Notícies</h1>
+  </div>
 
-<div id="llista-noticies">
-Carregant...
-</div>
+  <main class="llista" id="llista-noticies">
+    <div class="missatge">Carregant notícies...</div>
+  </main>
 
-</div>
+  <script>
+    const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
 
-<script>
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let current = "";
+      let inQuotes = false;
 
-const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
 
-function parseCSV(text){
-  const lines = text.trim().split("\n");
-  return lines.map(line => {
-    const result = [];
-    let current = "";
-    let insideQuotes = false;
-
-    for(let i=0; i<line.length; i++){
-      const char = line[i];
-
-      if(char === '"'){
-        if(insideQuotes && line[i + 1] === '"'){
-          current += '"';
-          i++;
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          row.push(current);
+          current = "";
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(current);
+          if (row.some(cell => cell.trim() !== "")) rows.push(row);
+          row = [];
+          current = "";
         } else {
-          insideQuotes = !insideQuotes;
+          current += char;
         }
-      } else if(char === "," && !insideQuotes){
-        result.push(current);
-        current = "";
-      } else {
-        current += char;
+      }
+
+      if (current.length > 0 || row.length > 0) {
+        row.push(current);
+        if (row.some(cell => cell.trim() !== "")) rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function csvToObjects(csvText) {
+      const rows = parseCSV(csvText);
+      if (!rows.length) return [];
+
+      const headers = rows[0].map(h => h.trim().toLowerCase());
+
+      return rows.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = (row[index] || "").trim();
+        });
+        return obj;
+      });
+    }
+
+    function parseDateDMY(str) {
+      if (!str) return new Date(0);
+
+      const s = str.trim();
+
+      if (/^\d{2}-\d{2}-\d{4}$/.test(s)) {
+        const [d, m, y] = s.split("-");
+        return new Date(Number(y), Number(m) - 1, Number(d));
+      }
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+        const [y, m, d] = s.split("-");
+        return new Date(Number(y), Number(m) - 1, Number(d));
+      }
+
+      return new Date(s);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function creaTargetaNoticia(item) {
+      const imatgeHTML = item.imatge
+        ? `<img class="card-img" src="${item.imatge}" alt="Imatge notícia" loading="lazy" onerror="this.style.display='none'">`
+        : "";
+
+      const contingut = `
+        <article class="card ${item.enllac ? "clicable" : ""}">
+          ${imatgeHTML}
+          ${item.data ? `<div class="card-data">${escapeHtml(item.data)}</div>` : ""}
+          ${item.titol ? `<h2 class="card-titol">${escapeHtml(item.titol)}</h2>` : ""}
+          ${item.text ? `<p class="card-text">${escapeHtml(item.text)}</p>` : ""}
+          ${item.enllac ? `<div class="card-more">Veure més</div>` : ""}
+        </article>
+      `;
+
+      if (item.enllac) {
+        return `
+          <a class="card-link" href="${item.enllac}" target="_blank" rel="noopener noreferrer">
+            ${contingut}
+          </a>
+        `;
+      }
+
+      return contingut;
+    }
+
+    async function carregarNoticies() {
+      const llista = document.getElementById("llista-noticies");
+
+      try {
+        const res = await fetch(URL_NOTICIES);
+        const csv = await res.text();
+
+        const items = csvToObjects(csv)
+          .filter(item => (item.visible || "").toLowerCase() === "si")
+          .sort((a, b) => parseDateDMY(b.data) - parseDateDMY(a.data));
+
+        if (!items.length) {
+          llista.innerHTML = `<div class="missatge">No hi ha notícies visibles.</div>`;
+          return;
+        }
+
+        llista.innerHTML = items.map(creaTargetaNoticia).join("");
+      } catch (e) {
+        llista.innerHTML = `<div class="missatge">No s'han pogut carregar les notícies.</div>`;
       }
     }
 
-    result.push(current);
-    return result;
-  });
-}
-
-function formatData(dataISO){
-  if(!dataISO) return "";
-  const parts = dataISO.split("-");
-  if(parts.length !== 3) return dataISO;
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
-}
-
-fetch(URL_NOTICIES)
-  .then(response => response.text())
-  .then(csv => {
-
-    const files = parseCSV(csv);
-    const capcalera = files[0];
-    const filesDades = files.slice(1);
-
-    const idxVisible = capcalera.indexOf("visible");
-    const idxData = capcalera.indexOf("data");
-    const idxTitol = capcalera.indexOf("titol");
-    const idxText = capcalera.indexOf("text");
-    const idxImatge = capcalera.indexOf("imatge");
-    const idxEnllac = capcalera.map(c => c.trim()).indexOf("enllac");
-
-    const noticies = filesDades
-      .filter(f => f[idxVisible] && f[idxVisible].trim().toLowerCase() === "si")
-      .sort((a,b) => new Date(b[idxData]) - new Date(a[idxData]));
-
-    const contenidor = document.getElementById("llista-noticies");
-
-    if(noticies.length === 0){
-      contenidor.innerHTML = "<div class='targeta'>No hi ha cap notícia visible.</div>";
-      return;
-    }
-
-    contenidor.innerHTML = noticies.map(f => `
-      <div class="targeta">
-
-        ${f[idxImatge] ? `<img src="${f[idxImatge].trim()}" class="img-noticia">` : ""}
-
-        <div class="targeta-data">${formatData(f[idxData])}</div>
-
-        <div class="targeta-titol">${f[idxTitol] || ""}</div>
-
-        <div class="targeta-text">${f[idxText] || ""}</div>
-
-        ${f[idxEnllac] ? `<a href="${f[idxEnllac].trim()}" target="_blank" class="boto-enllac">Veure més</a>` : ""}
-
-      </div>
-    `).join("");
-
-  })
-  .catch(error => {
-    document.getElementById("llista-noticies").innerHTML =
-      "<div class='targeta'>Error carregant notícies.</div>";
-    console.error(error);
-  });
-
-</script>
-</script>
-
+    carregarNoticies();
+  </script>
 </body>
-
 </html>
