@@ -85,7 +85,19 @@ white-space:pre-line;
 
 </head>
 
-  <script>
+  
+<body>
+
+<div class="barra-superior">
+  <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
+  <div class="titol-pagina">AGENDA</div>
+</div>
+
+<div class="contingut">
+  <div id="llista-convocatories">Carregant agenda...</div>
+</div>
+
+<script>
 const URL_CONVOCATORIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
 
 function parseCSV(text){
@@ -162,25 +174,6 @@ fetch(URL_CONVOCATORIES)
     console.error(error);
   });
 </script>
-
-
-
-
-  
-<body>
-
-<div class="barra-superior">
-  <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
-  <div class="titol-pagina">AGENDA</div>
-</div>
-
-<div class="contingut">
-  <div id="llista-convocatories">Carregant agenda...</div>
-</div>
-
-<a class="tornar" href="index.html">← Tornar</a>
-
-</div>
 
 </body>
 </html>
