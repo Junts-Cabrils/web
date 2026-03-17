@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-
 <meta charset="UTF-8">
 <title>Convocatòries</title>
-
 <link rel="manifest" href="manifest.json">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b3a63">
-
 <style>
 body{
 margin:0;
@@ -76,6 +72,14 @@ font-weight:bold;
 color:#163B65;
 }
 
+.targeta-meta{
+font-size:14px;
+line-height:1.35;
+color:#163B65;
+margin:0 0 8px 0;
+white-space:pre-line;
+}
+
 .targeta-text{
 margin:0;
 font-size:15px;
@@ -102,14 +106,9 @@ border-radius:6px;
 font-size:14px;
 font-weight:bold;
 }
-  
 </style>
-
 </head>
-
-  
 <body>
-
 <div class="barra-superior">
   <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
   <div class="titol-pagina">AGENDA</div>
@@ -123,13 +122,13 @@ font-weight:bold;
 const URL_CONVOCATORIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
 
 function parseCSV(text){
-  const lines = text.trim().split("\n");
+  const lines = text.trim().split(/\r?\n/);
   return lines.map(line => {
     const result = [];
     let current = "";
     let insideQuotes = false;
 
-    for(let i=0; i<line.length; i++){
+    for(let i = 0; i < line.length; i++){
       const char = line[i];
 
       if(char === '"'){
@@ -139,7 +138,7 @@ function parseCSV(text){
         } else {
           insideQuotes = !insideQuotes;
         }
-      } else if(char === "," && !insideQuotes){
+      } else if(char === ',' && !insideQuotes){
         result.push(current);
         current = "";
       } else {
@@ -154,28 +153,34 @@ function parseCSV(text){
 
 function formatData(dataISO){
   if(!dataISO) return "";
-  const parts = dataISO.split("-");
+  const parts = dataISO.trim().split("-");
   if(parts.length !== 3) return dataISO;
   return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
 
-fetch(URL_CONVOCATORIES)
+function net(v){
+  return (v || "").trim();
+}
+
+fetch(URL_CONVOCATORIES, { cache: "no-store" })
   .then(response => response.text())
   .then(csv => {
     const files = parseCSV(csv);
-    const capcalera = files[0];
+    const capcalera = files[0].map(c => c.trim().toLowerCase());
     const filesDades = files.slice(1);
 
-    const idxVisible = capcalera.map(c => c.trim()).indexOf("visible");
-    const idxData = capcalera.map(c => c.trim()).indexOf("data");
-    const idxTitol = capcalera.map(c => c.trim()).indexOf("titol");
-    const idxText = capcalera.map(c => c.trim()).indexOf("text");
-    const idxImatge = capcalera.map(c => c.trim()).indexOf("imatge");
-    const idxEnllac = capcalera.map(c => c.trim()).indexOf("enllac");
+    const idxVisible = capcalera.indexOf("visible");
+    const idxData = capcalera.indexOf("data");
+    const idxTitol = capcalera.indexOf("titol");
+    const idxLloc = capcalera.indexOf("lloc");
+    const idxHora = capcalera.indexOf("hora");
+    const idxText = capcalera.indexOf("text");
+    const idxImatge = capcalera.indexOf("imatge");
+    const idxEnllac = capcalera.indexOf("enllac");
 
     const convocatories = filesDades
-      .filter(f => f[idxVisible] && f[idxVisible].trim().toLowerCase() === "si")
-      .sort((a,b) => new Date(a[idxData]) - new Date(b[idxData]));
+      .filter(f => net(f[idxVisible]).toLowerCase() === "si")
+      .sort((a,b) => new Date(net(a[idxData])) - new Date(net(b[idxData])));
 
     const contenidor = document.getElementById("llista-convocatories");
 
@@ -184,21 +189,30 @@ fetch(URL_CONVOCATORIES)
       return;
     }
 
-    contenidor.innerHTML = convocatories.map(f => `
-    <div class="targeta">
+    contenidor.innerHTML = convocatories.map(f => {
+      const data = idxData >= 0 ? net(f[idxData]) : "";
+      const titol = idxTitol >= 0 ? net(f[idxTitol]) : "";
+      const lloc = idxLloc >= 0 ? net(f[idxLloc]) : "";
+      const hora = idxHora >= 0 ? net(f[idxHora]) : "";
+      const text = idxText >= 0 ? net(f[idxText]) : "";
+      const imatge = idxImatge >= 0 ? net(f[idxImatge]) : "";
+      const enllac = idxEnllac >= 0 ? net(f[idxEnllac]) : "";
 
-    ${f[idxImatge] ? `<img src="${f[idxImatge].trim()}" class="img-noticia">` : ""}
+      const meta = [
+        lloc ? `📍 ${lloc}` : "",
+        hora ? `🕐 ${hora}` : ""
+      ].filter(Boolean).join("\n");
 
-    <div class="targeta-data">${formatData(f[idxData])}</div>
-
-    <div class="targeta-titol">${f[idxTitol] || ""}</div>
-
-    <div class="targeta-text">${f[idxText] || ""}</div>
-
-    ${f[idxEnllac] ? `<a href="${f[idxEnllac].trim()}" target="_blank" class="boto-enllac">Veure més</a>` : ""}
-
-  </div>
-`).join("");
+      return `
+      <div class="targeta">
+        ${imatge ? `<img src="${imatge}" class="img-noticia">` : ""}
+        <div class="targeta-data">${formatData(data)}</div>
+        <div class="targeta-titol">${titol}</div>
+        ${meta ? `<div class="targeta-meta">${meta}</div>` : ""}
+        <div class="targeta-text">${text}</div>
+        ${enllac ? `<a href="${enllac}" target="_blank" rel="noopener noreferrer" class="boto-enllac">Veure més</a>` : ""}
+      </div>`;
+    }).join("");
   })
   .catch(error => {
     document.getElementById("llista-convocatories").innerHTML =
@@ -206,6 +220,5 @@ fetch(URL_CONVOCATORIES)
     console.error(error);
   });
 </script>
-
 </body>
 </html>
