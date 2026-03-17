@@ -188,64 +188,97 @@ Carregant...
 
 <script>
 
-const URL_NOTICIES =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
+<script>
 
-async function carregarNoticies(){
+const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
 
-const resposta = await fetch(URL_NOTICIES,{cache:"no-store"});
+function parseCSV(text){
+  const lines = text.trim().split("\n");
+  return lines.map(line => {
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
 
-const text = await resposta.text();
+    for(let i=0; i<line.length; i++){
+      const char = line[i];
 
-const files = text.split("\n").slice(1);
+      if(char === '"'){
+        if(insideQuotes && line[i + 1] === '"'){
+          current += '"';
+          i++;
+        } else {
+          insideQuotes = !insideQuotes;
+        }
+      } else if(char === "," && !insideQuotes){
+        result.push(current);
+        current = "";
+      } else {
+        current += char;
+      }
+    }
 
-let html="";
-
-files.forEach(function(linia){
-
-const camps = linia.split(",");
-
-const data = camps[1];
-const titol = camps[2];
-const textNoticia = camps[3];
-const imatge = camps[4];
-const enllac = camps[5];
-
-const visible = camps[0];
-
-const data = camps[1];
-
-const titol = camps[2];
-
-const text = camps[3];
-
-if(visible.trim().toLowerCase() === "si"){
-
-html += `
-<div class="targeta">
-
-  ${imatge ? `<img src="${imatge.trim()}" class="img-noticia">` : ""}
-
-  <div class="targeta-data">${data ? data.trim() : ""}</div>
-
-  <div class="targeta-titol">${titol ? titol.trim() : ""}</div>
-
-  <div class="targeta-text">${textNoticia ? textNoticia.trim() : ""}</div>
-
-  ${enllac ? `<a href="${enllac.trim()}" target="_blank" class="boto-enllac">Veure més</a>` : ""}
-
-</div>
-`;
+    result.push(current);
+    return result;
+  });
 }
 
-});
-
-document.getElementById("llista-noticies").innerHTML = html;
-
+function formatData(dataISO){
+  if(!dataISO) return "";
+  const parts = dataISO.split("-");
+  if(parts.length !== 3) return dataISO;
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
 
-carregarNoticies();
+fetch(URL_NOTICIES)
+  .then(response => response.text())
+  .then(csv => {
 
+    const files = parseCSV(csv);
+    const capcalera = files[0];
+    const filesDades = files.slice(1);
+
+    const idxVisible = capcalera.indexOf("visible");
+    const idxData = capcalera.indexOf("data");
+    const idxTitol = capcalera.indexOf("titol");
+    const idxText = capcalera.indexOf("text");
+    const idxImatge = capcalera.indexOf("imatge");
+    const idxEnllac = capcalera.indexOf("enllac");
+
+    const noticies = filesDades
+      .filter(f => f[idxVisible] && f[idxVisible].trim().toLowerCase() === "si")
+      .sort((a,b) => new Date(b[idxData]) - new Date(a[idxData]));
+
+    const contenidor = document.getElementById("llista-noticies");
+
+    if(noticies.length === 0){
+      contenidor.innerHTML = "<div class='targeta'>No hi ha cap notícia visible.</div>";
+      return;
+    }
+
+    contenidor.innerHTML = noticies.map(f => `
+      <div class="targeta">
+
+        ${f[idxImatge] ? `<img src="${f[idxImatge].trim()}" class="img-noticia">` : ""}
+
+        <div class="targeta-data">${formatData(f[idxData])}</div>
+
+        <div class="targeta-titol">${f[idxTitol] || ""}</div>
+
+        <div class="targeta-text">${f[idxText] || ""}</div>
+
+        ${f[idxEnllac] ? `<a href="${f[idxEnllac].trim()}" target="_blank" class="boto-enllac">Veure més</a>` : ""}
+
+      </div>
+    `).join("");
+
+  })
+  .catch(error => {
+    document.getElementById("llista-noticies").innerHTML =
+      "<div class='targeta'>Error carregant notícies.</div>";
+    console.error(error);
+  });
+
+</script>
 </script>
 
 </body>
