@@ -1,0 +1,20 @@
+{
+  "name": "Junts Cabrils",
+  "short_name": "Junts Cabrils",
+  "start_url": "/web/index.html",
+  "display": "standalone",
+  "background_color": "#163B65",
+  "theme_color": "#163B65",
+  "icons": [
+    {
+      "src": "/web/icona-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/web/icona-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Marta Gómez</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#163B65">
+
+<style>
+
+:root{
+--color-fons:#163B65;
+--color-caixa:white;
+--color-text:#0b3a63;
+--color-icona-fons:#163B65;
+--color-icona:white;
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:var(--color-fons);
+color:white;
+}
+
+.app{
+max-width:700px;
+margin:auto;
+padding:18px;
+}
+
+.cap{
+text-align:center;
+margin-top:10px;
+}
+
+.foto{
+width:170px;
+height:170px;
+border-radius:50%;
+object-fit:cover;
+display:block;
+margin:0 auto 14px auto;
+}
+
+h1{
+margin:0 0 10px 0;
+font-size:32px;
+}
+
+.subtitol{
+margin:0;
+font-size:20px;
+font-weight:bold;
+opacity:0.95;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:30px;
+}
+
+.caixa{
+background:white;
+color:var(--color-text);
+border-radius:16px;
+padding:16px;
+text-align:center;
+font-weight:bold;
+text-decoration:none;
+min-height:118px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+line-height:1.2;
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+}
+
+.icona{
+width:48px;
+height:48px;
+border-radius:50%;
+background:var(--color-icona-fons);
+color:var(--color-icona);
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:10px;
+}
+
+svg{
+width:24px;
+height:24px;
+stroke:currentColor;
+fill:none;
+stroke-width:2;
+stroke-linecap:round;
+stroke-linejoin:round;
+}
+
+@media (max-width:520px){
+
+.foto{
+width:150px;
+height:150px;
+}
+
+h1{
+font-size:30px;
+}
+
+.subtitol{
+font-size:21px;
+}
+
+.caixa{
+min-height:108px;
+}
+
+}
+
+.barra-superior{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+background:#163B65;
+color:white;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.boto-tornar{
+color:white;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+line-height:1;
+display:inline-block;
+padding:2px 4px;
+}
+
+.titol-pagina{
+font-size:18px;
+font-weight:bold;
+letter-spacing:0.3px;
+color:white;
+}
+
+
+
+
+
+
+  
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="barra-superior">
+  <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
+  <div class="titol-pagina">MARTA GÓMEZ</div>
+</div>
+
+<div class="cap">
+
+<img class="foto" src="marta.png" alt="Marta Gómez">
+
+<h1>Marta Gómez</h1>
+
+<p class="subtitol">
+Candidata a l'Alcaldia
+</p>
+
+</div>
+
+<div class="grid">
+
+<a class="caixa" href="presentacio.html">
+
+<div class="icona">
+
+<svg viewBox="0 0 24 24">
+<circle cx="12" cy="8" r="3"></circle>
+<path d="M6 19c2-3 10-3 12 0"></path>
+</svg>
+
+</div>
+
+PRESENTACIÓ
+
+</a>
+
+<a class="caixa" href="equip.html">
+
+<div class="icona">
+
+<svg viewBox="0 0 24 24">
+<circle cx="9" cy="8" r="3"></circle>
+<circle cx="16.5" cy="9" r="2.5"></circle>
+<path d="M4 19c1.5-3 9.5-3 11 0"></path>
+</svg>
+
+</div>
+
+EQUIP
+
+</a>
+
+<a class="caixa" href="programa.html">
+
+<div class="icona">
+
+<svg viewBox="0 0 24 24">
+<rect x="5" y="3" width="14" height="18" rx="2"></rect>
+<line x1="8" y1="8" x2="16" y2="8"></line>
+<line x1="8" y1="12" x2="16" y2="12"></line>
+<line x1="8" y1="16" x2="13" y2="16"></line>
+</svg>
+
+</div>
+
+PROGRAMA
+
+</a>
+
+<a class="caixa" href="mailto:info@juntspercabrils.cat">
+
+<div class="icona">
+
+<svg viewBox="0 0 24 24">
+<rect x="3" y="5" width="18" height="14" rx="2"></rect>
+<polyline points="3,7 12,13 21,7"></polyline>
+</svg>
+
+</div>
+
+CONTACTE
+
+</a>
+
+<a class="caixa" href="#" onclick="obreInstagramMarta(); return false;">
+
+<div class="icona">
+
+<svg viewBox="0 0 24 24">
+<rect x="2" y="2" width="20" height="20" rx="5"></rect>
+<circle cx="12" cy="12" r="4"></circle>
+<circle cx="17" cy="7" r="1"></circle>
+</svg>
+
+</div>
+
+INSTAGRAM
+
+</a>
+
+<a class="caixa" href="#" onclick="obreFacebookMarta(); return false;">
+
+<div class="icona">
+
+<svg viewBox="0 0 24 24">
+<path d="M14 8h3V4h-3c-2.2 0-4 1.8-4 4v3H7v4h3v5h4v-5h3l1-4h-4V8c0-.6.4-1 1-1z"></path>
+</svg>
+
+</div>
+
+FACEBOOK
+
+</a>
+
+  
+</div>
+
+</div>
+
+<script>
+
+function obreInstagramMarta(){
+  window.open("https://www.instagram.com/ADRECA_REAL", "_blank");
+}
+
+function obreFacebookMarta(){
+  window.open("https://www.facebook.com/ADRECA_REAL", "_blank");
+}
+
+</script>
+
+</script>
+</body>
+</html>
