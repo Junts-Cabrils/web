@@ -166,12 +166,12 @@ fetch(URL_CONVOCATORIES)
     const capcalera = files[0];
     const filesDades = files.slice(1);
 
-    const idxVisible = capcalera.indexOf("visible");
-    const idxData = capcalera.indexOf("data");
-    const idxTitol = capcalera.indexOf("titol");
-    const idxText = capcalera.indexOf("text");
-    const idxImatge = capcalera.indexOf("imatge");
-    const idxEnllac = capcalera.indexOf("enllac");
+    const idxVisible = capcalera.map(c => c.trim()).indexOf("visible");
+    const idxData = capcalera.map(c => c.trim()).indexOf("data");
+    const idxTitol = capcalera.map(c => c.trim()).indexOf("titol");
+    const idxText = capcalera.map(c => c.trim()).indexOf("text");
+    const idxImatge = capcalera.map(c => c.trim()).indexOf("imatge");
+    const idxEnllac = capcalera.map(c => c.trim()).indexOf("enllac");
 
     const convocatories = filesDades
       .filter(f => f[idxVisible] && f[idxVisible].trim().toLowerCase() === "si")
