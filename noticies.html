@@ -240,7 +240,7 @@ fetch(URL_NOTICIES)
     const idxTitol = capcalera.indexOf("titol");
     const idxText = capcalera.indexOf("text");
     const idxImatge = capcalera.indexOf("imatge");
-    const idxEnllac = capcalera.indexOf("enllac");
+    const idxEnllac = capcalera.map(c => c.trim()).indexOf("enllac");
 
     const noticies = filesDades
       .filter(f => f[idxVisible] && f[idxVisible].trim().toLowerCase() === "si")
