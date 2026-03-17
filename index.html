@@ -527,11 +527,17 @@ document.getElementById("preview-noticies").textContent = "No hi ha notícies.";
 return;
 }
 
-let item = files[0];
+let html = "";
 
-document.getElementById("preview-noticies").innerHTML =
-'<span class="mini-titol">Notícia: ' + (item.titol || '') + '</span>' +
-'<span class="mini-text">' + textCurt(item.text || '', 55) + '</span>';
+files.slice(0,4).forEach(function(item){
+
+html +=
+'<span class="mini-titol">' + (item.titol || '') + '</span>' +
+'<span class="mini-text">' + textCurt(item.text || '', 55) + '</span><br>';
+
+});
+
+document.getElementById("preview-noticies").innerHTML = html;
 
 }catch(error){
 document.getElementById("preview-noticies").textContent = "No s'ha pogut carregar la notícia.";
@@ -553,13 +559,20 @@ document.getElementById("preview-convocatories").textContent = "No hi ha convoca
 return;
 }
 
-let item = files[0];
+let html = "";
+
+files.slice(0,4).forEach(function(item){
+
 let resum = [item.data, item.hora, item.lloc].filter(Boolean).join(" · ");
 if(!resum) resum = item.text || "";
 
-document.getElementById("preview-convocatories").innerHTML =
-'<span class="mini-titol">Convocatòria: ' + (item.titol || '') + '</span>' +
-'<span class="mini-text">' + textCurt(resum, 55) + '</span>';
+html +=
+'<span class="mini-titol">' + (item.titol || '') + '</span>' +
+'<span class="mini-text">' + textCurt(resum, 55) + '</span><br>';
+
+});
+
+document.getElementById("preview-convocatories").innerHTML = html;
 
 }catch(error){
 document.getElementById("preview-convocatories").textContent = "No s'ha pogut carregar la convocatòria.";
