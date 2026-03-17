@@ -11,42 +11,44 @@
 <meta name="theme-color" content="#0b3a63">
 
 <style>
-
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
-background:#0b3a63;
+background:#f3f4f6;
+color:#1f2937;
+}
+
+.barra-superior{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+background:#163B65;
 color:white;
+position:sticky;
+top:0;
+z-index:1000;
 }
 
-.app{
-max-width:600px;
-margin:auto;
-padding:20px;
+.boto-tornar{
+color:white;
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+line-height:1;
+display:inline-block;
+padding:2px 4px;
 }
 
-h1{
-text-align:center;
-margin-bottom:25px;
+.titol-pagina{
+font-size:18px;
+font-weight:bold;
+letter-spacing:0.3px;
 }
 
 .contingut{
-background:white;
-color:#0b3a63;
-padding:20px;
-border-radius:12px;
-line-height:1.5;
+padding:12px;
 }
-
-.tornar{
-margin-top:25px;
-display:block;
-text-align:center;
-color:white;
-font-weight:bold;
-text-decoration:none;
-}
-
 </style>
 
 </head>
@@ -57,17 +59,9 @@ text-decoration:none;
   <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
   <div class="titol-pagina">AGENDA</div>
 </div>
-  
-<div class="app">
-
-<h1>Convocatòries</h1>
 
 <div class="contingut">
-
-<!-- AQUÍ HI POSARÀS EL CONTINGUT -->
-
-<p>Contingut en preparació.</p>
-
+  <div id="llista-convocatories">Carregant agenda...</div>
 </div>
 
 <a class="tornar" href="index.html">← Tornar</a>
