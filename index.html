@@ -36,6 +36,55 @@
 box-sizing:border-box;
 }
 
+.install-bar{
+position:fixed;
+left:12px;
+right:12px;
+bottom:12px;
+background:#ffffff;
+color:#26545E;
+border-radius:16px;
+padding:14px 14px 12px 14px;
+box-shadow:0 8px 24px rgba(0,0,0,0.25);
+z-index:9999;
+display:none;
+}
+
+.install-text{
+font-size:14px;
+line-height:1.35;
+margin-bottom:10px;
+}
+
+.install-actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.install-btn{
+border:none;
+border-radius:12px;
+padding:10px 14px;
+font-weight:bold;
+font-size:14px;
+cursor:pointer;
+}
+
+.install-btn-primary{
+background:#26545E;
+color:#ffffff;
+}
+
+.install-btn-secondary{
+background:#e9eeee;
+color:#26545E;
+}
+
+
+
+
+  
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
@@ -369,6 +418,18 @@ Candidata a l'Alcaldia
 
 </div>
 
+<div id="installBar" class="install-bar">
+  <div id="installText" class="install-text"></div>
+  <div class="install-actions">
+    <button id="installBtn" class="install-btn install-btn-primary" style="display:none;">
+      Instal·la l'app
+    </button>
+    <button id="closeInstallBtn" class="install-btn install-btn-secondary">
+      Tanca
+    </button>
+  </div>
+</div>
+  
 <script>
 
 function obreInstagram(){
@@ -388,6 +449,67 @@ if ("serviceWorker" in navigator) {
 navigator.serviceWorker.register("sw.js");
 }
 
+let deferredPrompt = null;
+
+const installBar = document.getElementById("installBar");
+const installText = document.getElementById("installText");
+const installBtn = document.getElementById("installBtn");
+const closeInstallBtn = document.getElementById("closeInstallBtn");
+
+function esIphone(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function esAndroid(){
+  return /android/i.test(navigator.userAgent);
+}
+
+function enStandalone(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function mostrarBarraInstallatge(text, mostrarBoto){
+  if(enStandalone()) return;
+  installText.innerHTML = text;
+  installBar.style.display = "block";
+  installBtn.style.display = mostrarBoto ? "inline-block" : "none";
+}
+
+window.addEventListener("beforeinstallprompt", function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+
+  if(esAndroid()){
+    mostrarBarraInstallatge("Pots instal·lar aquesta app al mòbil. Prem el botó d'instal·lació.", true);
+  }
+});
+
+installBtn.addEventListener("click", async function(){
+  if(!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBar.style.display = "none";
+});
+
+closeInstallBtn.addEventListener("click", function(){
+  installBar.style.display = "none";
+});
+
+window.addEventListener("load", function(){
+  if(enStandalone()) return;
+
+  if(esIphone()){
+    mostrarBarraInstallatge("Per posar aquesta app a la pantalla d'inici a iPhone: prem Compartir i després 'Afegeix a pantalla d'inici'.", false);
+  }
+});
+
+
+
+
+
+  
 const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
 const URL_CONVOCATORIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
 
