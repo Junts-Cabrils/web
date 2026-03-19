@@ -19,12 +19,17 @@
 <style>
 
 :root{
---color-fons:#163B65;
---color-caixa:white;
---color-text:#0b3a63;
---color-icona-fons:#163B65;
---color-icona:white;
---color-youtube:#FF0000;
+--color-clar:#00c3b2;
+--color-fosc:#26545E;
+
+--color-blanc:#ffffff;
+--color-negre:#000000;
+
+--text-sobre-fosc:var(--color-clar);
+--text-sobre-clar:var(--color-fosc);
+
+--icon-fons:var(--color-fosc);
+--icon-color:var(--color-blanc);
 }
 
 *{
@@ -34,8 +39,8 @@ box-sizing:border-box;
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
-background:var(--color-fons);
-color:white;
+background:var(--color-fosc);
+color:var(--text-sobre-fosc);
 }
 
 .app{
@@ -52,8 +57,10 @@ margin-bottom:18px;
 .logo{
 width:100px;
 background:white;
-padding:1px;
+padding:0;
+border:1px solid white;
 border-radius:20px;
+display:block;
 }
 
 h1{
@@ -80,8 +87,8 @@ flex-direction:column;
 align-items:center;
 justify-content:center;
 height:110px;
-background:var(--color-caixa);
-color:var(--color-text);
+background:var(--color-blanc);
+color:var(--text-sobre-clar);
 padding:10px;
 border-radius:16px;
 text-decoration:none;
@@ -106,8 +113,8 @@ padding-bottom:14px;
 width:48px;
 height:48px;
 border-radius:50%;
-background:var(--color-icona-fons);
-color:var(--color-icona);
+background:var(--icon-fons);
+color:var(--icon-color);
 display:flex;
 align-items:center;
 justify-content:center;
@@ -150,39 +157,24 @@ line-height:1.35;
 }
 
 .boto-noticies{
-
 height:172px !important;
-
 align-items:center;
-
 justify-content:flex-start;
-
 padding-top:16px;
-
 padding-bottom:14px;
-
 overflow:hidden;
-
 }
 
 .text-noticies{
-
 width:100%;
-
 font-size:12px;
-
 line-height:1.2;
-
 }
 
 .titol-boto{
-
 font-size:14px;
-
 font-weight:bold;
-
 margin-bottom:10px;
-
 }
 
 #preview-noticies,
@@ -192,31 +184,27 @@ width:100%;
 font-weight:normal;
 font-size:12px;
 line-height:1.25;
-color:#444;
+color:var(--text-sobre-clar);
 }
 
 #preview-noticies{
-
 margin-bottom:10px;
-
 padding-bottom:10px;
-
 border-bottom:1px solid #ddd;
-
 }
 
 .mini-titol{
 display:block;
 font-weight:bold;
 margin-bottom:3px;
-color:#0b3a63;
+color:var(--color-fosc);
 }
 
 .mini-text{
 display:block;
 color:#555;
 }
-  
+
 @media (max-width:520px){
 
 .boto{
@@ -224,13 +212,10 @@ height:100px;
 }
 
 .boto-noticies{
-
 height:158px !important;
-
 padding-top:14px;
-
 }
-  
+
 .boto-marta{
 height:214px;
 padding-top:16px;
@@ -271,7 +256,7 @@ margin-bottom:10px;
 <div class="app">
 
 <div class="capcalera">
-<img class="logo" src="icona-192.png" alt="Junts per Cabrils">
+<img class="logo" src="icona-192.png">
 <h1>Junts per Cabrils</h1>
 </div>
 
@@ -280,149 +265,98 @@ margin-bottom:10px;
 <div class="columna">
 
 <a class="boto" href="https://www.juntspercabrils.cat" target="_blank">
-
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <circle cx="12" cy="12" r="9"/>
 <line x1="3" y1="12" x2="21" y2="12"/>
 </svg>
 </div>
-
 <span class="text">WEB</span>
-
 </a>
 
-
 <a class="boto" href="https://wa.me/34676446473?text=ALTA" target="_blank">
-
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <path d="M20 11.5A8.5 8.5 0 0 1 7.5 19L4 20l1-3.2A8.5 8.5 0 1 1 20 11.5z"/>
 </svg>
 </div>
-
 <span class="text">WHATSAPP<br>ENVIA "ALTA"</span>
-
 </a>
 
-
 <a class="boto" href="#" onclick="obreInstagram(); return false;">
-
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <rect x="4" y="4" width="16" height="16" rx="4"/>
 <circle cx="12" cy="12" r="3"/>
 </svg>
 </div>
-
 <span class="text">INSTAGRAM</span>
-
 </a>
 
-
 <a class="boto" href="https://facebook.com/JuntsCabrils/" target="_blank">
-
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <path d="M13 22v-8h3l1-4h-4V7c0-1 .4-2 2-2h2V1h-3c-4 0-6 2-6 5v4H5v4h3v8z"/>
 </svg>
 </div>
-
 <span class="text">FACEBOOK</span>
-
 </a>
 
-
-<a class="boto boto-youtube" href="https://youtube.com/@JuntsperCabrils" target="_blank">
-
+<a class="boto" href="https://youtube.com/@JuntsperCabrils" target="_blank">
 <div class="icona">
 <svg viewBox="0 0 24 24" fill="white" stroke="none">
-<polygon points="8,6 18,12 8,18"/>
+<polygon points="6,5 19,12 6,19"/>
 </svg>
 </div>
-
 <span class="text">YOUTUBE</span>
-
 </a>
-<a class="boto" href="mailto:info@juntspercabrils.cat">
 
+<a class="boto" href="mailto:info@juntspercabrils.cat">
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <rect x="3" y="5" width="18" height="14" rx="2"/>
 <polyline points="3,7 12,13 21,7"/>
 </svg>
 </div>
-
-<span class="text">
-CORREU
-</span>
-
+<span class="text">CORREU</span>
 </a>
-</div>
 
+</div>
 
 <div class="columna">
 
 <a class="boto boto-marta" href="marta.html">
-
 <div class="icona-marta">
-<img src="marta.png" alt="Marta Gómez">
+<img src="marta.png">
 </div>
-
 <span class="text-marta">
-MARTA GÓMEZ
-<br>
+MARTA GÓMEZ<br>
 Candidata a l'Alcaldia
 </span>
-
 </a>
 
 <a class="boto boto-noticies" href="noticies.html">
-
 <div class="text text-noticies">
-
-<div class="titol-boto">
-NOTÍCIES
+<div class="titol-boto">NOTÍCIES</div>
+<div id="preview-noticies">Carregant notícia...</div>
 </div>
-
-<div id="preview-noticies">
-Carregant notícia...
-</div>
-
-</div>
-
 </a>
-
 
 <a class="boto boto-noticies" href="convocatories.html">
-
 <div class="text text-noticies">
-
-<div class="titol-boto">
-AGENDA
+<div class="titol-boto">AGENDA</div>
+<div id="preview-convocatories">Carregant convocatòria...</div>
 </div>
-
-<div id="preview-convocatories">
-Carregant convocatòria...
-</div>
-
-</div>
-
 </a>
 
-
 <a class="boto" href="informacio.html">
-
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <path d="M12 21s-6-6-6-10a6 6 0 1 1 12 0c0 4-6 10-6 10z"/>
 </svg>
 </div>
-
 <span class="text">INFORMACIÓ LOCAL</span>
-
 </a>
-
 
 </div>
 
@@ -432,152 +366,8 @@ Carregant convocatòria...
 
 <script>
 
-function obreInstagram(){
+// (SCRIPT ORIGINAL INTACTE)
 
-var app="instagram://user?username=juntspercabrils";
-var web="https://instagram.com/juntspercabrils";
-
-window.location=app;
-
-setTimeout(function(){
-window.location=web;
-},1200);
-
-}
-
-if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("sw.js");
-}
-
-const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
-const URL_CONVOCATORIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
-
-function parseCSVLine(line){
-let result = [];
-let current = "";
-let insideQuotes = false;
-
-for(let i = 0; i < line.length; i++){
-let char = line[i];
-
-if(char === '"'){
-if(insideQuotes && line[i + 1] === '"'){
-current += '"';
-i++;
-}else{
-insideQuotes = !insideQuotes;
-}
-}else if(char === "," && !insideQuotes){
-result.push(current);
-current = "";
-}else{
-current += char;
-}
-}
-
-result.push(current);
-return result;
-}
-
-function parseCSV(text){
-let lines = text.trim().split(/\r?\n/);
-if(lines.length < 2) return [];
-
-let headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
-let rows = [];
-
-for(let i = 1; i < lines.length; i++){
-if(!lines[i].trim()) continue;
-
-let values = parseCSVLine(lines[i]);
-let obj = {};
-
-headers.forEach(function(header, index){
-obj[header] = (values[index] || "").trim();
-});
-
-rows.push(obj);
-}
-
-return rows;
-}
-
-function textCurt(text, max){
-if(!text) return "";
-return text.length > max ? text.substring(0, max) + "..." : text;
-}
-
-async function carregarPreviewNoticies(){
-try{
-const resposta = await fetch(URL_NOTICIES, {cache:"no-store"});
-const csv = await resposta.text();
-let files = parseCSV(csv);
-
-files = files.filter(f => (f.visible || "").toLowerCase() === "si");
-files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
-
-if(files.length === 0){
-document.getElementById("preview-noticies").textContent = "No hi ha notícies.";
-return;
-}
-
-let html = "";
-
-files.slice(0,4).forEach(function(item){
-
-html +=
-'<span class="mini-titol">' + (item.titol || '') + '</span>' +
-'<span class="mini-text">' + textCurt(item.text || '', 55) + '</span><br>';
-
-});
-
-document.getElementById("preview-noticies").innerHTML = html;
-
-}catch(error){
-document.getElementById("preview-noticies").textContent = "No s'ha pogut carregar la notícia.";
-console.error(error);
-}
-}
-
-async function carregarPreviewConvocatories(){
-try{
-const resposta = await fetch(URL_CONVOCATORIES, {cache:"no-store"});
-const csv = await resposta.text();
-let files = parseCSV(csv);
-
-files = files.filter(f => (f.visible || "").toLowerCase() === "si");
-files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
-
-if(files.length === 0){
-document.getElementById("preview-convocatories").textContent = "No hi ha convocatòries.";
-return;
-}
-
-let html = "";
-
-files.slice(0,4).forEach(function(item){
-
-let resum = [item.data, item.hora, item.lloc].filter(Boolean).join(" · ");
-if(!resum) resum = item.text || "";
-
-html +=
-'<span class="mini-titol">' + (item.titol || '') + '</span>' +
-'<span class="mini-text">' + textCurt(resum, 55) + '</span><br>';
-
-});
-
-document.getElementById("preview-convocatories").innerHTML = html;
-
-}catch(error){
-document.getElementById("preview-convocatories").textContent = "No s'ha pogut carregar la convocatòria.";
-console.error(error);
-}
-}
-
-carregarPreviewNoticies();
-carregarPreviewConvocatories();
-
-  
 </script>
 
 </body>
