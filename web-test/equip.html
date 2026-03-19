@@ -47,23 +47,6 @@ margin:auto;
 padding:18px 16px 30px 16px;
 }
 
-.boto-tornar{
-display:inline-block;
-background:var(--color-blanc);
-color:var(--color-fosc);
-text-decoration:none;
-font-weight:bold;
-padding:10px 16px;
-border-radius:12px;
-margin-bottom:18px;
-}
-
-.titol{
-text-align:center;
-font-size:30px;
-margin-bottom:24px;
-}
-
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -98,7 +81,41 @@ font-size:16px;
 font-size:13px;
 opacity:0.8;
 }
+.barra-superior{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+background:var(--color-fosc);
+color:var(--color-blanc);
+position:sticky;
+top:0;
+z-index:1000;
+}
 
+.boto-tornar{
+color:var(--color-blanc);
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+line-height:1;
+display:inline-block;
+padding:2px 4px;
+background:none;
+border-radius:0;
+margin:0;
+}
+
+.titol-pagina{
+font-size:18px;
+font-weight:bold;
+letter-spacing:0.3px;
+color:var(--color-blanc);
+}
+
+
+
+  
 @media (max-width:520px){
 
 .foto{
@@ -123,13 +140,10 @@ font-size:12px;
 
 <div class="app">
 
-<a href="marta.html" class="boto-tornar">
-← Tornar
-</a>
-
-<h1 class="titol">
-Equip
-</h1>
+<div class="barra-superior">
+  <a href="marta.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
+  <div class="titol-pagina">EQUIP</div>
+</div>
 
 <div class="grid">
 
