@@ -19,6 +19,17 @@
 
 <style>
 
+:root{
+--color-clar:#00c3b2;
+--color-fosc:#26545E;
+
+--color-blanc:#ffffff;
+--color-negre:#000000;
+
+--text-sobre-fosc:var(--color-clar);
+--text-sobre-clar:var(--color-fosc);
+}
+  
 *{
 box-sizing:border-box;
 }
@@ -26,31 +37,14 @@ box-sizing:border-box;
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
-background:rgb(22,59,101);
-color:white;
+background:var(--color-fosc);
+color:var(--text-sobre-fosc);
 }
 
 .app{
 max-width:700px;
 margin:auto;
 padding:18px 16px 30px 16px;
-}
-
-.boto-tornar{
-display:inline-block;
-background:white;
-color:#163B65;
-text-decoration:none;
-font-weight:bold;
-padding:10px 16px;
-border-radius:12px;
-margin-bottom:18px;
-}
-
-.titol{
-text-align:center;
-font-size:30px;
-margin-bottom:24px;
 }
 
 .grid{
@@ -60,8 +54,8 @@ gap:16px;
 }
 
 .persona{
-background:white;
-color:#0b3a63;
+background:var(--color-blanc);
+color:var(--text-sobre-clar);
 border-radius:16px;
 padding:16px 10px;
 text-align:center;
@@ -87,7 +81,41 @@ font-size:16px;
 font-size:13px;
 opacity:0.8;
 }
+.barra-superior{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+background:var(--color-fosc);
+color:var(--color-blanc);
+position:sticky;
+top:0;
+z-index:1000;
+}
 
+.boto-tornar{
+color:var(--color-blanc);
+text-decoration:none;
+font-size:24px;
+font-weight:bold;
+line-height:1;
+display:inline-block;
+padding:2px 4px;
+background:none;
+border-radius:0;
+margin:0;
+}
+
+.titol-pagina{
+font-size:18px;
+font-weight:bold;
+letter-spacing:0.3px;
+color:var(--color-blanc);
+}
+
+
+
+  
 @media (max-width:520px){
 
 .foto{
@@ -112,13 +140,10 @@ font-size:12px;
 
 <div class="app">
 
-<a href="marta.html" class="boto-tornar">
-← Tornar
-</a>
-
-<h1 class="titol">
-Equip
-</h1>
+<div class="barra-superior">
+  <a href="marta.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
+  <div class="titol-pagina">EQUIP</div>
+</div>
 
 <div class="grid">
 
