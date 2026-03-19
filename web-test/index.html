@@ -366,9 +366,152 @@ Candidata a l'Alcaldia
 
 <script>
 
-// (SCRIPT ORIGINAL INTACTE)
+function obreInstagram(){
 
+var app="instagram://user?username=juntspercabrils";
+var web="https://instagram.com/juntspercabrils";
+
+window.location=app;
+
+setTimeout(function(){
+window.location=web;
+},1200);
+
+}
+
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("sw.js");
+}
+
+const URL_NOTICIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjIrH9BJexOjcXQi-VCfEvaz_Icg2xJU4eUQpiQoYCaLj6s9UxJKbT1ULJG5SGSQ/pub?output=csv";
+const URL_CONVOCATORIES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
+
+function parseCSVLine(line){
+let result = [];
+let current = "";
+let insideQuotes = false;
+
+for(let i = 0; i < line.length; i++){
+let char = line[i];
+
+if(char === '"'){
+if(insideQuotes && line[i + 1] === '"'){
+current += '"';
+i++;
+}else{
+insideQuotes = !insideQuotes;
+}
+}else if(char === "," && !insideQuotes){
+result.push(current);
+current = "";
+}else{
+current += char;
+}
+}
+
+result.push(current);
+return result;
+}
+
+function parseCSV(text){
+let lines = text.trim().split(/\r?\n/);
+if(lines.length < 2) return [];
+
+let headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+let rows = [];
+
+for(let i = 1; i < lines.length; i++){
+if(!lines[i].trim()) continue;
+
+let values = parseCSVLine(lines[i]);
+let obj = {};
+
+headers.forEach(function(header, index){
+obj[header] = (values[index] || "").trim();
+});
+
+rows.push(obj);
+}
+
+return rows;
+}
+
+function textCurt(text, max){
+if(!text) return "";
+return text.length > max ? text.substring(0, max) + "..." : text;
+}
+
+async function carregarPreviewNoticies(){
+try{
+const resposta = await fetch(URL_NOTICIES, {cache:"no-store"});
+const csv = await resposta.text();
+let files = parseCSV(csv);
+
+files = files.filter(f => (f.visible || "").toLowerCase() === "si");
+files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+
+if(files.length === 0){
+document.getElementById("preview-noticies").textContent = "No hi ha notícies.";
+return;
+}
+
+let html = "";
+
+files.slice(0,4).forEach(function(item){
+
+html +=
+'<span class="mini-titol">' + (item.titol || '') + '</span>' +
+'<span class="mini-text">' + textCurt(item.text || '', 55) + '</span><br>';
+
+});
+
+document.getElementById("preview-noticies").innerHTML = html;
+
+}catch(error){
+document.getElementById("preview-noticies").textContent = "No s'ha pogut carregar la notícia.";
+console.error(error);
+}
+}
+
+async function carregarPreviewConvocatories(){
+try{
+const resposta = await fetch(URL_CONVOCATORIES, {cache:"no-store"});
+const csv = await resposta.text();
+let files = parseCSV(csv);
+
+files = files.filter(f => (f.visible || "").toLowerCase() === "si");
+files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+
+if(files.length === 0){
+document.getElementById("preview-convocatories").textContent = "No hi ha convocatòries.";
+return;
+}
+
+let html = "";
+
+files.slice(0,4).forEach(function(item){
+
+let resum = [item.data, item.hora, item.lloc].filter(Boolean).join(" · ");
+if(!resum) resum = item.text || "";
+
+html +=
+'<span class="mini-titol">' + (item.titol || '') + '</span>' +
+'<span class="mini-text">' + textCurt(resum, 55) + '</span><br>';
+
+});
+
+document.getElementById("preview-convocatories").innerHTML = html;
+
+}catch(error){
+document.getElementById("preview-convocatories").textContent = "No s'ha pogut carregar la convocatòria.";
+console.error(error);
+}
+}
+
+carregarPreviewNoticies();
+carregarPreviewConvocatories();
+
+  
 </script>
-
 </body>
 </html>
