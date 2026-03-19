@@ -19,6 +19,17 @@
 
 <style>
 
+:root{
+--color-clar:#00c3b2;
+--color-fosc:#26545E;
+
+--color-blanc:#ffffff;
+--color-negre:#000000;
+
+--text-sobre-fosc:var(--color-clar);
+--text-sobre-clar:var(--color-fosc);
+}
+  
 *{
 box-sizing:border-box;
 }
@@ -26,8 +37,8 @@ box-sizing:border-box;
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
-background:rgb(22,59,101);
-color:white;
+background:var(--color-fosc);
+color:var(--text-sobre-fosc);
 }
 
 .app{
@@ -38,8 +49,8 @@ padding:18px 16px 30px 16px;
 
 .boto-tornar{
 display:inline-block;
-background:white;
-color:#163B65;
+background:var(--color-blanc);
+color:var(--color-fosc);
 text-decoration:none;
 font-weight:bold;
 padding:10px 16px;
@@ -60,8 +71,8 @@ gap:16px;
 }
 
 .persona{
-background:white;
-color:#0b3a63;
+background:var(--color-blanc);
+color:var(--text-sobre-clar);
 border-radius:16px;
 padding:16px 10px;
 text-align:center;
