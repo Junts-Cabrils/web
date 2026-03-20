@@ -251,17 +251,17 @@
       const imatgeHTML = item.imatge
         ? `<img class="card-img" src="${item.imatge}" alt="Imatge notícia" loading="lazy" onerror="this.style.display='none'">`
         : "";
-
+    
       const contingut = `
         <article class="card ${item.enllac ? "clicable" : ""}">
           ${imatgeHTML}
-          ${item.data ? `<div class="card-data">${escapeHtml(item.data)}</div>` : ""}
+          ${item.data ? `<div class="card-data">${escapeHtml(formatDataCatalana(item.data))}</div>` : ""}
           ${item.titol ? `<h2 class="card-titol">${escapeHtml(item.titol)}</h2>` : ""}
           ${item.text ? `<p class="card-text">${escapeHtml(item.text)}</p>` : ""}
           ${item.enllac ? `<div class="card-more">Veure més</div>` : ""}
         </article>
       `;
-
+    
       if (item.enllac) {
         return `
           <a class="card-link" href="${item.enllac}" target="_blank" rel="noopener noreferrer">
@@ -269,6 +269,9 @@
           </a>
         `;
       }
+    
+      return contingut;
+    }
 
       return contingut;
     }
@@ -294,18 +297,18 @@
         llista.innerHTML = `<div class="missatge">No s'han pogut carregar les notícies.</div>`;
       }
     }
-function formatDataCatalana(data) {
-  if (!data) return "";
-
-  const text = String(data).trim();
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
-    const [any, mes, dia] = text.split("-");
-    return `${dia}-${mes}-${any}`;
-  }
-
-  return text;
-}
+    function formatDataCatalana(data) {
+      if (!data) return "";
+    
+      const text = String(data).trim().split("T")[0];
+    
+      if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+        const [any, mes, dia] = text.split("-");
+        return `${dia}-${mes}-${any}`;
+      }
+    
+      return text;
+    }
 
    
     carregarNoticies();
