@@ -259,7 +259,7 @@
       const contingut = `
         <article class="card ${item.enllac ? "clicable" : ""}">
           ${imatgeHTML}
-          ${item.data ? `<div class="card-data">${escapeHtml(item.data)}</div>` : ""}
+          ${item.data ? `<div class="card-data">${escapeHtml(formatDataCatalana(item.data))}</div>` : ""}
           ${item.titol ? `<h2 class="card-titol">${escapeHtml(item.titol)}</h2>` : ""}
           ${item.text ? `<p class="card-text">${escapeHtml(item.text)}</p>` : ""}
           ${item.lloc ? `<p class="card-meta"><strong>Lloc:</strong> ${escapeHtml(item.lloc)}</p>` : ""}
