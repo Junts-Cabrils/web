@@ -301,6 +301,19 @@
       }
     }
 
+    function formatDataCatalana(data) {
+  if (!data) return "";
+
+  const text = String(data).trim().split("T")[0];
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    const [any, mes, dia] = text.split("-");
+    return `${dia}-${mes}-${any}`;
+  }
+
+  return text;
+}
+    
     carregarAgenda();
   </script>
 </body>
