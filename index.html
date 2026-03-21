@@ -736,6 +736,14 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
   }
 }
 </script>
+
+<script>
+function trackEvent(nom, dades = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', nom, dades);
+  }
+}
+</script>
   
 </body>
 </html>
