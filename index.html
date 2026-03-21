@@ -331,7 +331,8 @@ gtag('config', 'G-8D1EM8HE48');
 
 <div class="columna">
 
-<a class="boto" href="https://www.juntspercabrils.cat" target="_blank">
+<a class="boto" href="https://www.juntspercabrils.cat" target="_blank"
+  onclick="obrirWeb(); return false;">
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <circle cx="12" cy="12" r="9"/>
@@ -757,6 +758,18 @@ function enviarWhatsApp(){
 
   setTimeout(function(){
     window.open('https://wa.me/34676446473?text=ALTA','_blank');
+  }, 120);
+}
+</script>
+
+<script>
+function obrirWeb(){
+  if (typeof gtag === 'function') {
+    gtag('event','click_web');
+  }
+
+  setTimeout(function(){
+    window.open('https://www.juntspercabrils.cat','_blank');
   }, 120);
 }
 </script>
