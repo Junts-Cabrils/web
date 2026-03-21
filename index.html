@@ -355,7 +355,8 @@ gtag('config', 'G-8D1EM8HE48');
 
 </a>
 
-<a class="boto" href="#" onclick="obreInstagram(); return false;">
+<a class="boto" href="#"
+   onclick="obrirFacebook(); return false;">
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <rect x="4" y="4" width="16" height="16" rx="4"/>
@@ -787,6 +788,18 @@ function enviarEmail(){
 
   setTimeout(function(){
     window.location.href = 'mailto:info@juntspercabrils.cat';
+  }, 120);
+}
+</script>
+
+<script>
+function obrirFacebook(){
+  if (typeof gtag === 'function') {
+    gtag('event','click_facebook');
+  }
+
+  setTimeout(function(){
+    window.open('https://facebook.com/JuntsCabrils/','_blank');
   }, 120);
 }
 </script>
