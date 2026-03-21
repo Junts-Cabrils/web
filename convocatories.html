@@ -170,6 +170,24 @@
   <script>
     const URL_AGENDA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSppmvurw7sZCa1GtfZ7kF72Voudj29-SawqkXVQxUrX4yu2LmXCmGp5-naYY1mhw/pub?output=csv";
 
+    function arreglaEnllac(url){
+      if(!url) return "";
+    
+      const text = String(url).trim();
+    
+      // si és Drive tipus file/d/.../view
+      const match = text.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    
+      if(match){
+        const id = match[1];
+        return `https://drive.google.com/uc?export=view&id=${id}`;
+      }
+    
+      // si no és Drive, retorna igual
+      return text;
+    }
+
+    
     function parseCSV(text) {
       const rows = [];
       let row = [];
