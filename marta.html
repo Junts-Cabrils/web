@@ -208,7 +208,8 @@ Candidata a l'Alcaldia
 
 <div class="grid">
 
-<a class="caixa" href="presentacio.html">
+<a class="caixa" href="presentacio.html"
+   onclick="trackEvent('click_marta_presentacio')">
 
 <div class="icona">
 
@@ -239,7 +240,8 @@ EQUIP
 
 </a>
 
-<a class="caixa" href="programa.html">
+<a class="caixa" href="programa.html"
+   onclick="trackEvent('click_marta_programa')">
 
 <div class="icona">
 
@@ -256,7 +258,8 @@ PROGRAMA
 
 </a>
 
-<a class="caixa" href="mailto:info@juntspercabrils.cat">
+<a class="caixa" href="#"
+   onclick="enviarEmailMarta(); return false;">
 
 <div class="icona">
 
@@ -309,11 +312,23 @@ FACEBOOK
 <script>
 
 function obreInstagramMarta(){
-  window.open("https://www.instagram.com/marta_gomez_pons/", "_blank");
+  if (typeof gtag === 'function') {
+    gtag('event','click_marta_instagram');
+  }
+
+  setTimeout(function(){
+    window.open("https://www.instagram.com/marta_gomez_pons/", "_blank");
+  }, 120);
 }
 
 function obreFacebookMarta(){
-  window.open("https://www.facebook.com/marta.gomezpons", "_blank");
+  if (typeof gtag === 'function') {
+    gtag('event','click_marta_facebook');
+  }
+
+  setTimeout(function(){
+    window.open("https://www.facebook.com/marta.gomezpons", "_blank");
+  }, 120);
 }
 
 </script>
@@ -323,5 +338,23 @@ function obreFacebookMarta(){
   </a>
 </div>
 
+<script>
+function trackEvent(nom, dades = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', nom, dades);
+  }
+}
+
+function enviarEmailMarta(){
+  if (typeof gtag === 'function') {
+    gtag('event','click_marta_email');
+  }
+
+  setTimeout(function(){
+    window.location.href = 'mailto:info@juntspercabrils.cat';
+  }, 120);
+}
+</script>
+  
 </body>
 </html>
