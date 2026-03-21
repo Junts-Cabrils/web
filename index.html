@@ -383,7 +383,8 @@ gtag('config', 'G-8D1EM8HE48');
 <span class="text">YOUTUBE</span>
 </a>
 
-<a class="boto" href="mailto:info@juntspercabrils.cat">
+<a class="boto" href="#"
+   onclick="enviarEmail(); return false;">
 <div class="icona">
 <svg viewBox="0 0 24 24">
 <rect x="3" y="5" width="18" height="14" rx="2"/>
@@ -770,6 +771,18 @@ function obrirWeb(){
 
   setTimeout(function(){
     window.open('https://www.juntspercabrils.cat','_blank');
+  }, 120);
+}
+</script>
+
+<script>
+function enviarEmail(){
+  if (typeof gtag === 'function') {
+    gtag('event','click_email');
+  }
+
+  setTimeout(function(){
+    window.location.href = 'mailto:info@juntspercabrils.cat';
   }, 120);
 }
 </script>
