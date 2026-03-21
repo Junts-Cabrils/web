@@ -375,7 +375,8 @@ gtag('config', 'G-8D1EM8HE48');
 <span class="text">FACEBOOK</span>
 </a>
 
-<a class="boto" href="https://youtube.com/@JuntsperCabrils" target="_blank">
+<a class="boto" href="#"
+   onclick="obrirYoutube(); return false;">
 <div class="icona">
 <svg viewBox="0 0 24 24" fill="white" stroke="none">
 <polygon points="6,5 19,12 6,19"/>
@@ -800,6 +801,18 @@ function obrirFacebook(){
 
   setTimeout(function(){
     window.open('https://facebook.com/JuntsCabrils/','_blank');
+  }, 120);
+}
+</script>
+
+<script>
+function obrirYoutube(){
+  if (typeof gtag === 'function') {
+    gtag('event','click_youtube');
+  }
+
+  setTimeout(function(){
+    window.open('https://youtube.com/@JuntsperCabrils','_blank');
   }, 120);
 }
 </script>
