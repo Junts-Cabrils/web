@@ -432,6 +432,24 @@ Candidata a l'Alcaldia
   
 <script>
 
+function arreglaEnllac(url){
+  if(!url) return "";
+
+  const text = String(url).trim();
+
+  // si és Drive tipus file/d/.../view
+  const match = text.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+
+  if(match){
+    const id = match[1];
+    return `https://drive.google.com/uc?export=view&id=${id}`;
+  }
+
+  // si no és Drive, retorna igual
+  return text;
+}
+
+  
 function obreInstagram(){
 
 var app="instagram://user?username=juntspercabrils";
