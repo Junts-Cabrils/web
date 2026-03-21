@@ -581,6 +581,23 @@ return `${dia}-${mes}-${any}`;
 return text;
 }
 
+function parseDateDMY(data){
+if(!data) return new Date(0);
+
+const text = String(data).trim().split("T")[0];
+
+if(/^\d{4}-\d{2}-\d{2}$/.test(text)){
+const [any, mes, dia] = text.split("-");
+return new Date(Number(any), Number(mes) - 1, Number(dia));
+}
+
+if(/^\d{2}-\d{2}-\d{4}$/.test(text)){
+const [dia, mes, any] = text.split("-");
+return new Date(Number(any), Number(mes) - 1, Number(dia));
+}
+
+return new Date(0);
+}  
  
 async function carregarPreviewNoticies(){
 try{
@@ -589,7 +606,7 @@ const csv = await resposta.text();
 let files = parseCSV(csv);
 
 files = files.filter(f => (f.visible || "").toLowerCase() === "si");
-files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+files.sort((a, b) => parseDateDMY(a.data) - parseDateDMY(b.data));
 
 if(files.length === 0){
 document.getElementById("preview-noticies").textContent = "No hi ha notícies.";
