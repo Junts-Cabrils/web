@@ -155,7 +155,7 @@ gtag('config', 'G-8D1EM8HE48');
 <div class="app">
 
 <div class="barra-superior">
-  <a href="marta.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
+  <a href="marta.html" class="boto-tornar" onclick="trackEvent('click_tornar_equip'); history.back(); return false;">←</a>
   <div class="titol-pagina">EQUIP</div>
 </div>
 
@@ -233,5 +233,14 @@ navigator.serviceWorker.register("sw.js");
     Privacitat
   </a>
 </div>
+
+<script>
+function trackEvent(nom, dades = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', nom, dades);
+  }
+}
+</script>
+
 </body>
 </html>
