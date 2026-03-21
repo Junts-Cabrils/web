@@ -268,7 +268,7 @@ function arreglaEnllac(url){
 
     function creaTargetaNoticia(item) {
       const imatgeHTML = item.imatge
-        ? `<img class="card-img" src="${item.imatge}" alt="Imatge notícia" loading="lazy" onerror="this.style.display='none'">`
+        ? `<img class="card-img" src="${arreglaEnllac(item.imatge)}" alt="Imatge notícia" loading="lazy" onerror="this.style.display='none'">`
         : "";
     
       const contingut = `
@@ -283,7 +283,7 @@ function arreglaEnllac(url){
     
       if (item.enllac) {
         return `
-          <a class="card-link" href="${item.enllac}" target="_blank" rel="noopener noreferrer">
+          <a class="card-link" href="${arreglaEnllac(item.enllac)}" target="_blank" rel="noopener noreferrer">
             ${contingut}
           </a>
         `;
