@@ -303,7 +303,8 @@ gtag('config', 'G-8D1EM8HE48');
 
       if (item.enllac) {
         return `
-          <a class="card-link" href="${arreglaEnllac(item.enllac)}" target="_blank" rel="noopener noreferrer">
+      <a class="card-link" href="${arreglaEnllac(item.enllac)}" target="_blank" rel="noopener noreferrer"
+       onclick="trackEvent('agenda_open', {titol: '${escapeHtml(item.titol)}'})">
             ${contingut}
           </a>
         `;
@@ -364,5 +365,13 @@ gtag('config', 'G-8D1EM8HE48');
   </a>
 </div>
 
+<script>
+function trackEvent(nom, dades = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', nom, dades);
+  }
+}
+</script>
+  
 </body>
 </html>
