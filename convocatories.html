@@ -286,9 +286,17 @@
         const res = await fetch(URL_AGENDA);
         const csv = await res.text();
 
-        const items = csvToObjects(csv)
-          .filter(item => (item.visible || "").toLowerCase() === "si")
-          .sort((a, b) => parseDateDMY(a.data) - parseDateDMY(b.data));
+    const avui = new Date();
+    avui.setHours(0,0,0,0);
+    
+    const items = csvToObjects(csv)
+      .filter(item => (item.visible || "").toLowerCase() === "si")
+      .filter(item => {
+        const d = parseDateDMY(item.data);
+        d.setHours(0,0,0,0);
+        return d >= avui;
+      })
+      .sort((a, b) => parseDateDMY(a.data) - parseDateDMY(b.data));
 
         if (!items.length) {
           llista.innerHTML = `<div class="missatge">No hi ha convocatòries visibles.</div>`;
