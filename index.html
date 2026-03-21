@@ -723,6 +723,19 @@ carregarPreviewConvocatories();
   </a>
 </div>
 
+<script>
+window.addEventListener('appinstalled', () => {
+  if (typeof gtag === 'function') {
+    gtag('event', 'pwa_installed');
+  }
+});
 
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  if (typeof gtag === 'function') {
+    gtag('event', 'pwa_opened_standalone');
+  }
+}
+</script>
+  
 </body>
 </html>
