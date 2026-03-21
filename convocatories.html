@@ -175,11 +175,14 @@
     
       const text = String(url).trim();
     
-      const match = text.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+      if (/^[a-zA-Z0-9_-]{20,}$/.test(text)) {
+        return `https://drive.google.com/thumbnail?id=${text}&sz=w1200`;
+      }
     
+      const match = text.match(/drive\.google\.com\/file\/d\/([^/]+)/);
       if(match){
         const id = match[1];
-        return `https://drive.google.com/uc?id=${id}`;
+        return `https://drive.google.com/thumbnail?id=${id}&sz=w1200`;
       }
     
       return text;
