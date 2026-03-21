@@ -472,6 +472,10 @@ function arreglaEnllac(url){
   
 function obreInstagram(){
 
+  if (typeof gtag === 'function') {
+    gtag('event','click_instagram');
+  }  
+
 var app="instagram://user?username=juntspercabrils";
 var web="https://instagram.com/juntspercabrils";
 
