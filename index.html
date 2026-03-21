@@ -606,7 +606,7 @@ const csv = await resposta.text();
 let files = parseCSV(csv);
 
 files = files.filter(f => (f.visible || "").toLowerCase() === "si");
-files.sort((a, b) => parseDateDMY(a.data) - parseDateDMY(b.data));
+files.sort((a, b) => parseDateDMY(b.data) - parseDateDMY(a.data));
 
 if(files.length === 0){
 document.getElementById("preview-noticies").textContent = "No hi ha notícies.";
@@ -638,7 +638,17 @@ const csv = await resposta.text();
 let files = parseCSV(csv);
 
 files = files.filter(f => (f.visible || "").toLowerCase() === "si");
-files.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+
+const avui = new Date();
+avui.setHours(0,0,0,0);
+
+files = files.filter(f => {
+const d = parseDateDMY(f.data);
+d.setHours(0,0,0,0);
+return d >= avui;
+});
+
+files.sort((a, b) => parseDateDMY(a.data) - parseDateDMY(b.data));
 
 if(files.length === 0){
 document.getElementById("preview-convocatories").textContent = "No hi ha convocatòries.";
