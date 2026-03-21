@@ -153,11 +153,13 @@ gtag('config', 'G-8D1EM8HE48');
 
 
       <div class="descarrega">
-        <a href="PROGRAMA23.pdf" download>Descarregar PDF</a>
+        <a href="#"
+           onclick="descarregarProgramaPdf(); return false;">Descarregar PDF</a>
       </div>
       
       <div class="descarrega" style="margin-top:10px;">
-        <a href="PROGRAMA23.pdf" target="_blank">Obrir (visor)</a>
+        <a href="#"
+           onclick="obrirProgramaPdf(); return false;">Obrir (visor)</a>
       </div>
     </div>
   </div>
@@ -166,5 +168,33 @@ gtag('config', 'G-8D1EM8HE48');
     Privacitat
   </a>
 </div>
+
+<script>
+function descarregarProgramaPdf(){
+  if (typeof gtag === 'function') {
+    gtag('event','download_programa_pdf');
+  }
+
+  setTimeout(function(){
+    const a = document.createElement('a');
+    a.href = 'PROGRAMA23.pdf';
+    a.download = 'PROGRAMA23.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, 120);
+}
+
+function obrirProgramaPdf(){
+  if (typeof gtag === 'function') {
+    gtag('event','open_programa_pdf');
+  }
+
+  setTimeout(function(){
+    window.open('PROGRAMA23.pdf','_blank');
+  }, 120);
+}
+</script>
+
 </body>
 </html>
