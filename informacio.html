@@ -1,155 +1,103 @@
 <!DOCTYPE html>
 <html lang="ca">
-
 <head>
+  <meta charset="UTF-8">
+  <title>Guia de Cabrils</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163B65">
+  <style>
+    :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; }
+    body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; }
+    .pagina { max-width: 600px; margin: auto; padding: 15px; }
+    .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
+    .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; padding:5px; }
+    
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
 
-<meta charset="UTF-8">
-<title>Informació local</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#163B65">
-
-<link rel="manifest" href="manifest.json">
-
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
-
-<style>
-
-*{
-box-sizing:border-box;
-}
-
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#26545E;
-}
-
-.pagina{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
-
-.titol{
-color:white;
-text-align:center;
-margin:0 0 18px 0;
-font-size:28px;
-font-weight:bold;
-}
-
-.tornar{
-display:inline-block;
-margin-bottom:15px;
-background:white;
-color:#163B65;
-padding:10px 16px;
-border-radius:10px;
-text-decoration:none;
-font-weight:bold;
-}
-
-.caixa{
-background:white;
-border-radius:16px;
-padding:10px;
-box-shadow:0 6px 16px rgba(0,0,0,0.25);
-}
-
-iframe{
-width:100%;
-height:80vh;
-border:none;
-border-radius:10px;
-}
-
-.boto-pdf{
-display:inline-block;
-margin-top:15px;
-background:white;
-color:#163B65;
-padding:10px 16px;
-border-radius:10px;
-text-decoration:none;
-font-weight:bold;
-}
-
-.barra-superior{
-display:flex;
-align-items:center;
-gap:12px;
-padding:10px 14px;
-background:#26545E;
-color:white;
-position:sticky;
-top:0;
-z-index:1000;
-}
-
-.boto-tornar{
-color:white;
-text-decoration:none;
-font-size:24px;
-font-weight:bold;
-line-height:1;
-display:inline-block;
-padding:2px 4px;
-}
-
-.titol-pagina{
-font-size:18px;
-font-weight:bold;
-letter-spacing:0.3px;
-color:white;
-}
-
-</style>
-
-<meta charset="UTF-8">
-<title>Junts Cabrils</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8D1EM8HE48"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-8D1EM8HE48');
-</script>
-  
+    /* Estil Categories */
+    .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; }
+    
+    /* Targeta Compacta (3 línies) */
+    .llista-llocs { display:none; flex-direction:column; gap:10px; margin-bottom:20px; padding-left:10px; border-left:2px solid var(--clar); }
+    .targeta { background:var(--blanc); color:var(--fosc); padding:12px; border-radius:10px; }
+    .titol-lloc { font-weight:bold; font-size:16px; color:#163B65; margin-bottom:2px; display:block; }
+    .detalls-lloc { font-size:13px; color:#666; line-height:1.2; margin-bottom:8px; display:block; }
+    
+    .accions { display:flex; gap:8px; }
+    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; border:1px solid #ddd; }
+    .btn-truca { background:var(--clar); color:white; border:none; }
+  </style>
 </head>
-
 <body>
 
 <div class="pagina">
+  <div class="barra-superior">
+    <a href="index.html" class="boto-tornar">←</a>
+    <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
+  </div>
 
-<div class="barra-superior">
-  <a href="index.html" class="boto-tornar" onclick="history.back(); return false;">←</a>
-  <div class="titol-pagina">INFORMACIÓ CABRILS</div>
-</div>
+  <input type="text" id="cercador" class="cercador" placeholder="Cerca per nom o servei..." onkeyup="filtrar()">
 
-<div class="caixa">
-<iframe src="informacio_cabrils.pdf"></iframe>
-</div>
-
-<a class="boto-pdf" href="informacio_cabrils.pdf" target="_blank">Obrir PDF</a>
-
+  <div id="contingut-guia">
+    </div>
 </div>
 
 <script>
-if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("sw.js");
-}
-</script>
-<div style="text-align:center; font-size:12px; margin:2px;">
-  <a href="privacitat.html" style="color:#00c3b2; text-decoration:none;">
-    Privacitat
-  </a>
-</div>
-</body>
+  // Recorda publicar el teu Sheets com a CSV i posar el link aquí
+  const URL_GUIA = "AQUÍ_EL_TEU_LINK_CSV_DE_GOOGLE_SHEETS";
 
+  async function carregarDades() {
+    try {
+      const res = await fetch(URL_GUIA, {cache: "no-store"});
+      const csv = await res.text();
+      const dades = parseCSV(csv).filter(f => f.visible.toLowerCase() === "si");
+      
+      const categories = [...new Set(dades.map(d => d.categoria))];
+      renderitzar(categories, dades);
+    } catch (e) { console.error(e); }
+  }
+
+  function renderitzar(cats, dades) {
+    let html = "";
+    cats.forEach(cat => {
+      html += `<button class="btn-cat" onclick="toggleCat('${cat}')">${cat} <span>▼</span></button>`;
+      html += `<div id="cat-${cat}" class="llista-llocs">`;
+      dades.filter(d => d.categoria === cat).forEach(lloc => {
+        html += `
+          <div class="targeta">
+            <span class="titol-lloc">${lloc.nom}</span>
+            <span class="detalls-lloc">${lloc.lloc} <br> ${lloc.horari || ''}</span>
+            <div class="accions">
+              <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCAR</a>
+              ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc">✉️ MAIL</a>` : ''}
+              <a href="https://www.google.com/maps/search/${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
+            </div>
+          </div>`;
+      });
+      html += `</div>`;
+    });
+    document.getElementById("contingut-guia").innerHTML = html;
+  }
+
+  function toggleCat(cat) {
+    const el = document.getElementById('cat-'+cat);
+    el.style.display = el.style.display === "flex" ? "none" : "flex";
+  }
+
+  function filtrar() {
+    let val = document.getElementById('cercador').value.toLowerCase();
+    let cats = document.getElementsByClassName('btn-cat');
+    let llistes = document.getElementsByClassName('llista-llocs');
+    for(let i=0; i<cats.length; i++) {
+        let visible = llistes[i].innerText.toLowerCase().includes(val);
+        cats[i].style.display = visible ? "flex" : "none";
+        llistes[i].style.display = val.length > 1 && visible ? "flex" : "none";
+    }
+  }
+
+  function parseCSV(t){let l=t.trim().split(/\r?\n/);if(l.length<2)return[];let h=l[0].split(",").map(x=>x.trim().toLowerCase());let r=[];for(let i=1;i<l.length;i++){let v=l[i].split(",");let o={};h.forEach((header,idx)=>o[header]=(v[idx]||"").trim());r.push(o)}return r;}
+  
+  carregarDades();
+</script>
+</body>
 </html>
