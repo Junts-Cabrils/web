@@ -11,16 +11,25 @@
     .pagina { max-width: 600px; margin: auto; padding: 15px; }
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; padding:5px; }
-    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
-    .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
-    .llista-llocs { display:none; flex-direction:column; gap:10px; margin-bottom:20px; padding-left:10px; border-left:2px solid var(--clar); }
-    .targeta { background:var(--blanc); color:var(--fosc); padding:12px; border-radius:10px; }
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    
+    /* Botons de Categoria */
+    .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    .btn-cat span { font-size: 12px; transition: transform 0.3s; }
+    
+    /* Contenidor de llocs (amagat per defecte) */
+    .llista-llocs { display:none; flex-direction:column; gap:10px; margin-bottom:20px; padding-left:10px; border-left:3px solid var(--clar); }
+    
+    /* Targeta de l'establiment */
+    .targeta { background:var(--blanc); color:var(--fosc); padding:12px; border-radius:10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     .titol-lloc { font-weight:bold; font-size:16px; color:#163B65; margin-bottom:2px; display:block; }
-    .detalls-lloc { font-size:13px; color:#666; line-height:1.2; margin-bottom:8px; display:block; }
+    .detalls-lloc { font-size:13px; color:#666; line-height:1.3; margin-bottom:10px; display:block; }
+    
     .accions { display:flex; gap:8px; }
-    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; border:1px solid #ddd; }
+    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:9px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; border:1px solid #ddd; }
     .btn-truca { background:var(--clar); color:white; border:none; }
   </style>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D1EM8HE48"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -30,43 +39,57 @@
   </script>
 </head>
 <body>
+
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
-    <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
+    <div style="font-weight:bold; letter-spacing:0.5px;">GUIA DE SERVEIS CABRILS</div>
   </div>
+
   <input type="text" id="cercador" class="cercador" placeholder="Cerca per nom o servei..." onkeyup="filtrar()">
-  <div id="contingut-guia"><p style="text-align:center;">Carregant dades...</p></div>
+
+  <div id="contingut-guia">
+    <p style="text-align:center; opacity:0.7;">Carregant la guia de Cabrils...</p>
+  </div>
 </div>
 
 <script>
-  // SUBSTITUEIX EL TEXT ENTRE COMETES PER L'ENLLAÇ QUE HAS COPIAT
-  const URL_GUIA = "AQUÍ_VA_EL_TEU_ENLLAÇ_CSV";
+  // Posa aquí el teu enllaç CSV de Google Sheets
+  const URL_GUIA = "AQUÍ_EL_TEU_ENLLAÇ_CSV";
 
   async function carregarDades() {
     try {
       const res = await fetch(URL_GUIA, {cache: "no-store"});
       const csv = await res.text();
-      const dades = parseCSV(csv).filter(f => f.visible && f.visible.toLowerCase() === "si");
+      const dades = parseCSV(csv).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
+      
+      if(dades.length === 0) {
+        document.getElementById("contingut-guia").innerHTML = "<p style='text-align:center;'>No hi ha dades disponibles actualment.</p>";
+        return;
+      }
+
+      // Obtenim categories úniques i les ordenem
       const categories = [...new Set(dades.map(d => d.categoria))].sort();
       renderitzar(categories, dades);
     } catch (e) { 
-      document.getElementById("contingut-guia").innerHTML = "Error carregant la guia.";
+      document.getElementById("contingut-guia").innerHTML = "<p style='text-align:center;'>Error de connexió. Comprova l'enllaç del full de càlcul.</p>";
     }
   }
 
   function renderitzar(cats, dades) {
     let html = "";
     cats.forEach(cat => {
-      html += `<button class="btn-cat" onclick="toggleCat('${cat}')">${cat} <span>▼</span></button>`;
+      if(!cat) return;
+      html += `<button class="btn-cat" onclick="toggleCat('${cat}')">${cat.toUpperCase()} <span id="icon-${cat}">▼</span></button>`;
       html += `<div id="cat-${cat}" class="llista-llocs">`;
+      
       dades.filter(d => d.categoria === cat).forEach(lloc => {
         html += `
           <div class="targeta">
             <span class="titol-lloc">${lloc.nom}</span>
-            <span class="detalls-lloc">${lloc.lloc} <br> ${lloc.horari || ''}</span>
+            <span class="detalls-lloc">📍 ${lloc.lloc} <br> ⏰ ${lloc.horari || 'Horari no disponible'}</span>
             <div class="accions">
-              <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCAR</a>
+              <a href="tel:${lloc.telefon}" class="btn-acc btn-truca" onclick="gtag('event','trucada_guia',{'nom':'${lloc.nom}'})">📞 TRUCAR</a>
               ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc">✉️ MAIL</a>` : ''}
               <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' ' + lloc.lloc + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
             </div>
@@ -79,19 +102,25 @@
 
   function toggleCat(cat) {
     const el = document.getElementById('cat-'+cat);
+    const icon = document.getElementById('icon-'+cat);
     const isVisible = el.style.display === "flex";
     el.style.display = isVisible ? "none" : "flex";
+    icon.style.transform = isVisible ? "rotate(0deg)" : "rotate(180deg)";
   }
 
   function filtrar() {
     let val = document.getElementById('cercador').value.toLowerCase();
     let cats = document.getElementsByClassName('btn-cat');
     let llistes = document.getElementsByClassName('llista-llocs');
+    
     for(let i=0; i<cats.length; i++) {
-        let textLlista = llistes[i].innerText.toLowerCase();
-        let visible = textLlista.includes(val) || cats[i].innerText.toLowerCase().includes(val);
+        let textContingut = llistes[i].innerText.toLowerCase();
+        let textTitol = cats[i].innerText.toLowerCase();
+        let visible = textContingut.includes(val) || textTitol.includes(val);
+        
         cats[i].style.display = visible ? "flex" : "none";
-        llistes[i].style.display = val.length > 1 && visible ? "flex" : "none";
+        // Si l'usuari busca, obrim les categories automàticament
+        llistes[i].style.display = (val.length > 1 && visible) ? "flex" : "none";
     }
   }
 
@@ -100,12 +129,17 @@
     if(lines.length < 2) return [];
     let headers = lines[0].split(",").map(x => x.trim().toLowerCase());
     return lines.slice(1).map(line => {
-      let values = line.split(",");
+      // Millorat per gestionar comes dins de cometes si n'hi hagués
+      let values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
       let obj = {};
-      headers.forEach((h, idx) => obj[h] = (values[idx] || "").trim());
+      headers.forEach((h, idx) => {
+        let val = (values[idx] || "").trim();
+        obj[h] = val.replace(/^"|"$/g, ''); // Treu cometes si n'hi ha
+      });
       return obj;
     });
   }
+
   carregarDades();
 </script>
 </body>
