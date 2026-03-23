@@ -11,13 +11,17 @@
     .pagina { max-width: 600px; margin: auto; padding: 15px; }
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; padding:5px; }
-    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:10px; font-size:16px; box-sizing:border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    
+    /* Avís de col·laboració */
+    .avis-colabora { background: rgba(255, 255, 255, 0.1); border: 1px dashed var(--clar); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; line-height: 1.4; }
+    .avis-colabora a { color: var(--clar); text-decoration: none; font-weight: bold; }
+
     /* Estil Categories */
     .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
     .btn-cat span { font-size: 12px; transition: transform 0.3s; }
     
-    /* Contenidor de llocs */
     .llista-llocs { display:none; flex-direction:column; gap:10px; margin-bottom:20px; padding-left:10px; border-left:3px solid var(--clar); }
     
     /* Targeta Compacta */
@@ -27,7 +31,7 @@
     
     /* Botons d'acció (4 espais) */
     .accions { display:flex; gap:6px; flex-wrap: nowrap; }
-    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px 4px; border-radius:6px; text-decoration:none; font-size:11px; font-weight:bold; border:1px solid #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px 2px; border-radius:6px; text-decoration:none; font-size:10px; font-weight:bold; border:1px solid #ddd; white-space: nowrap; }
     .btn-truca { background:var(--clar); color:white; border:none; }
   </style>
   
@@ -48,6 +52,11 @@
   </div>
 
   <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
+
+  <div class="avis-colabora">
+    Si falta un servei existent o vols actualitzar dades, envia un correu a: <br>
+    <a href="mailto:info@juntscabrils.cat">info@juntscabrils.cat</a>
+  </div>
 
   <div id="contingut-guia"><p style="text-align:center; opacity:0.7;">Carregant dades...</p></div>
 </div>
@@ -81,12 +90,12 @@
         html += `
           <div class="targeta">
             <span class="titol-lloc">${lloc.nom}</span>
-            <span class="detalls-lloc">📍 ${lloc.lloc} | ⏰ ${lloc.horari || 'Horari no disponible'}</span>
+            <span class="detalls-lloc">📍 ${lloc.lloc} | ⏰ ${lloc.horari || 'Consultar horari'}</span>
             <div class="accions">
-              <a href="tel:${lloc.telefon}" class="btn-acc btn-truca" title="TRUCAR">📞 TRUCA</a>
-              ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc" title="EMAIL">✉️ MAIL</a>` : ''}
-              <a href="http://googleusercontent.com/maps.google.com/maps?q=${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc" title="MAPA">📍 MAPA</a>
-              ${lloc.web ? `<a href="${lloc.web}" target="_blank" class="btn-acc" title="WEB">🌐 WEB</a>` : ''}
+              <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
+              ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc">✉️ MAIL</a>` : ''}
+              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
+              ${lloc.web ? `<a href="${lloc.web}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
             </div>
           </div>`;
       });
@@ -100,7 +109,7 @@
     const icon = document.getElementById('icon-'+cat);
     const isVisible = el.style.display === "flex";
     el.style.display = isVisible ? "none" : "flex";
-    icon.style.transform = isVisible ? "rotate(0deg)" : "rotate(180deg)";
+    if(icon) icon.style.transform = isVisible ? "rotate(0deg)" : "rotate(180deg)";
   }
 
   function filtrar() {
