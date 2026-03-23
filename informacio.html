@@ -14,22 +14,19 @@
     
     .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:10px; font-size:16px; box-sizing:border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     
-    /* Avís de col·laboració */
-    .avis-colabora { background: rgba(255, 255, 255, 0.1); border: 1px dashed var(--clar); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; line-height: 1.4; }
-    .avis-colabora a { color: var(--clar); text-decoration: none; font-weight: bold; }
+    /* Avís de col·laboració en una sola línia */
+    .avis-colabora { background: rgba(255, 255, 255, 0.08); padding: 8px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; border: 1px solid rgba(0, 195, 178, 0.3); }
+    .avis-colabora a { color: var(--clar); text-decoration: underline; font-weight: bold; }
 
-    /* Estil Categories */
     .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
     .btn-cat span { font-size: 12px; transition: transform 0.3s; }
     
     .llista-llocs { display:none; flex-direction:column; gap:10px; margin-bottom:20px; padding-left:10px; border-left:3px solid var(--clar); }
     
-    /* Targeta Compacta */
     .targeta { background:var(--blanc); color:var(--fosc); padding:12px; border-radius:10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     .titol-lloc { font-weight:bold; font-size:16px; color:#163B65; margin-bottom:2px; display:block; }
     .detalls-lloc { font-size:13px; color:#666; line-height:1.3; margin-bottom:10px; display:block; }
     
-    /* Botons d'acció (4 espais) */
     .accions { display:flex; gap:6px; flex-wrap: nowrap; }
     .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px 2px; border-radius:6px; text-decoration:none; font-size:10px; font-weight:bold; border:1px solid #ddd; white-space: nowrap; }
     .btn-truca { background:var(--clar); color:white; border:none; }
@@ -54,8 +51,7 @@
   <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
 
   <div class="avis-colabora">
-    Si falta un servei existent o vols actualitzar dades, envia un correu a: <br>
-    <a href="mailto:info@juntscabrils.cat">info@juntscabrils.cat</a>
+    Si falta un servei o vols actualitzar dades, envia'ns un <a href="mailto:info@juntscabrils.cat">correu</a>.
   </div>
 
   <div id="contingut-guia"><p style="text-align:center; opacity:0.7;">Carregant dades...</p></div>
