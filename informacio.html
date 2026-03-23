@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163B65">
   <style>
-    :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; }
+    :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; --ressaltat: #ffeb3b; }
     body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; }
     .pagina { max-width: 600px; margin: auto; padding: 15px; }
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
@@ -14,14 +14,19 @@
     .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:10px; font-size:16px; box-sizing:border-box; }
     .avis-colabora { background: rgba(255, 255, 255, 0.08); padding: 8px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; border: 1px solid rgba(0, 195, 178, 0.3); }
     .avis-colabora a { color: var(--clar); text-decoration: underline; font-weight: bold; }
-    .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-    .btn-cat span { font-size: 12px; transition: transform 0.3s; }
+    
+    .btn-cat { width:100%; background:var(--blanc); color:var(--fosc); padding:15px; border-radius:12px; margin-bottom:10px; border:none; font-weight:bold; text-align:left; font-size:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
     .llista-llocs { display:none; flex-direction:column; gap:10px; margin-bottom:20px; padding-left:10px; border-left:3px solid var(--clar); }
-    .targeta { background:var(--blanc); color:var(--fosc); padding:12px; border-radius:10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .titol-lloc { font-weight:bold; font-size:16px; color:#163B65; margin-bottom:2px; display:block; }
-    .detalls-lloc { font-size:13px; color:#666; line-height:1.3; margin-bottom:10px; display:block; }
+    
+    .targeta { background:var(--blanc); color:var(--fosc); padding:12px; border-radius:10px; transition: all 0.3s; }
+    .titol-lloc { font-weight:bold; font-size:16px; color:#163B65; display:block; }
+    .detalls-lloc { font-size:13px; color:#666; margin-bottom:10px; display:block; }
+    
+    /* Ressaltat de cerca */
+    mark { background: var(--ressaltat); color: black; font-weight: bold; padding: 0 2px; border-radius: 2px; }
+    
     .accions { display:flex; gap:6px; }
-    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px 2px; border-radius:6px; text-decoration:none; font-size:10px; font-weight:bold; border:1px solid #ddd; white-space: nowrap; }
+    .btn-acc { flex:1; background:#f0f4f4; color:var(--fosc); text-align:center; padding:8px 2px; border-radius:6px; text-decoration:none; font-size:10px; font-weight:bold; border:1px solid #ddd; }
     .btn-truca { background:var(--clar); color:white; border:none; }
   </style>
 </head>
@@ -30,68 +35,84 @@
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
-    <div style="font-weight:bold; letter-spacing:0.5px;">GUIA DE SERVEIS CABRILS</div>
+    <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
   </div>
   <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
-  <div class="avis-colabora">Si falta un servei o vols actualitzar dades, envia'ns un <a href="mailto:info@juntscabrils.cat" target="_blank">correu</a>.</div>
-  <div id="contingut-guia"><p style="text-align:center; opacity:0.7;">Carregant dades...</p></div>
+  <div class="avis-colabora">Si falta un servei, envia'ns un <a href="mailto:info@juntscabrils.cat">correu</a>.</div>
+  <div id="contingut-guia"></div>
 </div>
 
 <script>
   const URL_GUIA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?output=csv";
+  let DADES_GLOBALS = [];
 
   async function carregarDades() {
     try {
       const res = await fetch(URL_GUIA, {cache: "no-store"});
       const csv = await res.text();
-      const dades = parseCSV(csv).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
-      
-      if(dades.length === 0) {
-        document.getElementById("contingut-guia").innerHTML = "<p style='text-align:center;'>No hi ha dades disponibles.</p>";
-        return;
-      }
-
-      // Ordenem les categories basant-nos en la columna 'ordre'
-      const mapaCategories = {};
-      dades.forEach(d => {
-        if (!mapaCategories[d.categoria]) {
-          mapaCategories[d.categoria] = parseInt(d.ordre) || 99;
-        }
-      });
-
-      const categoriesOrdenades = Object.keys(mapaCategories).sort((a, b) => mapaCategories[a] - mapaCategories[b]);
-      
-      renderitzar(categoriesOrdenades, dades);
+      DADES_GLOBALS = parseCSV(csv).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
+      renderitzar();
     } catch (e) { document.getElementById("contingut-guia").innerHTML = "Error de connexió."; }
   }
 
-  function renderitzar(cats, dades) {
-    let html = "";
-    cats.forEach(cat => {
-      const catId = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase();
-      html += `<button class="btn-cat" onclick="toggleCat('${catId}')">${cat.toUpperCase()} <span id="icon-${catId}">▼</span></button>`;
-      html += `<div id="cat-${catId}" class="llista-llocs">`;
-      
-      dades.filter(d => d.categoria === cat).forEach(lloc => {
-        let urlWeb = lloc.web ? lloc.web.trim() : "";
-        if (urlWeb && !urlWeb.startsWith('http')) urlWeb = 'https://' + urlWeb;
-        const queryMapa = encodeURIComponent(lloc.nom + ' ' + lloc.lloc + ' Cabrils');
-
-        html += `
-          <div class="targeta">
-            <span class="titol-lloc">${lloc.nom}</span>
-            <span class="detalls-lloc">📍 ${lloc.lloc} | ⏰ ${lloc.horari || 'Consultar horari'}</span>
-            <div class="accions">
-              <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
-              ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc" target="_blank">✉️ MAIL</a>` : ''}
-              <a href="https://www.google.com/maps/search/?api=1&query=${queryMapa}" target="_blank" class="btn-acc">📍 MAPA</a>
-              ${urlWeb ? `<a href="${urlWeb}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
-            </div>
-          </div>`;
-      });
-      html += `</div>`;
+  function renderitzar(filtre = "") {
+    const contenidor = document.getElementById("contingut-guia");
+    const mapaCategories = {};
+    
+    DADES_GLOBALS.forEach(d => {
+      if (!mapaCategories[d.categoria]) mapaCategories[d.categoria] = parseInt(d.ordre) || 99;
     });
-    document.getElementById("contingut-guia").innerHTML = html;
+
+    const categoriesOrdenades = Object.keys(mapaCategories).sort((a, b) => mapaCategories[a] - mapaCategories[b]);
+    
+    let html = "";
+    categoriesOrdenades.forEach(cat => {
+      const llocsCat = DADES_GLOBALS.filter(d => d.categoria === cat);
+      const llocsFiltrats = llocsCat.filter(d => 
+        d.nom.toLowerCase().includes(filtre.toLowerCase()) || 
+        d.categoria.toLowerCase().includes(filtre.toLowerCase())
+      );
+
+      if (llocsFiltrats.length > 0) {
+        const catId = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase();
+        const displayLlista = filtre.length > 1 ? "flex" : "none";
+        const icona = filtre.length > 1 ? "▲" : "▼";
+
+        html += `<button class="btn-cat" onclick="toggleCat('${catId}')">${cat.toUpperCase()} <span id="icon-${catId}">${icona}</span></button>`;
+        html += `<div id="cat-${catId}" class="llista-llocs" style="display:${displayLlista}">`;
+        
+        llocsFiltrats.forEach(lloc => {
+          let nomRessaltat = ressaltarText(lloc.nom, filtre);
+          let urlWeb = lloc.web ? lloc.web.trim() : "";
+          if (urlWeb && !urlWeb.startsWith('http')) urlWeb = 'https://' + urlWeb;
+          
+          html += `
+            <div class="targeta">
+              <span class="titol-lloc">${nomRessaltat}</span>
+              <span class="detalls-lloc">📍 ${lloc.lloc} | ⏰ ${lloc.horari || 'Consultar horari'}</span>
+              <div class="accions">
+                <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
+                ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc" target="_blank">✉️ MAIL</a>` : ''}
+                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
+                ${urlWeb ? `<a href="${urlWeb}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
+              </div>
+            </div>`;
+        });
+        html += `</div>`;
+      }
+    });
+    contenidor.innerHTML = html || "<p style='text-align:center;'>No s'ha trobat cap resultat.</p>";
+  }
+
+  function ressaltarText(text, cerca) {
+    if (!cerca || cerca.length < 2) return text;
+    const regex = new RegExp(`(${cerca})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+  }
+
+  function filtrar() {
+    const val = document.getElementById('cercador').value;
+    renderitzar(val);
   }
 
   function toggleCat(id) {
@@ -99,18 +120,7 @@
     const icon = document.getElementById('icon-'+id);
     const isVisible = el.style.display === "flex";
     el.style.display = isVisible ? "none" : "flex";
-    if(icon) icon.style.transform = isVisible ? "rotate(0deg)" : "rotate(180deg)";
-  }
-
-  function filtrar() {
-    let val = document.getElementById('cercador').value.toLowerCase();
-    let cats = document.getElementsByClassName('btn-cat');
-    let llistes = document.getElementsByClassName('llista-llocs');
-    for(let i=0; i<cats.length; i++) {
-        let visible = llistes[i].innerText.toLowerCase().includes(val) || cats[i].innerText.toLowerCase().includes(val);
-        cats[i].style.display = visible ? "flex" : "none";
-        if(val.length > 1) llistes[i].style.display = visible ? "flex" : "none";
-    }
+    if(icon) icon.innerText = isVisible ? "▼" : "▲";
   }
 
   function parseCSV(t){
