@@ -76,21 +76,23 @@
     } catch (e) { document.getElementById("contingut-guia").innerHTML = "<p style='text-align:center;'>Error de connexió.</p>"; }
   }
 
-  function renderitzar(cats, dades) {
+function renderitzar(cats, dades) {
     let html = "";
     cats.forEach(cat => {
       if(!cat) return;
       html += `<button class="btn-cat" onclick="toggleCat('${cat}')">${cat.toUpperCase()} <span id="icon-${cat}">▼</span></button>`;
       html += `<div id="cat-${cat}" class="llista-llocs">`;
       dades.filter(d => d.categoria === cat).forEach(lloc => {
+        // Preparem la cerca de Google Maps
+        const queryMapa = encodeURIComponent(lloc.nom + ' ' + lloc.lloc + ' Cabrils');
         html += `
           <div class="targeta">
             <span class="titol-lloc">${lloc.nom}</span>
             <span class="detalls-lloc">📍 ${lloc.lloc} | ⏰ ${lloc.horari || 'Consultar horari'}</span>
             <div class="accions">
               <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
-              ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc">✉️ MAIL</a>` : ''}
-              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
+              ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc" target="_blank">✉️ MAIL</a>` : ''}
+              <a href="https://www.google.com/maps/search/?api=1&query=${queryMapa}" target="_blank" class="btn-acc">📍 MAPA</a>
               ${lloc.web ? `<a href="${lloc.web}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
             </div>
           </div>`;
