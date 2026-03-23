@@ -70,7 +70,7 @@
             <div class="accions">
               <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCAR</a>
               ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc">✉️ MAIL</a>` : ''}
-              <a href="https://www.google.com/maps/search/${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
+             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
             </div>
           </div>`;
       });
