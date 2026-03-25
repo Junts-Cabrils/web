@@ -200,6 +200,18 @@
         font-size:9px;
       }
     }
+    .avis-guia{
+      font-size:13px;
+      line-height:1.4;
+      color:#ffffff;
+      margin:-4px 0 16px 0;
+    }
+    
+    .avis-guia a{
+      color:#00c3b2;
+      text-decoration:none;
+      font-weight:bold;
+    }
   </style>
 </head>
 <body>
@@ -218,7 +230,12 @@
     placeholder="Cerca establiment o servei..."
     onkeyup="filtrar()"
   >
-
+  
+<div class="avis-guia">
+  Si vols afegir un establiment o servei, o actualitzar-lo,
+  <a href="#" onclick="enviarEmailGuia(); return false;">envia un correu</a>.
+</div>
+  
   <div class="contenidor-grid">
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
@@ -284,19 +301,12 @@ console.log("D2 visibles:", d2);
       dibuixarBotons(d1, "col-1");
       dibuixarBotons(d2, "col-2");
 
-      const primeraCategoria =
-        (d1.length > 0 && d1[0].categoria) ||
-        (d2.length > 0 && d2[0].categoria) ||
-        "";
-
-      if (primeraCategoria) {
-        CATEGORIA_ACTIVA = primeraCategoria;
-        activarBotoPerText(primeraCategoria);
-        renderitzar(primeraCategoria);
-      } else {
-        document.getElementById("resultats-guia").innerHTML =
-          `<div class="msg-error">No hi ha establiments visibles.</div>`;
-      }
+if (DADES_TOTALS.length > 0) {
+  document.getElementById("resultats-guia").innerHTML = "";
+} else {
+  document.getElementById("resultats-guia").innerHTML =
+    `<div class="msg-error">No hi ha establiments visibles.</div>`;
+}
 
     } catch (e) {
       document.getElementById("resultats-guia").innerHTML =
