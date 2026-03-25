@@ -166,6 +166,7 @@
       color:var(--fosc);
       border-radius:10px;
       box-shadow:0 2px 5px rgba(0,0,0,0.1);
+      width:100%;
     }
 
     .titol-lloc{
@@ -190,19 +191,20 @@
       min-width:0;
     }
     
-    .accions-vertical{
-      display:flex;
-      flex-direction:column;
+    .accions-2x2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
       gap:4px;
-      width:72px;
+      width:116px;
       flex-shrink:0;
     }
+    
     .btn-acc{
       display:flex;
       align-items:center;
       justify-content:center;
-      min-height:22px;
-      padding:1px 3px;
+      min-height:24px;
+      padding:2px 4px;
       border-radius:6px;
       text-decoration:none;
       font-size:8px;
@@ -211,6 +213,7 @@
       background:#f0f4f4;
       color:var(--fosc);
       border:1px solid #ddd;
+      text-align:center;
     }
     
     .btn-truca{
@@ -363,7 +366,6 @@
     
       return `
         <div class="targeta">
-          
           <div class="info-lloc">
             <span class="titol-lloc">${escapeHtml(lloc.nom || "")}</span>
             <span class="detalls-lloc">
@@ -372,13 +374,12 @@
             </span>
           </div>
     
-          <div class="accions-vertical">
-            ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca" onclick="trackEvent('click_truca_guia')">TRUCA</a>` : ""}
-            ${mail ? `<a href="mailto:${mail}" class="btn-acc" onclick="trackEvent('click_mail_guia')">MAIL</a>` : ""}
-            <a href="${mapa}" target="_blank" class="btn-acc" onclick="trackEvent('click_mapa_guia')">MAPA</a>
-            ${web ? `<a href="${web}" target="_blank" class="btn-acc" onclick="trackEvent('click_web_guia')">WEB</a>` : ""}
+          <div class="accions-2x2">
+            ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca" onclick="trackEvent('click_truca_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">TRUCA</a>` : `<span></span>`}
+            <a href="${mapa}" target="_blank" rel="noopener" class="btn-acc" onclick="trackEvent('click_mapa_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">MAPA</a>
+            ${mail ? `<a href="mailto:${mail}" class="btn-acc" onclick="trackEvent('click_mail_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">MAIL</a>` : `<span></span>`}
+            ${web ? `<a href="${web}" target="_blank" rel="noopener" class="btn-acc" onclick="trackEvent('click_web_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">WEB</a>` : `<span></span>`}
           </div>
-    
         </div>
       `;
     }
