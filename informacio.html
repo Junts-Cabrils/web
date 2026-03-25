@@ -8,23 +8,22 @@
     :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; --ressaltat: #ffeb3b; }
     body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; }
     .pagina { max-width: 600px; margin: auto; padding: 15px; }
-    .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
+    .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:100; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
-    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; width:100%; }
     
-    /* Una sola columna per a màxima estabilitat */
-    .columna-unica { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-    
-    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 15px; border-radius: 10px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); text-transform: uppercase; }
+    /* El Grid que buscàvem: Dues columnes fixes */
+    .contenidor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .columna { display: flex; flex-direction: column; gap: 8px; }
+
+    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 12px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); text-transform: uppercase; }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
     
     #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
     .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; }
-    .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; margin-bottom: 3px; }
-    .detalls-lloc { font-size: 13px; color: #666; display: block; line-height: 1.3; margin-bottom: 10px; }
-    .accions { display: flex; gap: 8px; }
-    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 10px 2px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold; border: 1px solid #ddd; }
-    .btn-truca { background: var(--clar); color: white; border: none; }
+    .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; }
+    .accions { display: flex; gap: 6px; margin-top: 10px; }
+    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
   </style>
 </head>
 <body>
@@ -34,62 +33,72 @@
     <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
   </div>
   
-  <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
+  <input type="text" id="cercador" class="cercador" placeholder="Cerca..." onkeyup="filtrar()">
   
-  <div id="llista-categories" class="columna-unica"></div>
+  <div id="grid-categories" class="contenidor-grid">
+    <div id="col-esquerra" class="columna"></div>
+    <div id="col-dreta" class="columna"></div>
+  </div>
+  
   <div id="resultats-guia"></div>
 </div>
 
 <script>
-  // Fem servir només el full principal (gid=0) per evitar errors de fetch múltiples
-  const URL_DATA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv";
+  const URL_UNICA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv";
 
-  let DADES = [];
+  let DADES_TOTALS = [];
 
   async function carregarDades() {
     try {
-      const resposta = await fetch(URL_DATA);
-      const text = await resposta.text();
-      DADES = parseCSV(text).filter(f => f.visible?.toLowerCase() === "si");
-      generarBotons();
+      const res = await fetch(URL_UNICA);
+      const text = await res.text();
+      DADES_TOTALS = parseCSV(text).filter(f => f.visible?.toLowerCase() === "si");
+      
+      repartirBotons();
     } catch (e) {
-      document.getElementById("resultats-guia").innerHTML = "<p style='text-align:center;'>⚠️ Error carregant dades.</p>";
+      document.getElementById("resultats-guia").innerHTML = "Error de connexió.";
     }
   }
 
-  function generarBotons() {
-    const contenidor = document.getElementById("llista-categories");
-    const categories = [...new Set(DADES.map(d => d.categoria))].filter(Boolean);
+  function repartirBotons() {
+    const colEsq = document.getElementById("col-esquerra");
+    const colDre = document.getElementById("col-dreta");
     
-    categories.forEach(cat => {
+    // Obtenim categories úniques
+    const categories = [...new Set(DADES_TOTALS.map(d => d.categoria))].filter(Boolean);
+    
+    // Les repartim: meitat a una columna, meitat a l'altra
+    const meitat = Math.ceil(categories.length / 2);
+    
+    categories.forEach((cat, i) => {
       const btn = document.createElement("button");
       btn.className = "btn-cat";
       btn.innerText = cat;
       btn.onclick = () => {
         document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
         btn.classList.add("btn-actiu");
-        mostrarLlista(cat);
+        renderitzar(cat);
       };
-      contenidor.appendChild(btn);
+      
+      if (i < meitat) colEsq.appendChild(btn);
+      else colDre.appendChild(btn);
     });
   }
 
-  function mostrarLlista(categoria, filtre = "") {
+  function renderitzar(categoria, filtre = "") {
     const contenidor = document.getElementById("resultats-guia");
-    const filtrats = filtre 
-      ? DADES.filter(d => d.nom.toLowerCase().includes(filtre.toLowerCase()))
-      : DADES.filter(d => d.categoria === categoria);
+    const llista = filtre 
+      ? DADES_TOTALS.filter(d => d.nom.toLowerCase().includes(filtre.toLowerCase()))
+      : DADES_TOTALS.filter(d => d.categoria === categoria);
 
-    contenidor.innerHTML = `<h3 style="color:var(--clar); border-bottom:1px solid; padding-bottom:5px;">${filtre ? 'Resultats' : categoria}</h3>`;
-
-    filtrats.forEach(lloc => {
-      const telf = lloc.telefon?.replace(/\s+/g, '') || "";
+    contenidor.innerHTML = `<h3 style="color:var(--clar); border-bottom:1px solid;">${filtre ? 'Resultats' : categoria}</h3>`;
+    
+    llista.forEach(lloc => {
       contenidor.innerHTML += `
         <div class="targeta">
           <span class="titol-lloc">${lloc.nom}</span>
-          <span class="detalls-lloc">📍 ${lloc.lloc || 'Cabrils'} <br> ⏰ ${lloc.horari || 'Consultar'}</span>
           <div class="accions">
-            ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca">📞 TRUCA</a>` : ''}
+            <a href="tel:${lloc.telefon}" class="btn-acc">📞 TRUCA</a>
             <a href="https://www.google.com/maps/search/${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
           </div>
         </div>`;
@@ -97,12 +106,13 @@
   }
 
   function filtrar() {
-    const text = document.getElementById('cercador').value;
-    if (text.length > 1) {
-      document.getElementById("llista-categories").style.display = "none";
-      mostrarLlista(null, text);
+    const val = document.getElementById('cercador').value;
+    const grid = document.getElementById('grid-categories');
+    if (val.length > 1) {
+      grid.style.display = "none";
+      renderitzar(null, val);
     } else {
-      document.getElementById("llista-categories").style.display = "flex";
+      grid.style.display = "grid";
       document.getElementById("resultats-guia").innerHTML = "";
     }
   }
