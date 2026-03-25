@@ -116,7 +116,9 @@
       flex-direction:column;
       gap:8px;
     }
-
+    .bloc-cat.actiu{
+      grid-column: 1 / -1;
+    }
     .btn-cat{
       background:var(--blanc);
       color:var(--fosc);
@@ -378,17 +380,20 @@
     `;
   }
 
-  function tancarTotesLesCategories() {
-    document.querySelectorAll(".llista-cat").forEach(el => {
-      el.style.display = "none";
-      el.innerHTML = "";
-    });
+function tancarTotesLesCategories() {
+  document.querySelectorAll(".llista-cat").forEach(el => {
+    el.style.display = "none";
+    el.innerHTML = "";
+  });
 
-    document.querySelectorAll(".btn-cat").forEach(b => {
-      b.classList.remove("btn-actiu");
-    });
-  }
+  document.querySelectorAll(".btn-cat").forEach(b => {
+    b.classList.remove("btn-actiu");
+  });
 
+  document.querySelectorAll(".bloc-cat").forEach(b => b.classList.remove("actiu"));
+}
+
+  
   function dibuixarBotons(dades, idCol) {
     const col = document.getElementById(idCol);
     col.innerHTML = "";
@@ -419,6 +424,7 @@
         if (!obert) {
           btn.classList.add("btn-actiu");
           contingut.style.display = "flex";
+          bloc.classList.add("actiu");
 
           const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
           contingut.innerHTML = dadesFiltrades.map(crearTargeta).join("");
