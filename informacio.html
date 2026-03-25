@@ -136,63 +136,54 @@
       color:white !important;
     }
 
-    #resultats-guia{
+    .llista-cat{
       display:none;
       flex-direction:column;
-      gap:12px;
-      padding-bottom:30px;
+      gap:10px;
+      margin-top:8px;
       width:100%;
-      margin-top:6px;
-    }
-
-    .cap-resultats{
-      color:var(--clar);
-      font-weight:bold;
-      margin-top:10px;
-      border-bottom:1px solid var(--clar);
-      padding-bottom:5px;
     }
 
     .targeta{
       background:var(--blanc);
       color:var(--fosc);
-      padding:12px;
+      padding:10px;
       border-radius:10px;
       box-shadow:0 2px 5px rgba(0,0,0,0.1);
     }
 
     .titol-lloc{
       font-weight:bold;
-      font-size:16px;
+      font-size:15px;
       color:#163B65;
       display:block;
-      margin-bottom:3px;
+      margin-bottom:2px;
     }
 
     .detalls-lloc{
-      font-size:13px;
+      font-size:12px;
       color:#666;
       display:block;
-      line-height:1.3;
-      margin-bottom:10px;
+      line-height:1.25;
+      margin-bottom:8px;
     }
 
     .accions{
       display:flex;
-      gap:6px;
+      gap:5px;
       flex-wrap:wrap;
     }
 
     .btn-acc{
       flex:1;
-      min-width:70px;
+      min-width:68px;
       background:#f0f4f4;
       color:var(--fosc);
       text-align:center;
-      padding:8px 2px;
+      padding:7px 2px;
       border-radius:6px;
       text-decoration:none;
-      font-size:10px;
+      font-size:9px;
       font-weight:bold;
       border:1px solid #ddd;
     }
@@ -206,7 +197,7 @@
     .msg-error{
       text-align:center;
       color:var(--ressaltat);
-      padding:20px;
+      padding:16px;
       font-weight:bold;
     }
 
@@ -248,8 +239,6 @@
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
   </div>
-
-  <div id="resultats-guia"></div>
 
 </div>
 
@@ -376,24 +365,11 @@
     document.querySelectorAll(".btn-cat").forEach(b => {
       b.classList.remove("btn-actiu");
     });
-  }
 
-  function mostrarResultats(titol, dadesFiltrades) {
-    const contenidor = document.getElementById("resultats-guia");
-
-    contenidor.style.display = "flex";
-
-    if (!dadesFiltrades || dadesFiltrades.length === 0) {
-      contenidor.innerHTML = `
-        <div class="cap-resultats">${escapeHtml(titol)}</div>
-        <div class="msg-error">No hi ha resultats en aquesta categoria.</div>
-      `;
-      return;
-    }
-
-    contenidor.innerHTML =
-      `<div class="cap-resultats">${escapeHtml(titol)}</div>` +
-      dadesFiltrades.map(crearTargeta).join("");
+    document.querySelectorAll(".llista-cat").forEach(llista => {
+      llista.style.display = "none";
+      llista.innerHTML = "";
+    });
   }
 
   function dibuixarBotons(dades, idCol) {
@@ -410,16 +386,17 @@
       btn.className = "btn-cat";
       btn.innerText = cat;
 
+      const contingut = document.createElement("div");
+      contingut.className = "llista-cat";
+
       btn.onclick = () => {
         const jaActiu = btn.classList.contains("btn-actiu");
-        const contenidor = document.getElementById("resultats-guia");
-
         document.getElementById("cercador").value = "";
 
         if (jaActiu) {
-          tancarTotesLesCategories();
-          contenidor.style.display = "none";
-          contenidor.innerHTML = "";
+          btn.classList.remove("btn-actiu");
+          contingut.style.display = "none";
+          contingut.innerHTML = "";
           return;
         }
 
@@ -427,51 +404,57 @@
         btn.classList.add("btn-actiu");
 
         const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
-        mostrarResultats(cat, dadesFiltrades);
+
+        if (!dadesFiltrades || dadesFiltrades.length === 0) {
+          contingut.innerHTML = `<div class="msg-error">No hi ha resultats en aquesta categoria.</div>`;
+        } else {
+          contingut.innerHTML = dadesFiltrades.map(crearTargeta).join("");
+        }
+
+        contingut.style.display = "flex";
 
         setTimeout(() => {
-          contenidor.scrollIntoView({
+          bloc.scrollIntoView({
             behavior: "smooth",
-            block: "start"
+            block: "nearest"
           });
         }, 50);
       };
 
       bloc.appendChild(btn);
+      bloc.appendChild(contingut);
       col.appendChild(bloc);
     });
   }
 
   function filtrar() {
     const val = document.getElementById("cercador").value.trim();
-    const contenidor = document.getElementById("resultats-guia");
-
     tancarTotesLesCategories();
 
-    if (!val) {
-      contenidor.style.display = "none";
-      contenidor.innerHTML = "";
-      return;
-    }
+    if (!val) return;
 
     const cerca = normalitza(val);
 
-    const resultats = DADES_TOTALS.filter(d =>
-      normalitza(d.nom).includes(cerca) ||
-      normalitza(d.categoria).includes(cerca) ||
-      normalitza(d.lloc).includes(cerca)
-    );
+    document.querySelectorAll(".bloc-cat").forEach(bloc => {
+      const btn = bloc.querySelector(".btn-cat");
+      const contingut = bloc.querySelector(".llista-cat");
+      const cat = btn.innerText;
 
-    contenidor.style.display = "flex";
+      const resultats = DADES_TOTALS.filter(d =>
+        d.categoria === cat &&
+        (
+          normalitza(d.nom).includes(cerca) ||
+          normalitza(d.categoria).includes(cerca) ||
+          normalitza(d.lloc).includes(cerca)
+        )
+      );
 
-    if (resultats.length === 0) {
-      contenidor.innerHTML = `<div class="msg-error">No s'han trobat resultats.</div>`;
-      return;
-    }
-
-    contenidor.innerHTML =
-      `<div class="cap-resultats">RESULTATS</div>` +
-      resultats.map(crearTargeta).join("");
+      if (resultats.length > 0) {
+        btn.classList.add("btn-actiu");
+        contingut.innerHTML = resultats.map(crearTargeta).join("");
+        contingut.style.display = "flex";
+      }
+    });
   }
 
   async function carregarDades() {
@@ -496,15 +479,17 @@
       dibuixarBotons(d2, "col-2");
 
       if (DADES_TOTALS.length === 0) {
-        const contenidor = document.getElementById("resultats-guia");
-        contenidor.style.display = "flex";
-        contenidor.innerHTML = `<div class="msg-error">No hi ha establiments visibles.</div>`;
+        document.querySelector(".pagina").insertAdjacentHTML(
+          "beforeend",
+          `<div class="msg-error">No hi ha establiments visibles.</div>`
+        );
       }
 
     } catch (e) {
-      const contenidor = document.getElementById("resultats-guia");
-      contenidor.style.display = "flex";
-      contenidor.innerHTML = `<div class="msg-error">⚠️ Error de connexió amb Google Sheets.<br>Torna a carregar la pàgina.</div>`;
+      document.querySelector(".pagina").insertAdjacentHTML(
+        "beforeend",
+        `<div class="msg-error">⚠️ Error de connexió amb Google Sheets.<br>Torna a carregar la pàgina.</div>`
+      );
       console.error(e);
     }
   }
