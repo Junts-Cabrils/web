@@ -11,32 +11,27 @@
     .pagina { max-width: 600px; margin: auto; padding: 15px; }
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
     
-    /* Cercador */
-    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:10px; font-size:16px; box-sizing:border-box; }
-    
-    /* Secció de dues columnes per a botons de categoria */
-    .titol-seccio { font-size: 11px; text-transform: uppercase; opacity: 0.7; text-align: center; margin-bottom: 5px; font-weight: bold; letter-spacing: 1px; }
+    /* Grid de dues columnes per als botons */
     .contenidor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
     .columna { display: flex; flex-direction: column; gap: 8px; }
 
-    /* Botons de Categoria */
-    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 12px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: transform 0.1s; }
-    .btn-cat:active { transform: scale(0.96); background: var(--clar); color: white; }
+    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
 
     /* Resultats a tota l'amplada */
-    #resultats-guia { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-    .titol-categoria-activa { border-bottom: 2px solid var(--clar); padding-bottom: 5px; margin-bottom: 10px; font-size: 18px; color: var(--clar); font-weight: bold; }
+    #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
+    .titol-cat-activa { border-bottom: 2px solid var(--clar); padding-bottom: 5px; margin-bottom: 10px; font-size: 18px; color: var(--clar); font-weight: bold; text-transform: uppercase; }
     
     .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; }
+    .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; margin-bottom: 3px; }
     .detalls-lloc { font-size: 13px; color: #666; margin-bottom: 10px; display: block; line-height: 1.3; }
     
     mark { background: var(--ressaltat); color: black; font-weight: bold; padding: 0 2px; }
     
     .accions { display: flex; gap: 6px; }
-    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
+    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; }
     .btn-truca { background: var(--clar); color: white; border: none; }
   </style>
 </head>
@@ -45,70 +40,55 @@
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
-    <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
+    <div style="font-weight:bold; letter-spacing:0.5px;">GUIA DE SERVEIS CABRILS</div>
   </div>
 
-  <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
+  <input type="text" id="cercador" class="cercador" placeholder="Cerca servei o comerç..." onkeyup="filtrar()">
 
   <div class="contenidor-grid">
-    <div class="columna">
-      <div class="titol-seccio">SERVEIS</div>
-      <div id="btns-serveis"></div>
-    </div>
-    <div class="columna">
-      <div class="titol-seccio">COMERÇ</div>
-      <div id="btns-comerc"></div>
-    </div>
+    <div id="col-1" class="columna"></div>
+    <div id="col-2" class="columna"></div>
   </div>
 
-  <div id="resultats-guia">
-    <p style="text-align:center; opacity:0.5; margin-top:20px;">Selecciona una categoria o cerca un servei.</p>
-  </div>
+  <div id="resultats-guia"></div>
 </div>
 
 <script>
-  // CONFIGURACIÓ: Posa aquí els teus dos enllaços CSV reals
-  const URL_SERVEIS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv"; 
-  const URL_COMERC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=12345&output=csv"; // Canvia el GID o posa l'altre link
+  // CONFIGURACIÓ: Posa aquí els teus dos enllaços CSV
+  const URL_1 = "URL_DEL_TEU_PRIMER_SHEET_CSV"; 
+  const URL_2 = "URL_DEL_TEU_SEGON_SHEET_CSV";
 
   let DADES_TOTALS = [];
 
   async function carregarDades() {
     try {
-      // Carreguem els dos fitxers a la vegada
       const [res1, res2] = await Promise.all([
-        fetch(URL_SERVEIS, {cache: "no-store"}),
-        fetch(URL_COMERC, {cache: "no-store"})
+        fetch(URL_1, {cache: "no-store"}),
+        fetch(URL_2, {cache: "no-store"})
       ]);
       
-      const csv1 = await res1.text();
-      const csv2 = await res2.text();
-
-      const dades1 = parseCSV(csv1).filter(f => f.visible?.toLowerCase() === "si");
-      const dades2 = parseCSV(csv2).filter(f => f.visible?.toLowerCase() === "si");
+      const dades1 = parseCSV(await res1.text()).filter(f => f.visible?.toLowerCase() === "si");
+      const dades2 = parseCSV(await res2.text()).filter(f => f.visible?.toLowerCase() === "si");
 
       DADES_TOTALS = [...dades1, ...dades2];
 
-      crearBotons(dades1, "btns-serveis");
-      crearBotons(dades2, "btns-comerc");
+      crearBotons(dades1, "col-1");
+      crearBotons(dades2, "col-2");
 
-    } catch (e) { document.getElementById("resultats-guia").innerHTML = "Error carregant dades."; }
+    } catch (e) { console.error(e); }
   }
 
   function crearBotons(dades, idContenidor) {
     const contenidor = document.getElementById(idContenidor);
-    // Ordenem per la columna 'ordre' que hem creat abans
     const mapaCats = {};
     dades.forEach(d => { if(!mapaCats[d.categoria]) mapaCats[d.categoria] = parseInt(d.ordre) || 99; });
     
-    const categories = Object.keys(mapaCats).sort((a,b) => mapaCats[a] - mapaCats[b]);
-
-    categories.forEach(cat => {
+    Object.keys(mapaCats).sort((a,b) => mapaCats[a] - mapaCats[b]).forEach(cat => {
       const btn = document.createElement("button");
       btn.className = "btn-cat";
       btn.innerText = cat.toUpperCase();
       btn.onclick = () => {
-        desmarcarBotons();
+        document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
         btn.classList.add("btn-actiu");
         renderitzarLlista(cat);
       };
@@ -125,10 +105,10 @@
         d.nom.toLowerCase().includes(filtre.toLowerCase()) || 
         d.categoria.toLowerCase().includes(filtre.toLowerCase())
       );
-      contenidor.innerHTML = `<div class="titol-categoria-activa">RESULTATS DE CERCA</div>`;
+      contenidor.innerHTML = `<div class="titol-cat-activa">RESULTATS</div>`;
     } else {
       llocsFiltrats = DADES_TOTALS.filter(d => d.categoria === categoria);
-      contenidor.innerHTML = `<div class="titol-categoria-activa">${categoria.toUpperCase()}</div>`;
+      contenidor.innerHTML = `<div class="titol-cat-activa">${categoria}</div>`;
     }
 
     llocsFiltrats.forEach(lloc => {
@@ -148,22 +128,16 @@
           </div>
         </div>`;
     });
-    
-    if(llocsFiltrats.length === 0) contenidor.innerHTML = "<p style='text-align:center;'>No hi ha resultats.</p>";
   }
 
   function filtrar() {
     const val = document.getElementById('cercador').value;
     if (val.length > 1) {
-      desmarcarBotons();
+      document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
       renderitzarLlista(null, val);
     } else if (val.length === 0) {
-      document.getElementById("resultats-guia").innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:20px;">Selecciona una categoria o cerca un servei.</p>';
+      document.getElementById("resultats-guia").innerHTML = "";
     }
-  }
-
-  function desmarcarBotons() {
-    document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
   }
 
   function parseCSV(t){
