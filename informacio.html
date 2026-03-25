@@ -11,7 +11,6 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icona-512.png">
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8D1EM8HE48"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -83,12 +82,26 @@
       display:block;
     }
 
+    .avis-guia{
+      font-size:13px;
+      line-height:1.4;
+      color:#ffffff;
+      margin:-4px 0 16px 0;
+    }
+
+    .avis-guia a{
+      color:#00c3b2;
+      text-decoration:none;
+      font-weight:bold;
+    }
+
     .contenidor-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
       margin-bottom:20px;
       width:100%;
+      align-items:start;
     }
 
     .columna{
@@ -96,6 +109,12 @@
       flex-direction:column;
       gap:8px;
       min-width:0;
+    }
+
+    .bloc-cat{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
 
     .btn-cat{
@@ -118,8 +137,15 @@
       color:white !important;
     }
 
-    #resultats-guia{
+    .llista-cat{
+      margin-top:2px;
       display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    #resultats-guia{
+      display:none;
       flex-direction:column;
       gap:12px;
       padding-bottom:30px;
@@ -140,13 +166,7 @@
       border-radius:10px;
       box-shadow:0 2px 5px rgba(0,0,0,0.1);
     }
-    .llista-cat{
-      margin-top:10px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    
+
     .titol-lloc{
       font-weight:bold;
       font-size:16px;
@@ -206,18 +226,6 @@
         font-size:9px;
       }
     }
-    .avis-guia{
-      font-size:13px;
-      line-height:1.4;
-      color:#ffffff;
-      margin:-4px 0 16px 0;
-    }
-    
-    .avis-guia a{
-      color:#00c3b2;
-      text-decoration:none;
-      font-weight:bold;
-    }
   </style>
 </head>
 <body>
@@ -236,17 +244,19 @@
     placeholder="Cerca establiment o servei..."
     onkeyup="filtrar()"
   >
-  
-<div class="avis-guia">
-  Si vols afegir un establiment o servei, o actualitzar-lo, envia un
-  <a href="#" onclick="enviarEmailGuia(); return false;">correu</a>.
-</div>
-  
+
+  <div class="avis-guia">
+    Si vols afegir un establiment o servei, o actualitzar-lo, envia un
+    <a href="#" onclick="enviarEmailGuia(); return false;">correu</a>.
+  </div>
+
   <div class="contenidor-grid">
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
   </div>
-<div id="resultats-guia" style="display:none;"></div>
+
+  <div id="resultats-guia"></div>
+
 </div>
 
 <script>
@@ -254,16 +264,22 @@
     navigator.serviceWorker.register("sw.js");
   }
 
-const URL_1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?output=csv";
-const URL_2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOZBoyYn-qDUWU49ruAVDs_4aPatzTjaHlaMs6Zrv-gE3q3Bav3RG_XxA9lxUmA/pub?output=csv";
-  
+  const URL_1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?output=csv";
+  const URL_2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOZBoyYn-qDUWU49ruAVDs_4aPatzTjaHlaMs6Zrv-gE3q3Bav3RG_XxA9lxUmA/pub?output=csv";
+
   let DADES_TOTALS = [];
-  let CATEGORIA_ACTIVA = "";
 
   function trackEvent(nom, dades = {}) {
     if (typeof gtag === "function") {
       gtag("event", nom, dades);
     }
+  }
+
+  function enviarEmailGuia(){
+    trackEvent("click_email_guia");
+    setTimeout(function(){
+      window.location.href = "mailto:info@juntspercabrils.cat";
+    }, 120);
   }
 
   function normalitza(text){
@@ -273,218 +289,19 @@ const URL_2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOZBoyYn-qDUWU4
       .replace(/[\u0300-\u036f]/g, "");
   }
 
-  async function carregarDades() {
-    try {
-      const [r1, r2] = await Promise.all([
-        fetch(URL_1, { cache: "no-store" }),
-        fetch(URL_2, { cache: "no-store" })
-      ]);
-
-const t1 = await r1.text();
-const t2 = await r2.text();
-
-console.log("TEXT 1:", t1);
-console.log("TEXT 2:", t2);
-
-const p1 = parseCSV(t1);
-const p2 = parseCSV(t2);
-
-console.log("PARSE 1:", p1);
-console.log("PARSE 2:", p2);
-
-const d1 = p1.filter(f => String(f.visible || "").trim().toLowerCase() === "si");
-const d2 = p2.filter(f => String(f.visible || "").trim().toLowerCase() === "si");
-
-console.log("D1 visibles:", d1);
-console.log("D2 visibles:", d2);
-
-      DADES_TOTALS = [...d1, ...d2];
-
-      dibuixarBotons(d1, "col-1");
-      dibuixarBotons(d2, "col-2");
-
-if (DADES_TOTALS.length > 0) {
-  document.getElementById("resultats-guia").innerHTML = "";
-} else {
-  document.getElementById("resultats-guia").innerHTML =
-    `<div class="msg-error">No hi ha establiments visibles.</div>`;
-}
-
-    } catch (e) {
-      document.getElementById("resultats-guia").innerHTML =
-        `<div class="msg-error">⚠️ Error de connexió amb Google Sheets.<br>Torna a carregar la pàgina.</div>`;
-      console.error(e);
-    }
+  function escapeHtml(text) {
+    return String(text || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
   }
 
-function dibuixarBotons(dades, idCol) {
-  const col = document.getElementById(idCol);
-  col.innerHTML = "";
-
-  const cats = [...new Set(dades.map(d => d.categoria))].filter(Boolean);
-
-  cats.forEach(cat => {
-    const bloc = document.createElement("div");
-
-    const btn = document.createElement("button");
-    btn.className = "btn-cat";
-    btn.innerText = cat;
-
-    const contingut = document.createElement("div");
-    contingut.className = "llista-cat";
-    contingut.style.display = "none";
-
-    btn.onclick = () => {
-      const obert = contingut.style.display === "flex";
-
-      document.querySelectorAll(".llista-cat").forEach(el => {
-        el.style.display = "none";
-        el.innerHTML = "";
-      });
-
-      document.querySelectorAll(".btn-cat").forEach(b => {
-        b.classList.remove("btn-actiu");
-      });
-
-      if (!obert) {
-        btn.classList.add("btn-actiu");
-        contingut.style.display = "flex";
-        CATEGORIA_ACTIVA = cat;
-
-        const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
-
-        contingut.innerHTML = "";
-
-        dadesFiltrades.forEach(lloc => {
-          const telf = (lloc.telefon || "").replace(/\s+/g, "");
-          const mail = (lloc.email || "").trim();
-          const mapa = `https://www.google.com/maps/search/${encodeURIComponent((lloc.nom || "") + " Cabrils")}`;
-          const web = lloc.web
-            ? (lloc.web.startsWith("http") ? lloc.web : "https://" + lloc.web)
-            : "";
-
-          contingut.innerHTML += `
-            <div class="targeta">
-              <span class="titol-lloc">${escapeHtml(lloc.nom || "")}</span>
-              <span class="detalls-lloc">
-                📍 ${escapeHtml(lloc.lloc || "Cabrils")}<br>
-                ⏰ ${escapeHtml(lloc.horari || "Consultar")}
-              </span>
-              <div class="accions">
-                ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca" onclick="trackEvent('click_truca_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📞 TRUCA</a>` : ""}
-                ${mail ? `<a href="mailto:${mail}" class="btn-acc" onclick="trackEvent('click_mail_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">✉ MAIL</a>` : ""}
-                <a href="${mapa}" target="_blank" class="btn-acc" onclick="trackEvent('click_mapa_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📍 MAPA</a>
-                ${web ? `<a href="${web}" target="_blank" class="btn-acc" onclick="trackEvent('click_web_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">🌐 WEB</a>` : ""}
-              </div>
-            </div>
-          `;
-        });
-      }
-    };
-
-    bloc.appendChild(btn);
-    bloc.appendChild(contingut);
-    col.appendChild(bloc);
-  });
-}
-
-
-  function activarBotoPerText(categoria) {
-    document.querySelectorAll(".btn-cat").forEach(b => {
-      b.classList.toggle("btn-actiu", b.innerText.trim() === categoria);
-    });
-  }
-
-  function renderitzar(categoria, filtre = "") {
-    const contenidor = document.getElementById("resultats-guia");
-
-    if (DADES_TOTALS.length === 0) return;
-
-    let llista;
-
-    if (filtre.length > 1) {
-      const cerca = normalitza(filtre);
-      llista = DADES_TOTALS.filter(d =>
-        normalitza(d.nom).includes(cerca) ||
-        normalitza(d.categoria).includes(cerca) ||
-        normalitza(d.lloc).includes(cerca)
-      );
-    } else {
-      llista = DADES_TOTALS.filter(d => d.categoria === categoria);
-    }
-
-    contenidor.innerHTML =
-      `<div class="cap-resultats">${filtre ? "RESULTATS" : (categoria || "").toUpperCase()}</div>`;
-
-    if (llista.length === 0) {
-      contenidor.innerHTML +=
-        `<div class="msg-error" style="color:#26545E;background:#fff;border-radius:10px;">No s'han trobat resultats.</div>`;
-      return;
-    }
-
-    llista.forEach(lloc => {
-      const telf = (lloc.telefon || "").replace(/\s+/g, "");
-      const mapa = `https://www.google.com/maps/search/${encodeURIComponent((lloc.nom || "") + " Cabrils")}`;
-      const web = lloc.web
-        ? (lloc.web.startsWith("http") ? lloc.web : "https://" + lloc.web)
-        : "";
-
-      contenidor.innerHTML += `
-        <div class="targeta">
-          <span class="titol-lloc">${escapeHtml(lloc.nom || "")}</span>
-          <span class="detalls-lloc">
-            📍 ${escapeHtml(lloc.lloc || "Cabrils")}<br>
-            ⏰ ${escapeHtml(lloc.horari || "Consultar")}
-          </span>
-          <div class="accions">
-            ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca" onclick="trackEvent('click_truca_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📞 TRUCA</a>` : ""}
-            <a href="${mapa}" target="_blank" class="btn-acc" onclick="trackEvent('click_mapa_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📍 MAPA</a>
-            ${web ? `<a href="${web}" target="_blank" class="btn-acc" onclick="trackEvent('click_web_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">🌐 WEB</a>` : ""}
-          </div>
-        </div>
-      `;
-    });
-  }
-
-  function filtrar() {
-    const val = document.getElementById("cercador").value.trim();
-
-    if (val.length > 1) {
-        setTimeout(() => {
-        document.getElementById("resultats-guia").scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }, 50);  
-    } else if (val.length === 0) {
-      if (CATEGORIA_ACTIVA) {
-        activarBotoPerText(CATEGORIA_ACTIVA);
-      } else {
-        document.getElementById("resultats-guia").innerHTML = "";
-      }
-    }
-  }
-
-  function parseCSV(text) {
-    if (!text) return [];
-
-    const files = text.trim().split(/\r?\n/);
-    if (files.length < 2) return [];
-
-    const capcaleres = splitCSVLine(files[0]).map(h =>
-      h.trim().toLowerCase().replace(/['"]+/g, "")
-    );
-
-    return files.slice(1).map(fila => {
-      const valors = splitCSVLine(fila);
-      const obj = {};
-
-      capcaleres.forEach((h, i) => {
-        obj[h] = (valors[i] || "").trim().replace(/^"|"$/g, "");
-      });
-
-      return obj;
-    });
+  function escapeAttr(text) {
+    return String(text || "")
+      .replaceAll("\\", "\\\\")
+      .replaceAll("'", "\\'");
   }
 
   function splitCSVLine(line) {
@@ -514,19 +331,172 @@ function dibuixarBotons(dades, idCol) {
     return resultat;
   }
 
-  function escapeHtml(text) {
-    return String(text || "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
+  function parseCSV(text) {
+    if (!text) return [];
+
+    const files = text.trim().split(/\r?\n/);
+    if (files.length < 2) return [];
+
+    const capcaleres = splitCSVLine(files[0]).map(h =>
+      h.trim().toLowerCase().replace(/['"]+/g, "")
+    );
+
+    return files.slice(1).map(fila => {
+      const valors = splitCSVLine(fila);
+      const obj = {};
+
+      capcaleres.forEach((h, i) => {
+        obj[h] = (valors[i] || "").trim().replace(/^"|"$/g, "");
+      });
+
+      return obj;
+    });
   }
 
-  function escapeAttr(text) {
-    return String(text || "")
-      .replaceAll("\\", "\\\\")
-      .replaceAll("'", "\\'");
+  function crearTargeta(lloc) {
+    const telf = (lloc.telefon || "").replace(/\s+/g, "");
+    const mail = (lloc.email || "").trim();
+    const mapa = `https://www.google.com/maps/search/${encodeURIComponent((lloc.nom || "") + " Cabrils")}`;
+    const web = lloc.web
+      ? (lloc.web.startsWith("http") ? lloc.web : "https://" + lloc.web)
+      : "";
+
+    return `
+      <div class="targeta">
+        <span class="titol-lloc">${escapeHtml(lloc.nom || "")}</span>
+        <span class="detalls-lloc">
+          📍 ${escapeHtml(lloc.lloc || "Cabrils")}<br>
+          ⏰ ${escapeHtml(lloc.horari || "Consultar")}
+        </span>
+        <div class="accions">
+          ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca" onclick="trackEvent('click_truca_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📞 TRUCA</a>` : ""}
+          ${mail ? `<a href="mailto:${mail}" class="btn-acc" onclick="trackEvent('click_mail_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">✉ MAIL</a>` : ""}
+          <a href="${mapa}" target="_blank" class="btn-acc" onclick="trackEvent('click_mapa_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📍 MAPA</a>
+          ${web ? `<a href="${web}" target="_blank" class="btn-acc" onclick="trackEvent('click_web_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">🌐 WEB</a>` : ""}
+        </div>
+      </div>
+    `;
+  }
+
+  function tancarTotesLesCategories() {
+    document.querySelectorAll(".llista-cat").forEach(el => {
+      el.style.display = "none";
+      el.innerHTML = "";
+    });
+
+    document.querySelectorAll(".btn-cat").forEach(b => {
+      b.classList.remove("btn-actiu");
+    });
+  }
+
+  function dibuixarBotons(dades, idCol) {
+    const col = document.getElementById(idCol);
+    col.innerHTML = "";
+
+    const cats = [...new Set(dades.map(d => d.categoria))].filter(Boolean);
+
+    cats.forEach(cat => {
+      const bloc = document.createElement("div");
+      bloc.className = "bloc-cat";
+
+      const btn = document.createElement("button");
+      btn.className = "btn-cat";
+      btn.innerText = cat;
+
+      const contingut = document.createElement("div");
+      contingut.className = "llista-cat";
+      contingut.style.display = "none";
+
+      btn.onclick = () => {
+        const obert = contingut.style.display === "flex";
+
+        document.getElementById("cercador").value = "";
+        document.getElementById("resultats-guia").style.display = "none";
+        document.getElementById("resultats-guia").innerHTML = "";
+
+        tancarTotesLesCategories();
+
+        if (!obert) {
+          btn.classList.add("btn-actiu");
+          contingut.style.display = "flex";
+
+          const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
+          contingut.innerHTML = dadesFiltrades.map(crearTargeta).join("");
+        }
+      };
+
+      bloc.appendChild(btn);
+      bloc.appendChild(contingut);
+      col.appendChild(bloc);
+    });
+  }
+
+  function filtrar() {
+    const val = document.getElementById("cercador").value.trim();
+
+    tancarTotesLesCategories();
+
+    const contenidor = document.getElementById("resultats-guia");
+
+    if (!val) {
+      contenidor.style.display = "none";
+      contenidor.innerHTML = "";
+      return;
+    }
+
+    const cerca = normalitza(val);
+
+    const resultats = DADES_TOTALS.filter(d =>
+      normalitza(d.nom).includes(cerca) ||
+      normalitza(d.categoria).includes(cerca) ||
+      normalitza(d.lloc).includes(cerca)
+    );
+
+    contenidor.style.display = "flex";
+
+    if (resultats.length === 0) {
+      contenidor.innerHTML = `<div class="msg-error">No s'han trobat resultats.</div>`;
+      return;
+    }
+
+    contenidor.innerHTML =
+      `<div class="cap-resultats">RESULTATS</div>` +
+      resultats.map(crearTargeta).join("");
+  }
+
+  async function carregarDades() {
+    try {
+      const [r1, r2] = await Promise.all([
+        fetch(URL_1, { cache: "no-store" }),
+        fetch(URL_2, { cache: "no-store" })
+      ]);
+
+      const t1 = await r1.text();
+      const t2 = await r2.text();
+
+      const p1 = parseCSV(t1);
+      const p2 = parseCSV(t2);
+
+      const d1 = p1.filter(f => String(f.visible || "").trim().toLowerCase() === "si");
+      const d2 = p2.filter(f => String(f.visible || "").trim().toLowerCase() === "si");
+
+      DADES_TOTALS = [...d1, ...d2];
+
+      dibuixarBotons(d1, "col-1");
+      dibuixarBotons(d2, "col-2");
+
+      if (DADES_TOTALS.length === 0) {
+        const contenidor = document.getElementById("resultats-guia");
+        contenidor.style.display = "flex";
+        contenidor.innerHTML = `<div class="msg-error">No hi ha establiments visibles.</div>`;
+      }
+
+    } catch (e) {
+      const contenidor = document.getElementById("resultats-guia");
+      contenidor.style.display = "flex";
+      contenidor.innerHTML = `<div class="msg-error">⚠️ Error de connexió amb Google Sheets.<br>Torna a carregar la pàgina.</div>`;
+      console.error(e);
+    }
   }
 
   carregarDades();
