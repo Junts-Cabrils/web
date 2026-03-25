@@ -11,75 +11,61 @@
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
     .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
-    
     .contenidor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
     .columna { display: flex; flex-direction: column; gap: 8px; }
-
     .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
-
     #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
     .titol-cat-activa { border-bottom: 2px solid var(--clar); padding-bottom: 5px; margin-bottom: 10px; font-size: 18px; color: var(--clar); font-weight: bold; text-transform: uppercase; }
-    
-    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; }
     .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; margin-bottom: 3px; }
     .detalls-lloc { font-size: 13px; color: #666; margin-bottom: 10px; display: block; line-height: 1.3; }
-    
+    mark { background: var(--ressaltat); color: black; font-weight: bold; padding: 0 2px; }
     .accions { display: flex; gap: 6px; }
-    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
+    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; }
     .btn-truca { background: var(--clar); color: white; border: none; }
   </style>
 </head>
 <body>
-
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
     <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
   </div>
-
   <input type="text" id="cercador" class="cercador" placeholder="Cerca servei o comerç..." onkeyup="filtrar()">
-
   <div class="contenidor-grid">
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
   </div>
-
   <div id="resultats-guia"></div>
 </div>
 
 <script>
-// CONFIGURACIÓ: Enllaços directes d'exportació
-  const DOC_ID = "1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw";
-  const URL_1 = `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=0`; 
-  const URL_2 = `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=2047395724`;
+  // Fem servir un proxy per saltar-nos el bloqueig de seguretat (CORS)
+  const proxy = "https://api.allorigins.win/raw?url=";
+  const base_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?";
+  
+  const URL_1 = proxy + encodeURIComponent(base_url + "gid=0&output=csv"); 
+  const URL_2 = proxy + encodeURIComponent(base_url + "gid=2047395724&output=csv");
 
   let DADES_TOTALS = [];
 
   async function carregarDades() {
-    const resGuia = document.getElementById("resultats-guia");
     try {
-      const [r1, r2] = await Promise.all([
-        fetch(URL_1, { cache: "no-store" }),
-        fetch(URL_2, { cache: "no-store" })
+      const [res1, res2] = await Promise.all([
+        fetch(URL_1),
+        fetch(URL_2)
       ]);
-
-      if (!r1.ok || !r2.ok) throw new Error("No s'han pogut descarregar les dades de Google.");
-
-      const d1 = parseCSV(await r1.text()).filter(f => f.visible?.toLowerCase() === "si");
-      const d2 = parseCSV(await r2.text()).filter(f => f.visible?.toLowerCase() === "si");
+      
+      const d1 = parseCSV(await res1.text()).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
+      const d2 = parseCSV(await res2.text()).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
 
       DADES_TOTALS = [...d1, ...d2];
-
-      if (DADES_TOTALS.length === 0) {
-        resGuia.innerHTML = "<p style='text-align:center;'>No s'han trobat dades amb 'visible = si'.</p>";
-      }
-
       crearBotons(d1, "col-1");
       crearBotons(d2, "col-2");
 
-    } catch (e) {
-      resGuia.innerHTML = `<p style="color:#ffeb3b; text-align:center;">⚠️ Error: ${e.message}<br><small>Comprova que el fitxer estigui "Publicat a la web".</small></p>`;
+    } catch (e) { 
+      document.getElementById("resultats-guia").innerHTML = "Error de càrrega. Revisa la connexió.";
     }
   }
 
@@ -101,25 +87,34 @@
     });
   }
 
-function renderitzarLlista(categoria, filtre = "") {
+  function renderitzarLlista(categoria, filtre = "") {
     const contenidor = document.getElementById("resultats-guia");
-    let llocsFiltrats = DADES_TOTALS.filter(d => {
-      const nom = d.nom ? d.nom.toLowerCase() : "";
-      const cat = d.categoria ? d.categoria.toLowerCase() : "";
-      if (filtre.length > 1) {
-        return nom.includes(filtre.toLowerCase()) || cat.includes(filtre.toLowerCase());
-      }
-      return d.categoria === categoria;
-    });
+    let llista = filtre.length > 1 
+      ? DADES_TOTALS.filter(d => (d.nom + d.categoria).toLowerCase().includes(filtre.toLowerCase()))
+      : DADES_TOTALS.filter(d => d.categoria === categoria);
 
     contenidor.innerHTML = `<div class="titol-cat-activa">${filtre.length > 1 ? 'RESULTATS' : categoria}</div>`;
 
-    llocsFiltrats.forEach(lloc => {
-      // Netegem les dades per evitar errors de "undefined"
-      let nomDisplay = lloc.nom || "Sense nom";
-      if (filtre.length > 1) {
-        nomDisplay = nomDisplay.replace(new RegExp(`(${filtre})`, "gi"), "<mark>$1</mark>");
-      }
+    llista.forEach(lloc => {
+      let nomDisplay = filtre.length > 1 ? lloc.nom.replace(new RegExp(`(${filtre})`, "gi"), "<mark>$1</mark>") : lloc.nom;
+      let urlWeb = lloc.web?.trim();
+      if (urlWeb && !urlWeb.startsWith('http')) urlWeb = 'https://' + urlWeb;
+      
+      // Corregit l'error de sintaxi a la URL del mapa que trencava el codi anterior
+      const mapaUrl = "https://www.google.com/maps/search/" + encodeURIComponent(lloc.nom + " Cabrils");
+
+      contenidor.innerHTML += `
+        <div class="targeta">
+          <span class="titol-lloc">${nomDisplay}</span>
+          <span class="detalls-lloc">📍 ${lloc.lloc || ''} <br> ⏰ ${lloc.horari || 'Consultar'}</span>
+          <div class="accions">
+            <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
+            <a href="${mapaUrl}" target="_blank" class="btn-acc">📍 MAPA</a>
+            ${urlWeb ? `<a href="${urlWeb}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
+          </div>
+        </div>`;
+    });
+  }
 
   function filtrar() {
     const val = document.getElementById('cercador').value;
@@ -132,8 +127,7 @@ function renderitzarLlista(categoria, filtre = "") {
   }
 
   function parseCSV(t){
-    // Neteja caràcters invisibles inicials (BOM)
-    const net = t.replace(/^\uFEFF/, "").trim();
+    const net = t.replace(/^\uFEFF/, "").trim(); // Neteja caràcters invisibles de Google
     let lines = net.split(/\r?\n/);
     if(lines.length < 2) return [];
     let headers = lines[0].split(",").map(x => x.trim().toLowerCase().replace(/['"]+/g, ''));
