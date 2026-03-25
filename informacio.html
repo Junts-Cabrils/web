@@ -236,9 +236,8 @@
   }
 
 const URL_1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&single=true&output=csv";
-
 const URL_2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOZBoyYn-qDUWU49ruAVDS_4aPatzTjah1aMs6Zrv-gE3q3Bav3RG_XxA91xUmA/pub?gid=0&single=true&output=csv";
-
+  
   let DADES_TOTALS = [];
   let CATEGORIA_ACTIVA = "";
 
@@ -262,11 +261,23 @@ const URL_2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOZBoyYn-qDUWU4
         fetch(URL_2, { cache: "no-store" })
       ]);
 
-      const t1 = await r1.text();
-      const t2 = await r2.text();
+const t1 = await r1.text();
+const t2 = await r2.text();
 
-      const d1 = parseCSV(t1).filter(f => (f.visible || "").toLowerCase() === "si");
-      const d2 = parseCSV(t2).filter(f => (f.visible || "").toLowerCase() === "si");
+console.log("TEXT 1:", t1);
+console.log("TEXT 2:", t2);
+
+const p1 = parseCSV(t1);
+const p2 = parseCSV(t2);
+
+console.log("PARSE 1:", p1);
+console.log("PARSE 2:", p2);
+
+const d1 = p1.filter(f => String(f.visible || "").trim().toLowerCase() === "si");
+const d2 = p2.filter(f => String(f.visible || "").trim().toLowerCase() === "si");
+
+console.log("D1 visibles:", d1);
+console.log("D2 visibles:", d2);
 
       DADES_TOTALS = [...d1, ...d2];
 
