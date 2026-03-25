@@ -140,7 +140,12 @@
       border-radius:10px;
       box-shadow:0 2px 5px rgba(0,0,0,0.1);
     }
-
+    .llista-cat{
+      margin-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
     .titol-lloc{
       font-weight:bold;
       font-size:16px;
@@ -321,25 +326,61 @@ if (DADES_TOTALS.length > 0) {
 
     const cats = [...new Set(dades.map(d => d.categoria))].filter(Boolean);
 
-    cats.forEach(cat => {
-      const btn = document.createElement("button");
-      btn.className = "btn-cat";
-      btn.innerText = cat;
+cats.forEach(cat => {
+  const bloc = document.createElement("div");
 
-      btn.onclick = () => {
-        document.getElementById("cercador").value = "";
-        document.querySelectorAll(".btn-cat").forEach(b => b.classList.remove("btn-actiu"));
-        btn.classList.add("btn-actiu");
-        CATEGORIA_ACTIVA = cat;
-        renderitzar(cat);
-      
-        setTimeout(() => {
-          document.getElementById("resultats-guia").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }, 50);
-      };
+  const btn = document.createElement("button");
+  btn.className = "btn-cat";
+  btn.innerText = cat;
+
+  const contingut = document.createElement("div");
+  contingut.className = "llista-cat";
+  contingut.style.display = "none";
+
+  btn.onclick = () => {
+    const obert = contingut.style.display === "block";
+
+    document.querySelectorAll(".llista-cat").forEach(el => el.style.display = "none");
+    document.querySelectorAll(".btn-cat").forEach(b => b.classList.remove("btn-actiu"));
+
+    if (!obert) {
+      btn.classList.add("btn-actiu");
+      contingut.style.display = "flex";
+
+      const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
+
+      contingut.innerHTML = "";
+
+      dadesFiltrades.forEach(lloc => {
+        const telf = (lloc.telefon || "").replace(/\s+/g, "");
+        const mail = (lloc.email || "").trim();
+        const mapa = `https://www.google.com/maps/search/${encodeURIComponent((lloc.nom || "") + " Cabrils")}`;
+        const web = lloc.web
+          ? (lloc.web.startsWith("http") ? lloc.web : "https://" + lloc.web)
+          : "";
+
+        contingut.innerHTML += `
+          <div class="targeta">
+            <span class="titol-lloc">${escapeHtml(lloc.nom || "")}</span>
+            <span class="detalls-lloc">
+              📍 ${escapeHtml(lloc.lloc || "Cabrils")} | ⏰ ${escapeHtml(lloc.horari || "Consultar")}
+            </span>
+            <div class="accions">
+              ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca" onclick="trackEvent('click_truca_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📞 TRUCA</a>` : ""}
+              ${mail ? `<a href="mailto:${mail}" class="btn-acc" onclick="trackEvent('click_mail_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">✉ MAIL</a>` : ""}
+              <a href="${mapa}" target="_blank" class="btn-acc" onclick="trackEvent('click_mapa_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">📍 MAPA</a>
+              ${web ? `<a href="${web}" target="_blank" class="btn-acc" onclick="trackEvent('click_web_guia', {nom: '${escapeAttr(lloc.nom || "")}'})">🌐 WEB</a>` : ""}
+            </div>
+          </div>
+        `;
+      });
+    }
+  };
+
+  bloc.appendChild(btn);
+  bloc.appendChild(contingut);
+  col.appendChild(bloc);
+});
 
       col.appendChild(btn);
     });
