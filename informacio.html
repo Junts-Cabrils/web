@@ -12,19 +12,19 @@
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
     .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
+    .avis-colabora { background: rgba(255, 255, 255, 0.08); padding: 8px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; border: 1px solid rgba(0, 195, 178, 0.3); }
+    .avis-colabora a { color: var(--clar); text-decoration: underline; font-weight: bold; }
     
-    /* Grid de dues columnes per als botons */
     .contenidor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
     .columna { display: flex; flex-direction: column; gap: 8px; }
 
     .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
 
-    /* Resultats a tota l'amplada */
     #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
     .titol-cat-activa { border-bottom: 2px solid var(--clar); padding-bottom: 5px; margin-bottom: 10px; font-size: 18px; color: var(--clar); font-weight: bold; text-transform: uppercase; }
     
-    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; }
     .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; margin-bottom: 3px; }
     .detalls-lloc { font-size: 13px; color: #666; margin-bottom: 10px; display: block; line-height: 1.3; }
     
@@ -40,10 +40,11 @@
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
-    <div style="font-weight:bold; letter-spacing:0.5px;">GUIA DE SERVEIS CABRILS</div>
+    <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
   </div>
 
-  <input type="text" id="cercador" class="cercador" placeholder="Cerca servei o comerç..." onkeyup="filtrar()">
+  <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
+  <div class="avis-colabora">Si falta un servei o vols actualitzar dades, envia'ns un <a href="mailto:info@juntscabrils.cat" target="_blank">correu</a>.</div>
 
   <div class="contenidor-grid">
     <div id="col-1" class="columna"></div>
@@ -54,8 +55,7 @@
 </div>
 
 <script>
-  // CONFIGURACIÓ: Posa aquí els teus dos enllaços CSV
-// CONFIGURACIÓ: Enllaços específics per a cada pestanya
+  // CONFIGURACIÓ
   const URL_1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv"; 
   const URL_2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=2047395724&output=csv";
 
@@ -68,21 +68,28 @@
         fetch(URL_2, {cache: "no-store"})
       ]);
       
-      const dades1 = parseCSV(await res1.text()).filter(f => f.visible?.toLowerCase() === "si");
-      const dades2 = parseCSV(await res2.text()).filter(f => f.visible?.toLowerCase() === "si");
+      if (!res1.ok || !res2.ok) throw new Error("Error en la resposta de Google");
+
+      const text1 = await res1.text();
+      const text2 = await res2.text();
+
+      const dades1 = parseCSV(text1).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
+      const dades2 = parseCSV(text2).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
 
       DADES_TOTALS = [...dades1, ...dades2];
 
       crearBotons(dades1, "col-1");
       crearBotons(dades2, "col-2");
 
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+      document.getElementById("resultats-guia").innerHTML = "Error de connexió: " + e.message;
+    }
   }
 
   function crearBotons(dades, idContenidor) {
     const contenidor = document.getElementById(idContenidor);
     const mapaCats = {};
-    dades.forEach(d => { if(!mapaCats[d.categoria]) mapaCats[d.categoria] = parseInt(d.ordre) || 99; });
+    dades.forEach(d => { if(d.categoria && !mapaCats[d.categoria]) mapaCats[d.categoria] = parseInt(d.ordre) || 99; });
     
     Object.keys(mapaCats).sort((a,b) => mapaCats[a] - mapaCats[b]).forEach(cat => {
       const btn = document.createElement("button");
@@ -103,8 +110,8 @@
 
     if (filtre.length > 1) {
       llocsFiltrats = DADES_TOTALS.filter(d => 
-        d.nom.toLowerCase().includes(filtre.toLowerCase()) || 
-        d.categoria.toLowerCase().includes(filtre.toLowerCase())
+        (d.nom && d.nom.toLowerCase().includes(filtre.toLowerCase())) || 
+        (d.categoria && d.categoria.toLowerCase().includes(filtre.toLowerCase()))
       );
       contenidor.innerHTML = `<div class="titol-cat-activa">RESULTATS</div>`;
     } else {
@@ -113,18 +120,24 @@
     }
 
     llocsFiltrats.forEach(lloc => {
-      let nomDisplay = filtre.length > 1 ? lloc.nom.replace(new RegExp(`(${filtre})`, "gi"), "<mark>$1</mark>") : lloc.nom;
-      let urlWeb = lloc.web?.trim();
+      let nomDisplay = lloc.nom;
+      if (filtre.length > 1) {
+        nomDisplay = lloc.nom.replace(new RegExp(`(${filtre})`, "gi"), "<mark>$1</mark>");
+      }
+      
+      let urlWeb = lloc.web ? lloc.web.trim() : "";
       if (urlWeb && !urlWeb.startsWith('http')) urlWeb = 'https://' + urlWeb;
+      
+      const queryMapa = encodeURIComponent(lloc.nom + ' ' + (lloc.lloc || '') + ' Cabrils');
 
       contenidor.innerHTML += `
         <div class="targeta">
           <span class="titol-lloc">${nomDisplay}</span>
-          <span class="detalls-lloc">📍 ${lloc.lloc} <br> ⏰ ${lloc.horari || 'Consultar'}</span>
+          <span class="detalls-lloc">📍 ${lloc.lloc || ''} <br> ⏰ ${lloc.horari || 'Consultar'}</span>
           <div class="accions">
             <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
             ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc" target="_blank">✉️ MAIL</a>` : ''}
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=${queryMapa}" target="_blank" class="btn-acc">📍 MAPA</a>
             ${urlWeb ? `<a href="${urlWeb}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
           </div>
         </div>`;
@@ -142,23 +155,23 @@
   }
 
   function parseCSV(t){
-      // Treiem caràcters invisibles i netegem espais en blanc extrems
-      let lines = t.trim().split(/\r?\n/);
-      if(lines.length < 2) return [];
-      
-      // Neteja automàtica de les capçaleres per evitar errors per espais
-      let headers = lines[0].split(",").map(x => x.trim().toLowerCase().replace(/['"]+/g, ''));
-      
-      return lines.slice(1).map(line => {
-        let values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        let obj = {};
-        headers.forEach((h, idx) => {
-          let val = (values[idx] || "").trim().replace(/^"|"$/g, '');
-          obj[h] = val;
-        });
-        return obj;
+    // Neteja de caràcters BOM i espais rars al principi
+    const net = t.replace(/^\uFEFF/, "").trim();
+    let lines = net.split(/\r?\n/);
+    if(lines.length < 2) return [];
+    
+    let headers = lines[0].split(",").map(x => x.trim().toLowerCase().replace(/['"]+/g, ''));
+    
+    return lines.slice(1).map(line => {
+      let values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      let obj = {};
+      headers.forEach((h, idx) => {
+        let val = (values[idx] || "").trim().replace(/^"|"$/g, '');
+        obj[h] = val;
       });
-    }
+      return obj;
+    });
+  }
   carregarDades();
 </script>
 </body>
