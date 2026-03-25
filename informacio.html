@@ -99,7 +99,7 @@
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
-      margin-bottom:20px;
+      margin-bottom:18px;
       width:100%;
       align-items:start;
     }
@@ -112,13 +112,10 @@
     }
 
     .bloc-cat{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+      display:block;
+      width:100%;
     }
-    .bloc-cat.actiu{
-      grid-column: 1 / -1;
-    }
+
     .btn-cat{
       background:var(--blanc);
       color:var(--fosc);
@@ -139,18 +136,13 @@
       color:white !important;
     }
 
-    .llista-cat{
-      margin-top:2px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
     #resultats-guia{
       display:none;
       flex-direction:column;
       gap:12px;
       padding-bottom:30px;
+      width:100%;
+      margin-top:6px;
     }
 
     .cap-resultats{
@@ -380,20 +372,30 @@
     `;
   }
 
-function tancarTotesLesCategories() {
-  document.querySelectorAll(".llista-cat").forEach(el => {
-    el.style.display = "none";
-    el.innerHTML = "";
-  });
+  function tancarTotesLesCategories() {
+    document.querySelectorAll(".btn-cat").forEach(b => {
+      b.classList.remove("btn-actiu");
+    });
+  }
 
-  document.querySelectorAll(".btn-cat").forEach(b => {
-    b.classList.remove("btn-actiu");
-  });
+  function mostrarResultats(titol, dadesFiltrades) {
+    const contenidor = document.getElementById("resultats-guia");
 
-  document.querySelectorAll(".bloc-cat").forEach(b => b.classList.remove("actiu"));
-}
+    contenidor.style.display = "flex";
 
-  
+    if (!dadesFiltrades || dadesFiltrades.length === 0) {
+      contenidor.innerHTML = `
+        <div class="cap-resultats">${escapeHtml(titol)}</div>
+        <div class="msg-error">No hi ha resultats en aquesta categoria.</div>
+      `;
+      return;
+    }
+
+    contenidor.innerHTML =
+      `<div class="cap-resultats">${escapeHtml(titol)}</div>` +
+      dadesFiltrades.map(crearTargeta).join("");
+  }
+
   function dibuixarBotons(dades, idCol) {
     const col = document.getElementById(idCol);
     col.innerHTML = "";
@@ -408,41 +410,43 @@ function tancarTotesLesCategories() {
       btn.className = "btn-cat";
       btn.innerText = cat;
 
-      const contingut = document.createElement("div");
-      contingut.className = "llista-cat";
-      contingut.style.display = "none";
-
       btn.onclick = () => {
-        const obert = contingut.style.display === "flex";
+        const jaActiu = btn.classList.contains("btn-actiu");
+        const contenidor = document.getElementById("resultats-guia");
 
         document.getElementById("cercador").value = "";
-        document.getElementById("resultats-guia").style.display = "none";
-        document.getElementById("resultats-guia").innerHTML = "";
+
+        if (jaActiu) {
+          tancarTotesLesCategories();
+          contenidor.style.display = "none";
+          contenidor.innerHTML = "";
+          return;
+        }
 
         tancarTotesLesCategories();
+        btn.classList.add("btn-actiu");
 
-        if (!obert) {
-          btn.classList.add("btn-actiu");
-          contingut.style.display = "flex";
-          bloc.classList.add("actiu");
+        const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
+        mostrarResultats(cat, dadesFiltrades);
 
-          const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
-          contingut.innerHTML = dadesFiltrades.map(crearTargeta).join("");
-        }
+        setTimeout(() => {
+          contenidor.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }, 50);
       };
 
       bloc.appendChild(btn);
-      bloc.appendChild(contingut);
       col.appendChild(bloc);
     });
   }
 
   function filtrar() {
     const val = document.getElementById("cercador").value.trim();
+    const contenidor = document.getElementById("resultats-guia");
 
     tancarTotesLesCategories();
-
-    const contenidor = document.getElementById("resultats-guia");
 
     if (!val) {
       contenidor.style.display = "none";
