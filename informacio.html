@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Guia Cabrils</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#163B65">
   <style>
     :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; --ressaltat: #ffeb3b; }
     body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; }
@@ -12,96 +11,114 @@
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
     .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
+    
     .contenidor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
     .columna { display: flex; flex-direction: column; gap: 8px; }
+
     .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
+
     #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
     .titol-cat-activa { border-bottom: 2px solid var(--clar); padding-bottom: 5px; margin-bottom: 10px; font-size: 18px; color: var(--clar); font-weight: bold; text-transform: uppercase; }
-    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; }
+    
+    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; margin-bottom: 3px; }
     .detalls-lloc { font-size: 13px; color: #666; margin-bottom: 10px; display: block; line-height: 1.3; }
-    mark { background: var(--ressaltat); color: black; font-weight: bold; padding: 0 2px; }
+    
     .accions { display: flex; gap: 6px; }
-    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; }
+    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
     .btn-truca { background: var(--clar); color: white; border: none; }
   </style>
 </head>
 <body>
+
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
     <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
   </div>
-  <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
+
+  <input type="text" id="cercador" class="cercador" placeholder="Cerca servei o comerç..." onkeyup="filtrar()">
+
   <div class="contenidor-grid">
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
   </div>
+
   <div id="resultats-guia"></div>
 </div>
 
 <script>
-  // URL ÚNICA (Pestanya 1)
-  const URL_GUIA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv";
+  // Utilitzem el format export?format=csv que és més estable que /pub
+  const DOC_ID = "1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw";
+  const URL_1 = `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=0`;
+  const URL_2 = `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=2047395724`;
 
   let DADES_TOTALS = [];
 
   async function carregarDades() {
+    const resGuia = document.getElementById("resultats-guia");
     try {
-      const res = await fetch(URL_GUIA, {cache: "no-store"});
-      if (!res.ok) throw new Error("Error de resposta");
-      const text = await res.text();
-      DADES_TOTALS = parseCSV(text).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
+      const [r1, r2] = await Promise.all([
+        fetch(URL_1, { cache: "no-store" }),
+        fetch(URL_2, { cache: "no-store" })
+      ]);
 
-      // Separem categories per ordre
-      const mapaCats = {};
-      DADES_TOTALS.forEach(d => {
-        if(!mapaCats[d.categoria]) mapaCats[d.categoria] = parseInt(d.ordre) || 99;
-      });
+      if (!r1.ok || !r2.ok) throw new Error("No s'han pogut descarregar les dades de Google.");
 
-      const categories = Object.keys(mapaCats).sort((a,b) => mapaCats[a] - mapaCats[b]);
+      const d1 = parseCSV(await r1.text()).filter(f => f.visible?.toLowerCase() === "si");
+      const d2 = parseCSV(await r2.text()).filter(f => f.visible?.toLowerCase() === "si");
 
-      categories.forEach(cat => {
-        const ordre = mapaCats[cat];
-        const btn = document.createElement("button");
-        btn.className = "btn-cat";
-        btn.innerText = cat.toUpperCase();
-        btn.onclick = () => {
-          document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
-          btn.classList.add("btn-actiu");
-          renderitzarLlista(cat);
-        };
-        // Si ordre < 11 va a la columna 1, si no a la 2
-        document.getElementById(ordre < 11 ? "col-1" : "col-2").appendChild(btn);
-      });
+      DADES_TOTALS = [...d1, ...d2];
 
-    } catch (e) { 
-      document.getElementById("resultats-guia").innerHTML = "Error: " + e.message;
+      if (DADES_TOTALS.length === 0) {
+        resGuia.innerHTML = "<p style='text-align:center;'>No s'han trobat dades amb 'visible = si'.</p>";
+      }
+
+      crearBotons(d1, "col-1");
+      crearBotons(d2, "col-2");
+
+    } catch (e) {
+      resGuia.innerHTML = `<p style="color:#ffeb3b; text-align:center;">⚠️ Error: ${e.message}<br><small>Comprova que el fitxer estigui "Publicat a la web".</small></p>`;
     }
+  }
+
+  function crearBotons(dades, idContenidor) {
+    const contenidor = document.getElementById(idContenidor);
+    const mapaCats = {};
+    dades.forEach(d => { if(d.categoria && !mapaCats[d.categoria]) mapaCats[d.categoria] = parseInt(d.ordre) || 99; });
+    
+    Object.keys(mapaCats).sort((a,b) => mapaCats[a] - mapaCats[b]).forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "btn-cat";
+      btn.innerText = cat.toUpperCase();
+      btn.onclick = () => {
+        document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
+        btn.classList.add("btn-actiu");
+        renderitzarLlista(cat);
+      };
+      contenidor.appendChild(btn);
+    });
   }
 
   function renderitzarLlista(categoria, filtre = "") {
     const contenidor = document.getElementById("resultats-guia");
-    let llocs = filtre.length > 1 
-      ? DADES_TOTALS.filter(d => (d.nom+d.categoria).toLowerCase().includes(filtre.toLowerCase()))
+    let llista = filtre.length > 1 
+      ? DADES_TOTALS.filter(d => (d.nom + d.categoria).toLowerCase().includes(filtre.toLowerCase()))
       : DADES_TOTALS.filter(d => d.categoria === categoria);
 
     contenidor.innerHTML = `<div class="titol-cat-activa">${filtre.length > 1 ? 'RESULTATS' : categoria}</div>`;
     
-    llocs.forEach(lloc => {
-      let nom = filtre.length > 1 ? lloc.nom.replace(new RegExp(`(${filtre})`, "gi"), "<mark>$1</mark>") : lloc.nom;
-      let web = lloc.web ? (lloc.web.startsWith('http') ? lloc.web : 'https://'+lloc.web) : "";
-      
+    llista.forEach(lloc => {
+      const mapaUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom + ' Cabrils')}`;
       contenidor.innerHTML += `
         <div class="targeta">
-          <span class="titol-lloc">${nom}</span>
+          <span class="titol-lloc">${lloc.nom}</span>
           <span class="detalls-lloc">📍 ${lloc.lloc || ''} <br> ⏰ ${lloc.horari || 'Consultar'}</span>
           <div class="accions">
             <a href="tel:${lloc.telefon}" class="btn-acc btn-truca">📞 TRUCA</a>
-            ${lloc.email ? `<a href="mailto:${lloc.email}" class="btn-acc">✉️ MAIL</a>` : ''}
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lloc.nom+' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
-            ${web ? `<a href="${web}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
+            <a href="${mapaUrl}" target="_blank" class="btn-acc">📍 MAPA</a>
+            ${lloc.web ? `<a href="${lloc.web.startsWith('http') ? lloc.web : 'https://'+lloc.web}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
           </div>
         </div>`;
     });
@@ -118,6 +135,7 @@
   }
 
   function parseCSV(t){
+    // Neteja caràcters invisibles inicials (BOM)
     const net = t.replace(/^\uFEFF/, "").trim();
     let lines = net.split(/\r?\n/);
     if(lines.length < 2) return [];
