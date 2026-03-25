@@ -6,54 +6,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; --ressaltat: #ffeb3b; }
-    body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; }
-    .pagina { max-width: 600px; margin: auto; padding: 15px; }
-    .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:10; }
+    body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; overflow-x: hidden; }
+    .pagina { max-width: 600px; margin: auto; padding: 15px; box-sizing: border-box; }
+    .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:100; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
-    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; width: 100%; }
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; display: block; }
     
-    /* Grid forçat a dues columnes */
+    /* Forcem les dues columnes perquè no es moguin */
     .contenidor-grid { 
       display: grid; 
       grid-template-columns: 1fr 1fr; 
       gap: 10px; 
       margin-bottom: 20px; 
-      min-height: 50px;
+      width: 100%;
     }
-    .columna { display: flex; flex-direction: column; gap: 8px; }
+    .columna { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 
-    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); width: 100%; }
+    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); width: 100%; text-transform: uppercase; }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
     
-    #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
-    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; }
+    #resultats-guia { display: flex; flex-direction: column; gap: 12px; padding-bottom: 30px; }
+    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; margin-bottom: 3px; }
     .detalls-lloc { font-size: 13px; color: #666; display: block; line-height: 1.3; margin-bottom: 10px; }
-    .accions { display: flex; gap: 6px; }
-    .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
+    .accions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-acc { flex: 1; min-width: 70px; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
     .btn-truca { background: var(--clar); color: white; border: none; }
+    .msg-error { text-align: center; color: var(--ressaltat); padding: 20px; font-weight: bold; }
   </style>
 </head>
 <body>
 <div class="pagina">
   <div class="barra-superior">
     <a href="index.html" class="boto-tornar">←</a>
-    <div style="font-weight:bold;">GUIA DE SERVEIS CABRILS</div>
+    <div style="font-weight:bold; font-size: 14px;">GUIA DE SERVEIS CABRILS</div>
   </div>
+  
   <input type="text" id="cercador" class="cercador" placeholder="Cerca establiment o servei..." onkeyup="filtrar()">
   
   <div class="contenidor-grid">
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
   </div>
+  
   <div id="resultats-guia"></div>
 </div>
 
 <script>
-  const DOC_ID = "1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw";
+  // Proxy alternatiu més ràpid
   const proxy = "https://api.allorigins.win/get?url=";
+  const DOC_ID = "1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw";
   
-  // URLs d'exportació directa
   const URL_1 = `${proxy}${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=0`)}`;
   const URL_2 = `${proxy}${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=2047395724`)}`;
 
@@ -61,55 +64,57 @@
 
   async function carregarDades() {
     try {
-      // Carreguem seqüencialment per evitar col·lapses del proxy
-      const res1 = await fetch(URL_1).then(r => r.json());
-      const d1 = parseCSV(res1.contents).filter(f => f.visible?.toLowerCase() === "si");
-      crearBotons(d1, "col-1");
+      // Petició en paral·lel
+      const [r1, r2] = await Promise.all([ fetch(URL_1), fetch(URL_2) ]);
+      const j1 = await r1.json();
+      const j2 = await r2.json();
 
-      const res2 = await fetch(URL_2).then(r => r.json());
-      const d2 = parseCSV(res2.contents).filter(f => f.visible?.toLowerCase() === "si");
-      crearBotons(d2, "col-2");
+      const d1 = parseCSV(j1.contents).filter(f => f.visible?.toLowerCase() === "si");
+      const d2 = parseCSV(j2.contents).filter(f => f.visible?.toLowerCase() === "si");
 
       DADES_TOTALS = [...d1, ...d2];
+
+      // Dibuixem botons immediatament
+      dibuixarBotons(d1, "col-1");
+      dibuixarBotons(d2, "col-2");
+
     } catch (e) {
-      document.getElementById("resultats-guia").innerHTML = "<p style='text-align:center;'>⚠️ Error de connexió amb les dades.</p>";
+      document.getElementById("resultats-guia").innerHTML = `<div class="msg-error">⚠️ Error de connexió amb Google Sheets.<br>Torna a carregar la pàgina.</div>`;
     }
   }
 
-  function crearBotons(dades, idContenidor) {
-    const contenidor = document.getElementById(idContenidor);
-    const catsFetes = new Set();
+  function dibuixarBotons(dades, idCol) {
+    const col = document.getElementById(idCol);
+    col.innerHTML = "";
+    const cats = [...new Set(dades.map(d => d.categoria))].filter(Boolean);
     
-    // Ordenem per la columna "ordre"
-    dades.sort((a, b) => (parseInt(a.ordre) || 99) - (parseInt(b.ordre) || 99));
-
-    dades.forEach(d => {
-      if (d.categoria && !catsFetes.has(d.categoria)) {
-        catsFetes.add(d.categoria);
-        const btn = document.createElement("button");
-        btn.className = "btn-cat";
-        btn.innerText = d.categoria.toUpperCase();
-        btn.onclick = () => {
-          document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
-          btn.classList.add("btn-actiu");
-          renderitzarLlista(d.categoria);
-        };
-        contenidor.appendChild(btn);
-      }
+    cats.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "btn-cat";
+      btn.innerText = cat;
+      btn.onclick = () => {
+        document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
+        btn.classList.add("btn-actiu");
+        renderitzar(cat);
+      };
+      col.appendChild(btn);
     });
   }
 
-  function renderitzarLlista(categoria, filtre = "") {
+  function renderitzar(categoria, filtre = "") {
     const contenidor = document.getElementById("resultats-guia");
+    // Seguretat: si no hi ha dades, no fem res per evitar l'error de connexió visual
+    if (DADES_TOTALS.length === 0) return;
+
     let llista = filtre.length > 1 
       ? DADES_TOTALS.filter(d => (d.nom + d.categoria).toLowerCase().includes(filtre.toLowerCase()))
       : DADES_TOTALS.filter(d => d.categoria === categoria);
 
-    contenidor.innerHTML = `<div style="color:var(--clar); font-weight:bold; margin-bottom:10px; border-bottom:1px solid var(--clar); padding-bottom:5px;">${filtre ? 'RESULTATS' : categoria}</div>`;
+    contenidor.innerHTML = `<div style="color:var(--clar); font-weight:bold; margin-top:10px; border-bottom:1px solid var(--clar); padding-bottom:5px;">${filtre ? 'RESULTATS' : categoria.toUpperCase()}</div>`;
 
     llista.forEach(lloc => {
       const telf = lloc.telefon?.replace(/\s+/g, '') || "";
-      const mapaUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(lloc.nom + " Cabrils");
+      const mapa = `https://www.google.com/maps/search/${encodeURIComponent(lloc.nom + ' Cabrils')}`;
       
       contenidor.innerHTML += `
         <div class="targeta">
@@ -117,7 +122,7 @@
           <span class="detalls-lloc">📍 ${lloc.lloc || 'Cabrils'} <br> ⏰ ${lloc.horari || 'Consultar'}</span>
           <div class="accions">
             ${telf ? `<a href="tel:${telf}" class="btn-acc btn-truca">📞 TRUCA</a>` : ''}
-            <a href="${mapaUrl}" target="_blank" class="btn-acc">📍 MAPA</a>
+            <a href="${mapa}" target="_blank" class="btn-acc">📍 MAPA</a>
             ${lloc.web ? `<a href="${lloc.web.startsWith('http') ? lloc.web : 'https://'+lloc.web}" target="_blank" class="btn-acc">🌐 WEB</a>` : ''}
           </div>
         </div>`;
@@ -128,24 +133,24 @@
     const val = document.getElementById('cercador').value;
     if (val.length > 1) {
       document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
-      renderitzarLlista(null, val);
+      renderitzar(null, val);
     } else if (val.length === 0) {
       document.getElementById("resultats-guia").innerHTML = "";
     }
   }
 
-  function parseCSV(t) {
-    if (!t) return [];
-    const net = t.replace(/^\uFEFF/, "").trim();
-    const lines = net.split(/\r?\n/);
-    const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/['"]+/g, ''));
-    return lines.slice(1).map(line => {
-      const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+  function parseCSV(text) {
+    if (!text) return [];
+    const files = text.trim().split(/\r?\n/);
+    const capçaleres = files[0].split(",").map(h => h.trim().toLowerCase().replace(/['"]+/g, ''));
+    return files.slice(1).map(fila => {
+      const valors = fila.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
       const obj = {};
-      headers.forEach((h, i) => obj[h] = (values[i] || "").trim().replace(/^"|"$/g, ''));
+      capçaleres.forEach((h, i) => obj[h] = (valors[i] || "").trim().replace(/^"|"$/g, ''));
       return obj;
     });
   }
+
   carregarDades();
 </script>
 </body>
