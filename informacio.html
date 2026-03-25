@@ -232,8 +232,8 @@
   >
   
 <div class="avis-guia">
-  Si vols afegir un establiment o servei, o actualitzar-lo,
-  <a href="#" onclick="enviarEmailGuia(); return false;">envia un correu</a>.
+  Si vols afegir un establiment o servei, o actualitzar-lo, envia un
+  <a href="#" onclick="enviarEmailGuia(); return false;">correu</a>.
 </div>
   
   <div class="contenidor-grid">
@@ -332,6 +332,13 @@ if (DADES_TOTALS.length > 0) {
         btn.classList.add("btn-actiu");
         CATEGORIA_ACTIVA = cat;
         renderitzar(cat);
+      
+        setTimeout(() => {
+          document.getElementById("resultats-guia").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }, 50);
       };
 
       col.appendChild(btn);
@@ -401,6 +408,12 @@ if (DADES_TOTALS.length > 0) {
     if (val.length > 1) {
       document.querySelectorAll(".btn-cat").forEach(b => b.classList.remove("btn-actiu"));
       renderitzar(null, val);
+      setTimeout(() => {
+        document.getElementById("resultats-guia").scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }, 50);  
     } else if (val.length === 0) {
       if (CATEGORIA_ACTIVA) {
         activarBotoPerText(CATEGORIA_ACTIVA);
