@@ -146,7 +146,7 @@
       flex-direction:column;
       gap:12px;
     }
-    }
+    
     .titol-lloc{
       font-weight:bold;
       font-size:16px;
@@ -246,7 +246,7 @@
     <div id="col-1" class="columna"></div>
     <div id="col-2" class="columna"></div>
   </div>
-
+<div id="resultats-guia" style="display:none;"></div>
 </div>
 
 <script>
@@ -388,9 +388,6 @@ function dibuixarBotons(dades, idCol) {
   });
 }
 
-      col.appendChild(btn);
-    });
-  }
 
   function activarBotoPerText(categoria) {
     document.querySelectorAll(".btn-cat").forEach(b => {
