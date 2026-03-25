@@ -5,22 +5,27 @@
   <title>Guia Cabrils</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; --ressaltat: #ffeb3b; }
+    :root { --fosc: #26545E; --clar: #00c3b2; --blanc: #ffffff; }
     body { margin: 0; font-family: Arial, sans-serif; background: var(--fosc); color: white; }
     .pagina { max-width: 600px; margin: auto; padding: 15px; }
     .barra-superior { display:flex; align-items:center; gap:12px; padding:10px 0; position:sticky; top:0; background:var(--fosc); z-index:100; }
     .boto-tornar { color:white; text-decoration:none; font-size:24px; font-weight:bold; }
-    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; width:100%; }
+    .cercador { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:15px; font-size:16px; box-sizing:border-box; }
     
-    /* El Grid que buscàvem: Dues columnes fixes */
-    .contenidor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    /* Grid forçat a dues columnes */
+    .contenidor-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+      margin-bottom: 20px; 
+    }
     .columna { display: flex; flex-direction: column; gap: 8px; }
 
-    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 12px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); text-transform: uppercase; }
+    .btn-cat { background: var(--blanc); color: var(--fosc); padding: 14px 5px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); text-transform: uppercase; }
     .btn-actiu { background: var(--clar) !important; color: white !important; }
     
     #resultats-guia { display: flex; flex-direction: column; gap: 12px; }
-    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; }
+    .targeta { background: var(--blanc); color: var(--fosc); padding: 12px; border-radius: 10px; margin-bottom: 10px; }
     .titol-lloc { font-weight: bold; font-size: 16px; color: #163B65; display: block; }
     .accions { display: flex; gap: 6px; margin-top: 10px; }
     .btn-acc { flex: 1; background: #f0f4f4; color: var(--fosc); text-align: center; padding: 8px 2px; border-radius: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border: 1px solid #ddd; }
@@ -35,70 +40,70 @@
   
   <input type="text" id="cercador" class="cercador" placeholder="Cerca..." onkeyup="filtrar()">
   
-  <div id="grid-categories" class="contenidor-grid">
-    <div id="col-esquerra" class="columna"></div>
-    <div id="col-dreta" class="columna"></div>
+  <div id="grid-principal" class="contenidor-grid">
+    <div id="col-1" class="columna"></div>
+    <div id="col-2" class="columna"></div>
   </div>
   
   <div id="resultats-guia"></div>
 </div>
 
 <script>
-  const URL_UNICA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv";
+  // Utilitzem un sol full per a màxima estabilitat
+  const URL_DATA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?gid=0&output=csv";
 
   let DADES_TOTALS = [];
 
   async function carregarDades() {
     try {
-      const res = await fetch(URL_UNICA);
-      const text = await res.text();
+      const resposta = await fetch(URL_DATA);
+      const text = await resposta.text();
       DADES_TOTALS = parseCSV(text).filter(f => f.visible?.toLowerCase() === "si");
       
       repartirBotons();
     } catch (e) {
-      document.getElementById("resultats-guia").innerHTML = "Error de connexió.";
+      document.getElementById("resultats-guia").innerHTML = "<p style='text-align:center;'>⚠️ Error carregant dades.</p>";
     }
   }
 
   function repartirBotons() {
-    const colEsq = document.getElementById("col-esquerra");
-    const colDre = document.getElementById("col-dreta");
+    const col1 = document.getElementById("col-1");
+    const col2 = document.getElementById("col-2");
     
-    // Obtenim categories úniques
+    // Obtenim llista de categories úniques
     const categories = [...new Set(DADES_TOTALS.map(d => d.categoria))].filter(Boolean);
     
-    // Les repartim: meitat a una columna, meitat a l'altra
-    const meitat = Math.ceil(categories.length / 2);
-    
-    categories.forEach((cat, i) => {
+    // Repartim les categories entre les dues columnes
+    categories.forEach((cat, index) => {
       const btn = document.createElement("button");
       btn.className = "btn-cat";
       btn.innerText = cat;
       btn.onclick = () => {
         document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('btn-actiu'));
         btn.classList.add("btn-actiu");
-        renderitzar(cat);
+        mostrarLlista(cat);
       };
       
-      if (i < meitat) colEsq.appendChild(btn);
-      else colDre.appendChild(btn);
+      // Si l'índex és parell va a la col1, si és senar a la col2
+      if (index % 2 === 0) col1.appendChild(btn);
+      else col2.appendChild(btn);
     });
   }
 
-  function renderitzar(categoria, filtre = "") {
+  function mostrarLlista(categoria, filtre = "") {
     const contenidor = document.getElementById("resultats-guia");
-    const llista = filtre 
+    const filtrats = filtre 
       ? DADES_TOTALS.filter(d => d.nom.toLowerCase().includes(filtre.toLowerCase()))
       : DADES_TOTALS.filter(d => d.categoria === categoria);
 
-    contenidor.innerHTML = `<h3 style="color:var(--clar); border-bottom:1px solid;">${filtre ? 'Resultats' : categoria}</h3>`;
-    
-    llista.forEach(lloc => {
+    contenidor.innerHTML = `<h3 style="color:var(--clar); border-bottom:1px solid; padding-bottom:5px;">${filtre ? 'RESULTATS' : categoria.toUpperCase()}</h3>`;
+
+    filtrats.forEach(lloc => {
       contenidor.innerHTML += `
         <div class="targeta">
           <span class="titol-lloc">${lloc.nom}</span>
           <div class="accions">
-            <a href="tel:${lloc.telefon}" class="btn-acc">📞 TRUCA</a>
+            ${lloc.telefon ? `<a href="tel:${lloc.telefon}" class="btn-acc">📞 TRUCA</a>` : ''}
             <a href="https://www.google.com/maps/search/${encodeURIComponent(lloc.nom + ' Cabrils')}" target="_blank" class="btn-acc">📍 MAPA</a>
           </div>
         </div>`;
@@ -106,11 +111,11 @@
   }
 
   function filtrar() {
-    const val = document.getElementById('cercador').value;
-    const grid = document.getElementById('grid-categories');
-    if (val.length > 1) {
+    const text = document.getElementById('cercador').value;
+    const grid = document.getElementById('grid-principal');
+    if (text.length > 1) {
       grid.style.display = "none";
-      renderitzar(null, val);
+      mostrarLlista(null, text);
     } else {
       grid.style.display = "grid";
       document.getElementById("resultats-guia").innerHTML = "";
