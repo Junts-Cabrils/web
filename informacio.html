@@ -135,8 +135,12 @@
     .btn-actiu{
       background:var(--clar) !important;
       color:white !important;
+      box-shadow:0 0 0 2px #ffffff, 0 6px 14px rgba(0,0,0,0.28);
+      transform:translateY(1px);
     }
-
+    .btn-inactiu-paralel{
+      opacity:0.72;
+    }
     .llista-cat{
       display:none;
       flex-direction:column;
@@ -356,16 +360,17 @@
     `;
   }
 
-  function tancarTotesLesCategories() {
-    document.querySelectorAll(".btn-cat").forEach(b => {
-      b.classList.remove("btn-actiu");
-    });
-
-    document.querySelectorAll(".llista-cat").forEach(llista => {
-      llista.style.display = "none";
-      llista.innerHTML = "";
-    });
-  }
+    function tancarTotesLesCategories() {
+      document.querySelectorAll(".btn-cat").forEach(b => {
+        b.classList.remove("btn-actiu");
+        b.classList.remove("btn-inactiu-paralel");
+      });
+    
+      document.querySelectorAll(".llista-cat").forEach(llista => {
+        llista.style.display = "none";
+        llista.innerHTML = "";
+      });
+    }
 
   function dibuixarBotons(dades, idCol) {
     const col = document.getElementById(idCol);
@@ -384,37 +389,37 @@
       const contingut = document.createElement("div");
       contingut.className = "llista-cat";
 
-      btn.onclick = () => {
-        const jaActiu = btn.classList.contains("btn-actiu");
-        document.getElementById("cercador").value = "";
-
-        if (jaActiu) {
-          btn.classList.remove("btn-actiu");
-          contingut.style.display = "none";
-          contingut.innerHTML = "";
-          return;
-        }
-
-        tancarTotesLesCategories();
-        btn.classList.add("btn-actiu");
-
-        const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
-
-        if (!dadesFiltrades || dadesFiltrades.length === 0) {
-          contingut.innerHTML = `<div class="msg-error">No hi ha resultats en aquesta categoria.</div>`;
-        } else {
-          contingut.innerHTML = dadesFiltrades.map(crearTargeta).join("");
-        }
-
-        contingut.style.display = "flex";
-
-        setTimeout(() => {
-          bloc.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest"
-          });
-        }, 50);
-      };
+    btn.onclick = () => {
+      const jaActiu = btn.classList.contains("btn-actiu");
+      document.getElementById("cercador").value = "";
+    
+      if (jaActiu) {
+        btn.classList.remove("btn-actiu");
+        contingut.style.display = "none";
+        contingut.innerHTML = "";
+        return;
+      }
+    
+      tancarTotesLesCategories();
+      btn.classList.add("btn-actiu");
+    
+      const dadesFiltrades = DADES_TOTALS.filter(item => item.categoria === cat);
+    
+      if (!dadesFiltrades || dadesFiltrades.length === 0) {
+        contingut.innerHTML = `<div class="msg-error">No hi ha resultats en aquesta categoria.</div>`;
+      } else {
+        contingut.innerHTML = dadesFiltrades.map(crearTargeta).join("");
+      }
+    
+      contingut.style.display = "flex";
+    
+      setTimeout(() => {
+        bloc.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      }, 50);
+    };
 
       bloc.appendChild(btn);
       bloc.appendChild(contingut);
