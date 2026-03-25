@@ -41,7 +41,7 @@
 </div>
 
 <script>
-  // Fem servir un proxy per saltar-nos el bloqueig de seguretat (CORS)
+// CONFIGURACIÓ AMB PROXY PER EVITAR "FAILED TO FETCH"
   const proxy = "https://api.allorigins.win/raw?url=";
   const base_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcBpzsIwQmH4aiRLnH7_WH9DzhZSwKuMeOBi1IoxYJ5VGHOcZsNjDvS437xUibkw/pub?";
   
@@ -57,15 +57,29 @@
         fetch(URL_2)
       ]);
       
-      const d1 = parseCSV(await res1.text()).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
-      const d2 = parseCSV(await res2.text()).filter(f => f.visible && f.visible.trim().toLowerCase() === "si");
+      const csv1 = await res1.text();
+      const csv2 = await res2.text();
 
-      DADES_TOTALS = [...d1, ...d2];
-      crearBotons(d1, "col-1");
-      crearBotons(d2, "col-2");
+      // Mirem que el contingut sigui realment CSV i no un error
+      if (csv1.includes("<!DOCTYPE html>") || csv2.includes("<!DOCTYPE html>")) {
+         throw new Error("El proxy no ha pogut accedir a les dades.");
+      }
+
+      const dades1 = parseCSV(csv1).filter(f => f.visible?.toLowerCase() === "si");
+      const dades2 = parseCSV(csv2).filter(f => f.visible?.toLowerCase() === "si");
+
+      DADES_TOTALS = [...dades1, ...dades2];
+
+      // Netejem els contenidors abans de crear botons
+      document.getElementById("col-1").innerHTML = "";
+      document.getElementById("col-2").innerHTML = "";
+
+      crearBotons(dades1, "col-1");
+      crearBotons(dades2, "col-2");
 
     } catch (e) { 
-      document.getElementById("resultats-guia").innerHTML = "Error de càrrega. Revisa la connexió.";
+      console.error(e);
+      document.getElementById("resultats-guia").innerHTML = "<p style='color:#ffeb3b; text-align:center;'>⚠️ Error de connexió. Reintenta-ho en uns segons.</p>";
     }
   }
 
